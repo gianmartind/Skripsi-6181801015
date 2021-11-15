@@ -1,3 +1,10 @@
 /.sty
-/skripsi.nlo
 /skripsi.synctex.gz
+*.aux
+*.bbl
+*.lof
+*.log
+*.nlo
+*.blg
+*.out
+*.toc
