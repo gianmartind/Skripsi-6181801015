@@ -85,7 +85,7 @@ Secara garis besar tahapan proses OIR pada penelitian ini adalah sebagai berikut
 \section{SIFT (Speeded Up Robust Feature)}
 \label{sec:sift}
 
-SIFT adalah salah satu metode pencarian fitur lokal yang dicetuskan pada~\cite{lowe2004sift}. Fitur lokal yang dihasilkan SIFT bersifat invarian terhadap rotasi, perubahan skala, dan translasi pada gambar. Sifat invarian ini berarti fitur lokal yang sama pada gambar yang telah di rotasi, diubah skalanya, atau di translasi akan tetap memiliki ciri yang mirip. Setiap fitur lokal akan memiliki sebuah vektor yang mendeskripsikan daerah area fitur lokal tersebut, vektor ini biasa disebut sebagai deskriptor. Vektor deksriptor SIFT berbentuk vektor bilangan bulat yang memiliki 128 elemen. Tahap pencarian fitur lokal pada SIFT dibagi menjadi 4 langkah sebagai berikut.
+SIFT adalah salah satu metode pencarian fitur lokal yang dicetuskan pada~\cite{lowe2004sift}. Fitur lokal yang dihasilkan SIFT bersifat invarian terhadap rotasi, perubahan skala, dan translasi pada gambar. Sifat invarian ini berarti fitur lokal yang sama pada gambar yang telah di rotasi, diubah skalanya, atau di translasi akan tetap memiliki ciri yang mirip. Setiap fitur lokal akan memiliki sebuah vektor yang mendeskripsikan daerah area fitur lokal tersebut, vektor ini biasa disebut sebagai deskriptor. Vektor deksriptor SIFT berbentuk vektor bilangan bulat yang memiliki 128 elemen. Tahap pencarian fitur lokal pada SIFT dapat dibagi menjadi 4 langkah yang akan dijabarkan pada subbab-subbab berikut.
 
 \subsection{Pencarian Extrema}
 Pada tahap ini akan dicari \textit{pixel-pixel} pada gambar yang merupakan \textit{corner} atau biasa disebut \textit{keypoint}. \textit{Keypoint} pada SIFT dicari dengan memeriksa \textit{pixel-pixel} pada gambar hasil turunan kedua Gaussian. Turunan kedua Gaussian akan dihitung dengan menggunakan \textit{Difference of Gaussian} (DoG).
@@ -256,19 +256,71 @@ Ilustrasi dapat dilihat pada Gambar~\ref{fig:orb_pyramid}. Pada ilustrasi terseb
 	\label{fig:orb_pyramid}	
 \end{figure}
 
+\subsection{Penentuan Orientasi}
+Orientasi \textit{keypoint} pada ORB ditentukan oleh arah hadap titik \textit{keypoint} pada titik \textit{Intensity Centroid} di daerah sekitarnya. \textit{Intensity Centroid} pada sebuah daerah gambar merupakan titik di mana terjadi perubahan nilai intensitas terbesar. Titik \textit{Intensity Centroid}, $C$, didefinisikan sebagai berikut:
+\begin{equation}
+	C=(\frac{m_{10}}{m_{00}}, \frac{m_{01}}{m_{00}})
+\end{equation}
+\textit{Centroid} ditentukan dengan menghitung \textit{moment} pada gambar yang didefinisikan sebagai berikut:
+\begin{equation}
+	m_pq=\sum_{x,y}x^py^qI(x,y)
+\end{equation}
+Titik \textit{centroid} dihitung pada daerah yang dikelilingi 16 \textit{pixel} yang digunakan pada tahap Penentuan \textit{Keypoint}. Dari daerah tersebut didapat titik yang merupakan \textit{centroid}. Lalu dibuat garis vektor yang berasal dari titik \textit{keypoint} (titik tengah) menuju titik \textit{centroid}. Orientasi ditentukan dari sudut antara garis lurus sumbu x dengan garis vektor.
+
+\subsection{Pembuatan Deskriptor}
+
 \section{BSIS (Best Score Increasing Subsequence)}
 \label{sec:bsis}
-Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap objek (fitur lokal) di sekitarnya. Salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris adalah BSIS.
- 
+Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap objek (fitur lokal) di sekitarnya. Salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris adalah BSIS. Seluruh isi bab ini didapatkan dari~\cite{kusuma2019bsis}
+
+BSIS dilakukan dengan memberikan modifikasi metode OIR. Perubahan terdapat pada tahap \textit{Pairing}, \textit{Verification}, dan \textit{Scoring}. Langkah-langkah BSIS secara rinci dijelaskan pada subbab-subbab berikut, dilakukan setelah dilakukan ekstraksi fitur lokal pada gambar masukkan:
+
+\subsection{Pairing}
+Pertama untuk setiap fitur lokal pada gambar masukkan akan dicari $N$ fitur lokal dari \textit{dataset} yang nilai vektor deskriptornya paling mirip atau memiliki jarak yang \textit{euclidean} paling kecil. BSIS mengasumsikan jarak \textit{euclidean} tiap pasangan sebuah fitur lokal tersebar secara normal. 
+
+Pasangan-pasangan yang sudah dihitung lalu di-\textit{filter} dengan mengambil hanya nilai yang merupakan \textit{outlier} di sisi kiri. Pasangan yang digunakan hanya merupakan pasangan yang nilainya kurang dari $m - (K \times \sigma)$, $m$ merupakan \textit{mean} dan $\sigma$ merupakan standar deviasi dengan nilai $K = 4$.
+
+Setelah itu untuk setiap pasangan akan diberi bobot. Bobot, $P_w$, dihitung dengan $P_w=(\frac{distance(P_Q, P_T) - m}{\sigma})^2$, $P_Q$ merupakan fitur lokal gambar masukkan dan $P_T$ merupakan fitur lokal dari \textit{dataset}. Bobot tersebut pada dasarnya menghitung sejauh apa nilai jarak pasangan tersebut terhadap rata-ratanya. Karena pasangan yang digunakan pada tahap ini hanya pasangan yang nilai jaraknya lebih kecil dari rata-rata maka nilai bobot menunjukkan tingkat kemungkinan pasangan tersebut merupakan pasangan yang benar.
+
+\subsection{Verification}
+Pada tahap ini akan dilakukan pemeriksaan pada pasangan-pasangan fitur lokal untuk mencari pasangan mana saja yang konsisten secara geometris. Pasangan yang digunakan adalah pasangan yang sudah di-\textit{filter} pada tahap sebelumnya dan diberi bobot. Setiap fitur lokal dari gambar masukkan dapat dipasangkan dengan lebih dari satu fitur lokal dari gambar \textit{dataset} di pasangan yang berbeda. Langkah untuk melakukan verifikasi adalah sebagai berikut:
+\begin{enumerate}
+	\item Pada gambar masukkan, berikan label pada tiap fitur lokal berdasarkan urutan kemunculannya dari sumbu x. Label urutan ini disebut \textit{order}.
+	\item Urutkan fitur lokal pada gambar \textit{dataset} berdasarkan sumbu x dan masukkan ke dalam kolom-kolom. Untuk kolom tulis semua pasangan dari fitur lokal tersebut dan beri \textit{order} dari fitur lokal gambar masukkan pasangan tersebut. Catat juga $P_w$ dari tiap pasangan
+	\item Dari urutan kolom fitur lokal gambar \textit{dataset} buat sebuah \textit{subsequence} yang memaksimalkan nilai total $P_w$. \textit{Subsequence} dibuat dengan aturan berikut:
+	\begin{itemize}
+		\item Dari tiap kolom hanya dapat diambil satu pasangan.
+		\item \textit{Order} dari pasangan pada \textit{subsequence} harus selalu meningkat.
+	\end{itemize}
+	\item Simpan pasangan-pasangan yang membentuk \textit{subsequence} ke dalam $V_x$.
+	\item Ulangi lagi tahapan dengan menggunakan sumbu y pada pasangan-pasangan di $V_x$. Untuk lebih lanjut lagi mencari pasangan yang tidak konsisten dari sumbu y.
+\end{enumerate}
+Tahapan di atas dilakukan beberapa kali pada rotasi fitur lokal gambar \textit{dataset} yang berbeda untuk mencari rotasi gambar yang memberikan paling banyak pasangan fitur lokal yang konsisten.
+
+\subsection{Scoring}
+Setelah dipilih dan didapat pasangan fitur lokal yang konsisten secara geometris akan dihitung nilai kemiripan gambar masukkan dengan gambar \textit{dataset} yang terpilih. Tingkat kemiripan ditentukan dengan menghitung total $P_w$ dari pasangan yang terpilih pada tahap \textit{Verification}. Nilai kemiripan ini dapat digunakan untuk menentukan apakah pasangan gambar cukup mirip untuk menjadi pasangan yang benar.
+
 \section{KD-Tree}
 \label{sec:kdtree}
 
-
 \section{Clustering}
 \label{sec:clustering}
+\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda.
+
+Beberapa contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative} dan DBSCAN. Kedua teknik tersebut menggunakan metode dasar yang berbeda dan akan menghasilkan \textit{cluster} dengan ciri yang berbeda juga. Kedua metode tersebut dijelaskan pada dua subbab berikut. Penjelasan berdasarkan pada~\cite{han2011data}
 
 \subsection{Agglomerative}
-\label{subsec:agglomerative}
+\label{subsec:clustering_agglomerative}
+Teknik \textit{clustering Agglomerative} adalah salah satu teknik \textit{clustering} yang berbasis hierarki (\textit{hierarchical}). Teknik ini membentuk \textit{cluster} dengan menyusun hierarki antar objek berdasarkan kemiripanya. \textit{Agglomerative} adalah teknik \textit{clustering hierarchical} yang menggunakan metode \textit{bottom-up}. Tahapan dimulai dengan membentuk \textit{cluster-cluster} kecil dan kemudian menggabungkan \textit{cluster} kecil tersebut menjadi \textit{cluster} yang lebih besar.
+
+Tahapan \textit{clustering} pada \textit{Agglomerative} dimulai dengan terlebih dahulu menghitung jarak \textit{euclidean} antar tiap objek. Setelah itu ambil pasangan dengan jarak paling kecil dan gabungkan menjadi satu \textit{cluster} dan lakukan juga untuk jarak paling kecil berikutnya. Jika jarak terkecil yang ada adalah antara objek yang sudah berada di dalam \textit{cluster}, maka gabungkan kedua \textit{cluster} tersebut menjadi \textit{cluster} yang lebih besar. 
+
+Langkah-langkah pada tahapan tersebut dilakukan hingga semua objek sudah berada di dalam satu \textit{cluster} yang sama. \textit{Cluster} besar tersebut lalu dapat dibagi berdasarkan dari jaraknya dengan menggunakan \textit{threshold} yang dapat ditentukan secara manual.
 
 \subsection{DBSCAN}
-\label{subsec:dbscan}
+\label{subsec:clustering_dbscan}
+DBSCAN atau \textit{Density-Based Spatial Clustering of Applications with Noise} adalah salah satu metode \textit{clustering} yang berbasis kepadatan (\textit{density based}). Pada DBSCAN sebuah \textit{cluster} merupakan sebuah daerah padat yang dipisahkan oleh daerah yang jarang. \textit{Cluster} yang dihasilkan tidak selalu berbentuk \textit{circular} dan objek-objek yang berada dalam satu \textit{cluster} tidak selalu merupakan data yang mirip. Karena bentuknya yang tidak \textit{circular} dan tidak tentu miripnya objek, \textit{cluster} tidak dapat direpresentasikan dengan sebuah titik tengah atau \textit{centroid}.
+
+Penyusunan \textit{cluster} pada DBSCAN dimulai dengan mencari objek yang merupakan \textit{core object}. \textit{Core object} merupakan objek yang memiliki setidaknya $MinPts$ objek lain pada radius $\epsilon$ yang berpusat pada objek tersebut. $MinPts$ dan $\epsilon$ adalah parameter yang ditentukan secara manual. Nilai $MinPts$ dan $\epsilon$ akan memengaruhi hasil \textit{cluster} yang dihasilkan.
+
+Setiap objek yang merupakan \textit{core object} beserta anggotanya (objek lain pada radius $\epsilon$) akan menjadi satu \textit{cluster}. Jika dalam radius $\epsilon$ objek tersebut terdapat objek lain yang juga merupakan \textit{core object}, maka akan digabungkan menjadi satu \textit{cluster}. \textit{Core object} yang saling berdekatan ini akan terus digabungkan menjadi \textit{cluster} yang besar.
