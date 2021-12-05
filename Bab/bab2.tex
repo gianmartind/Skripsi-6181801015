@@ -235,6 +235,7 @@ Pembuatan vektor dilakukan dengan mengambil daerah di sekitar \textit{keypoint} 
 ORB adalah metode pencarian fitur lokal yang dijelaskan pada~\cite{rublee2011orb}. ORB dapat menemukan fitur lokal dengan lebih cepat jika dibandingkan dengan SIFT, walaupun fitur lokal yang dihasilkan tidak seakurat yang dihasilkan SIFT. ORB mencari fitur lokal dengan mencari \textit{pixel} yang merupakan \textit{keypoint}. \textit{Keypoint} dalam ORB dicari dengan ide bahwa sebuah \textit{pixel} yang merupakan sudut akan memiliki daerah kontinu dengan nilai intensitas yang lebih kecil atau lebih besar dari nilai intensitas \textit{pixel} tersebut. Fitur lokal yang dihasilkan ORB akan memiliki sebuah vektor deskriptor yang berbentuk vektor biner sebanyak 256 elemen. Tahap pencarian fitur lokal pada ORB dibagi menjadi 4 langkah yang dijelaskan pada subbab-subbab berikut.
 
 \subsection{Pencarian Keypoint}
+\label{subsec:orb_keypoint}
 Untuk menentukan apakah sebuah \textit{pixel} dalam gambar merupakan \textit{keypoint}, ORB mengambil nilai \textit{pixel} tersebut dan 16 \textit{pixel} di sekitarnya yang membentuk lingkaran. Dari ke 16 \textit{pixel} tersebut dibandingkan nilainya dengan \textit{pixel} yang di tengah $p$, yaitu \textit{pixel} yang ingin diperiksa apakah merupakan \textit{keypoint}. Sebuah \textit{pixel} merupakan \textit{keypoint} jika dari 16 \textit{pixel} di sekitarnya terdapat setidaknya $n$ \textit{pixel} kontinu yang nilainya lebih besar dari nilai $p + t$ atau lebih kecil dari $p - t$. Proses ini diilustrasikan pada Gambar~\ref{fig:orb_keypoint}
 
 \begin{figure}[H]
@@ -245,6 +246,7 @@ Untuk menentukan apakah sebuah \textit{pixel} dalam gambar merupakan \textit{key
 \end{figure}
 
 \subsection{Penentuan Skala}
+\label{subsec:orb_skala}
 \textit{Keypoint} yang telah dideteksi pada tahap awal perlu untuk dapat terdeteksi juga walaupun ukuran gambar berubah agar sifatnya invarian terhadap skala. Untuk mencapai sifat ini ORB menggunakan metode \textit{Image Pyramid}. ORB menggunakan \textit{Image Pyramid} dengan cara memperkecil ukuran gambar beberapa kali dan untuk setiap ukuran gambar dilakukan deteksi untuk \textit{keypoint}. 
 
 Ilustrasi dapat dilihat pada Gambar~\ref{fig:orb_pyramid}. Pada ilustrasi tersebut gambar awal diperkecil beberapa kali dengan membagi panjang dan lebarnya menjadi setengahnya. Untuk setiap ukuran gambar dicari \textit{keypoint-keypoint}-nya.
@@ -257,6 +259,7 @@ Ilustrasi dapat dilihat pada Gambar~\ref{fig:orb_pyramid}. Pada ilustrasi terseb
 \end{figure}
 
 \subsection{Penentuan Orientasi}
+\label{subsec:orb_orientasi}
 Orientasi \textit{keypoint} pada ORB ditentukan oleh arah hadap titik \textit{keypoint} pada titik \textit{Intensity Centroid} di daerah sekitarnya. \textit{Intensity Centroid} pada sebuah daerah gambar merupakan titik di mana terjadi perubahan nilai intensitas terbesar. Titik \textit{Intensity Centroid}, $C$, didefinisikan sebagai berikut:
 \begin{equation}
 	C=(\frac{m_{10}}{m_{00}}, \frac{m_{01}}{m_{00}})
@@ -268,6 +271,7 @@ Orientasi \textit{keypoint} pada ORB ditentukan oleh arah hadap titik \textit{ke
 Titik \textit{centroid} dihitung pada daerah yang dikelilingi 16 \textit{pixel} yang digunakan pada tahap Penentuan \textit{Keypoint}. Dari daerah tersebut didapat titik yang merupakan \textit{centroid}. Lalu dibuat garis vektor yang berasal dari titik \textit{keypoint} (titik tengah) menuju titik \textit{centroid}. Orientasi ditentukan dari sudut antara garis lurus sumbu x dengan garis vektor.
 
 \subsection{Pembuatan Deskriptor}
+\label{subsec:orb_deskriptor}
 
 \section{BSIS (Best Score Increasing Subsequence)}
 \label{sec:bsis}
@@ -276,6 +280,7 @@ Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk m
 BSIS dilakukan dengan memberikan modifikasi metode OIR. Perubahan terdapat pada tahap \textit{Pairing}, \textit{Verification}, dan \textit{Scoring}. Langkah-langkah BSIS secara rinci dijelaskan pada subbab-subbab berikut, dilakukan setelah dilakukan ekstraksi fitur lokal pada gambar masukkan:
 
 \subsection{Pairing}
+\label{subsec:bsis_pairing}
 Pertama untuk setiap fitur lokal pada gambar masukkan akan dicari $N$ fitur lokal dari \textit{dataset} yang nilai vektor deskriptornya paling mirip atau memiliki jarak yang \textit{euclidean} paling kecil. BSIS mengasumsikan jarak \textit{euclidean} tiap pasangan sebuah fitur lokal tersebar secara normal. 
 
 Pasangan-pasangan yang sudah dihitung lalu di-\textit{filter} dengan mengambil hanya nilai yang merupakan \textit{outlier} di sisi kiri. Pasangan yang digunakan hanya merupakan pasangan yang nilainya kurang dari $m - (K \times \sigma)$, $m$ merupakan \textit{mean} dan $\sigma$ merupakan standar deviasi dengan nilai $K = 4$.
@@ -283,6 +288,7 @@ Pasangan-pasangan yang sudah dihitung lalu di-\textit{filter} dengan mengambil h
 Setelah itu untuk setiap pasangan akan diberi bobot. Bobot, $P_w$, dihitung dengan $P_w=(\frac{distance(P_Q, P_T) - m}{\sigma})^2$, $P_Q$ merupakan fitur lokal gambar masukkan dan $P_T$ merupakan fitur lokal dari \textit{dataset}. Bobot tersebut pada dasarnya menghitung sejauh apa nilai jarak pasangan tersebut terhadap rata-ratanya. Karena pasangan yang digunakan pada tahap ini hanya pasangan yang nilai jaraknya lebih kecil dari rata-rata maka nilai bobot menunjukkan tingkat kemungkinan pasangan tersebut merupakan pasangan yang benar.
 
 \subsection{Verification}
+\label{subsec:bsis_verification}
 Pada tahap ini akan dilakukan pemeriksaan pada pasangan-pasangan fitur lokal untuk mencari pasangan mana saja yang konsisten secara geometris. Pasangan yang digunakan adalah pasangan yang sudah di-\textit{filter} pada tahap sebelumnya dan diberi bobot. Setiap fitur lokal dari gambar masukkan dapat dipasangkan dengan lebih dari satu fitur lokal dari gambar \textit{dataset} di pasangan yang berbeda. Langkah untuk melakukan verifikasi adalah sebagai berikut:
 \begin{enumerate}
 	\item Pada gambar masukkan, berikan label pada tiap fitur lokal berdasarkan urutan kemunculannya dari sumbu x. Label urutan ini disebut \textit{order}.
@@ -298,6 +304,7 @@ Pada tahap ini akan dilakukan pemeriksaan pada pasangan-pasangan fitur lokal unt
 Tahapan di atas dilakukan beberapa kali pada rotasi fitur lokal gambar \textit{dataset} yang berbeda untuk mencari rotasi gambar yang memberikan paling banyak pasangan fitur lokal yang konsisten.
 
 \subsection{Scoring}
+\label{subsec:bsis_scoring}
 Setelah dipilih dan didapat pasangan fitur lokal yang konsisten secara geometris akan dihitung nilai kemiripan gambar masukkan dengan gambar \textit{dataset} yang terpilih. Tingkat kemiripan ditentukan dengan menghitung total $P_w$ dari pasangan yang terpilih pada tahap \textit{Verification}. Nilai kemiripan ini dapat digunakan untuk menentukan apakah pasangan gambar cukup mirip untuk menjadi pasangan yang benar.
 
 \section{KD-Tree}
