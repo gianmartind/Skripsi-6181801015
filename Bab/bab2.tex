@@ -78,11 +78,11 @@ Secara garis besar tahapan proses OIR pada penelitian ini adalah sebagai berikut
 		\caption{}
 		\label{subfig:geo_ver2}
 	\end{subfigure}
-	\caption{Ilustrasi fitur lokal yang konsisten dan tidak konsisten. Pasangan fitur lokal A1 dengan A2 konsisten secara geometris karena keduanya memiliki posisi yang sama relatif terhadap fitur lokal lain. Fitur lokal A1 berada di atas B1 dan C1 sedangkan fitur lokal A2 berada di atas B2 dan C2. Pasangan fitur lokal B1 dengan B2 dan C1 dengan C2 tidak konsisten secara geometris karena B1 berada di kanan C1 sedangkan B2 berada di sebelah kiri C2.}
+	\caption{Ilustrasi fitur lokal yang konsisten dan tidak konsisten. Fitur lokal A1, B1, dan C1 pada Gambar (a) secara berurutan dipasangkan dengan fitur lokal A1, B2, dan C2 pada Gambar (b) Pasangan fitur lokal A1 dengan A2 konsisten secara geometris karena keduanya memiliki posisi yang sama relatif terhadap fitur lokal lain. Fitur lokal A1 berada di atas B1 dan C1 sedangkan fitur lokal A2 berada di atas B2 dan C2. Pasangan fitur lokal B1 dengan B2 dan C1 dengan C2 tidak konsisten secara geometris karena B1 berada di kanan C1 sedangkan B2 berada di sebelah kiri C2.}
 	\label{fig:geo_ver}
 \end{figure}
 
-\section{SIFT (Speeded Up Robust Feature)}
+\section{SIFT (Scale Invariant Feature Transform)}
 \label{sec:sift}
 
 SIFT adalah salah satu metode pencarian fitur lokal yang dicetuskan pada~\cite{lowe2004sift}. Fitur lokal yang dihasilkan SIFT bersifat invarian terhadap rotasi, perubahan skala, dan translasi pada gambar. Sifat invarian ini berarti fitur lokal yang sama pada gambar yang telah di rotasi, diubah skalanya, atau di translasi akan tetap memiliki ciri yang mirip. Setiap fitur lokal akan memiliki sebuah vektor yang mendeskripsikan daerah area fitur lokal tersebut, vektor ini biasa disebut sebagai deskriptor. Vektor deksriptor SIFT berbentuk vektor bilangan bulat yang memiliki 128 elemen. Tahap pencarian fitur lokal pada SIFT dapat dibagi menjadi 4 langkah yang akan dijabarkan pada subbab-subbab berikut.
@@ -184,10 +184,6 @@ Pada tahap sebelumnya sudah didapatkan \textit{keypoint-keypoint} dalam gambar. 
 
 Pada langkah di atas setiap siklus ukuran gambar disebut sebagai oktaf, dimulai dari oktaf pertama, lalu kedua, dan seterusnya. Dengan setiap oktaf ukuran gambar akan semakin kecil. Pencarian \textit{keypoint} dilakukan pada tiap oktaf, dan untuk tiap \textit{keypoint} tersebut ditulis nilai oktaf tertinggi (ukuran gambar terkecil) di mana \textit{keypoint} tersebut dapat terdeteksi.
 
-\begin{comment}
-Saat nilai $\sigma$ sudah mencapai 2 kali dari nilai awalnya---atau yang disebut sudah menyelesaikan satu oktaf---maka proses akan dilanjutkan ke oktaf berikutnya, gambar akan diperkecil (\textit{downsample}) ukuran menjadi setengahnya dan proses konvolusi diulang lagi (Gambar~\ref{fig:oktaf}). Untuk oktaf baru tersebut akan dihitung DoG-nya dan dicari \textit{extrema}-nya. Untuk setiap \textit{keypoint} akan dicatat oktaf terbesar (ukuran gambar terkecil) di mana gambar \textit{keypoint} tersebut tetap ditemukan. 
-\end{comment}
-
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{oktaf.png}
@@ -232,22 +228,35 @@ Pembuatan vektor dilakukan dengan mengambil daerah di sekitar \textit{keypoint} 
 
 \section{ORB (Oriented FAST and Rotated BRIEF)}
 \label{sec:orb}
-ORB adalah metode pencarian fitur lokal yang dijelaskan pada~\cite{rublee2011orb}. ORB dapat menemukan fitur lokal dengan lebih cepat jika dibandingkan dengan SIFT, walaupun fitur lokal yang dihasilkan tidak seakurat yang dihasilkan SIFT. ORB mencari fitur lokal dengan mencari \textit{pixel} yang merupakan \textit{keypoint}. \textit{Keypoint} dalam ORB dicari dengan ide bahwa sebuah \textit{pixel} yang merupakan sudut akan memiliki daerah kontinu dengan nilai intensitas yang lebih kecil atau lebih besar dari nilai intensitas \textit{pixel} tersebut. Fitur lokal yang dihasilkan ORB akan memiliki sebuah vektor deskriptor yang berbentuk vektor biner sebanyak 256 elemen. Tahap pencarian fitur lokal pada ORB dibagi menjadi 4 langkah yang dijelaskan pada subbab-subbab berikut.
+ORB adalah metode pencarian fitur lokal yang dijelaskan pada~\cite{rublee2011orb}. ORB dapat menemukan fitur lokal dengan lebih cepat jika dibandingkan dengan SIFT, walaupun fitur lokal yang dihasilkan tidak seakurat yang dihasilkan SIFT. ORB mencari fitur lokal dengan mencari \textit{pixel} yang merupakan \textit{keypoint}. \textit{Keypoint} dalam ORB dicari dengan ide bahwa sebuah \textit{pixel} yang merupakan sudut akan memiliki garis membentuk lingkaran yang kontinu dengan nilai intensitas yang lebih kecil atau lebih besar dari nilai intensitas \textit{pixel} tersebut. Fitur lokal yang dihasilkan ORB akan memiliki sebuah vektor deskriptor yang berbentuk vektor sebanyak 256 elemen yang bernilai biner. Tahap pencarian fitur lokal pada ORB dibagi menjadi 4 langkah yang dijelaskan pada subbab-subbab berikut.
 
 \subsection{Pencarian Keypoint}
 \label{subsec:orb_keypoint}
-Untuk menentukan apakah sebuah \textit{pixel} dalam gambar merupakan \textit{keypoint}, ORB mengambil nilai \textit{pixel} tersebut dan 16 \textit{pixel} di sekitarnya yang membentuk lingkaran. Dari ke 16 \textit{pixel} tersebut dibandingkan nilainya dengan \textit{pixel} yang di tengah $p$, yaitu \textit{pixel} yang ingin diperiksa apakah merupakan \textit{keypoint}. Sebuah \textit{pixel} merupakan \textit{keypoint} jika dari 16 \textit{pixel} di sekitarnya terdapat setidaknya $n$ \textit{pixel} kontinu yang nilainya lebih besar dari nilai $p + t$ atau lebih kecil dari $p - t$. Proses ini diilustrasikan pada Gambar~\ref{fig:orb_keypoint}
+Untuk menentukan apakah sebuah \textit{pixel} dalam gambar merupakan \textit{keypoint}, ORB mengambil nilai \textit{pixel} tersebut dan 16 \textit{pixel} di sekitarnya yang membentuk lingkaran. Dari ke 16 \textit{pixel} tersebut dibandingkan nilai intensitasnya dengan nilai intensitas \textit{pixel} yang berada di tengah ($p$), yaitu \textit{pixel} yang ingin diperiksa apakah merupakan \textit{keypoint}. Sebuah \textit{pixel} merupakan \textit{keypoint} jika dari 16 \textit{pixel} di sekitarnya terdapat setidaknya $n$ \textit{pixel} kontinu yang nilai intensitasnya lebih besar dari nilai $p + t$ atau lebih kecil dari $p - t$. Proses ini diilustrasikan pada Gambar~\ref{fig:orb_keypoint}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{orb_keypoint.png}
-	\caption{Ilustrasi \textit{keypoint} pada ORB. Titik tengah pada gambar tersebut memiliki \textit{pixel-pixel} dengan nilai jauh lebih kecil (lebih gelap) yang mengelilinginya. \textit{Pixel-pixel} yang mengelilingi tersebut seakan membentuk sudut dengan titik tengah sebagai pusatnya.}
+%	\caption{Ilustrasi \textit{keypoint} pada ORB. Titik tengah pada gambar tersebut memiliki \textit{pixel-pixel} dengan nilai jauh lebih kecil (lebih gelap) yang mengelilinginya. \textit{Pixel-pixel} yang mengelilingi tersebut seakan membentuk sudut dengan titik tengah sebagai pusatnya.}
+	\caption{Ilustrasi penentuan \textit{keypoint} pada ORB. Setiap kotak menunjukkan sebuah \textit{pixel} pada gambar dan angka di dalamnya merupakan nilai intensitasnya. \textit{Pixel} di tengah gambar (\textit{pixel} bernilai 4) merupakan \textit{pixel} yang akan diperiksa apakah merupakan \textit{keypoint}. \textit{Pixel-pixel} yang ditandai dengan kotak putih merupakan 16 \textit{pixel} yang digunakan untuk memeriksa apakah \textit{pixel} di tengah merupakan \textit{keypoint}.}
 	\label{fig:orb_keypoint}	
 \end{figure}
 
+Pada ilustrasi di Gambar~\ref{fig:orb_keypoint} \textit{pixel} bernilai 4 yang berada di tengah gambar dapat menjadi \textit{keypoint} tergantung dari parameter $n$ dan $t$ yang digunakan. Di sekitar \textit{pixel} tersebut terdapat 11 \textit{pixel} kontinu yang nilai intensitasnya lebih besar setidaknya 83 satuan dari nilai intensitas \textit{pixel} tersebut.
+
+\textit{Keypoint-keypoint} yang dihasilkan pada tahap ini belum tentu merupakan sebuah \textit{corner}. Metode yang digunakan ORB akan mendeteksi sebuah titik terang yang dikelilingi lingkaran dengan titik gelap atau sebaliknya menjadi sebuah \textit{keypoint}. Untuk itu perlu untuk disaring untuk mendapatkan hanya \textit{keypoint} yang merupakan \textit{corner}. 
+
+Penentuan apakah \textit{keypoint} merupakan \textit{corner} pada ORB dilakukan dengan menggunakan \textit{Harris Corner Measure}. \textit{Harris Corner Measure} akan memberikan sebuah skor untuk sebuah daerah di sekitar \textit{pixel} untuk menunjukkan seberapa daerah tersebut merupakan \textit{corner}. 
+
+\textit{Harris Corner Measure} menentukan apakah sebuah daerah merupakan \textit{corder} dengan menggunakan sebuah \textit{window} yang terpusat pada titik \textit{keypoint}. \textit{Window} tersebut lalu digerakkan ke beberapa arah dan dihitung intensitasnya untuk tiap pergerakan. Daerah tersebut merupakan \textit{corner} jika terdapat perubahan nilai intensitas ke arah manapun \textit{window} tersebut digerakkan.
+
+Teknik \textit{Harris Corner Measure} akan menghasilkan sebuah skor $M$ yang menunjukkan nilai seberapa daerah yang diperiksa merupakan \textit{corner}. ORB akan mengambil $N$ \textit{keypoint} dengan nilai $M$ tertinggi untuk ditentukan sebagai \textit{keypoint}.  
+
 \subsection{Penentuan Skala}
 \label{subsec:orb_skala}
-\textit{Keypoint} yang telah dideteksi pada tahap awal perlu untuk dapat terdeteksi juga walaupun ukuran gambar berubah agar sifatnya invarian terhadap skala. Untuk mencapai sifat ini ORB menggunakan metode \textit{Image Pyramid}. ORB menggunakan \textit{Image Pyramid} dengan cara memperkecil ukuran gambar beberapa kali dan untuk setiap ukuran gambar dilakukan deteksi untuk \textit{keypoint}. 
+\textit{Keypoint} yang telah dideteksi pada tahap awal perlu untuk dapat terdeteksi juga walaupun ukuran gambar berubah agar sifatnya invarian terhadap skala. \textit{Keypoint} yang invarian terhadap skala adalah \textit{keypoint} dengan ciri yang tetap walaupun dideteksi pada ukuran gambar yang berbeda. 
+
+Untuk mencapai sifat ini ORB menggunakan metode \textit{Image Pyramid}. ORB menggunakan \textit{Image Pyramid} dengan cara memperkecil ukuran gambar beberapa kali dan untuk setiap ukuran gambar dilakukan deteksi untuk \textit{keypoint}. 
 
 Ilustrasi dapat dilihat pada Gambar~\ref{fig:orb_pyramid}. Pada ilustrasi tersebut gambar awal diperkecil beberapa kali dengan membagi panjang dan lebarnya menjadi setengahnya. Untuk setiap ukuran gambar dicari \textit{keypoint-keypoint}-nya.
 
@@ -258,76 +267,237 @@ Ilustrasi dapat dilihat pada Gambar~\ref{fig:orb_pyramid}. Pada ilustrasi terseb
 	\label{fig:orb_pyramid}	
 \end{figure}
 
+Tahap ini akan menghasilkan \textit{keypoint-keypoint} dengan skala yang berbeda sesuai dengan ukuran gambar di mana \textit{keypoint} tersebut ditemukan. \textit{Keypoint-keypoint} yang perlu untuk terlebih dahulu disaring untuk mendapatkan \textit{keypoint} yang memiliki respon yang kuat terhadap sudut. \textit{Keypoint-keypoint} yang dihasilkan tersebut diberi skor menggunakan \textit{Harris Corner Measure} dan dipilih beberapa \textit{keypoint} dengan skor tertinggi.
+
 \subsection{Penentuan Orientasi}
 \label{subsec:orb_orientasi}
-Orientasi \textit{keypoint} pada ORB ditentukan oleh arah hadap titik \textit{keypoint} pada titik \textit{Intensity Centroid} di daerah sekitarnya. \textit{Intensity Centroid} pada sebuah daerah gambar merupakan titik di mana terjadi perubahan nilai intensitas terbesar. Titik \textit{Intensity Centroid}, $C$, didefinisikan sebagai berikut:
+Orientasi \textit{keypoint} pada ORB ditentukan oleh (arah hadap) titik \textit{keypoint} pada titik \textit{Intensity Centroid} di daerah sekitarnya. \textit{Intensity Centroid} pada sebuah daerah gambar merupakan titik di mana terjadi perubahan nilai intensitas terbesar. Titik \textit{Intensity Centroid}, $C$, didefinisikan sebagai berikut:
 \begin{equation}
 	C=(\frac{m_{10}}{m_{00}}, \frac{m_{01}}{m_{00}})
+	\label{eq:centroid}
 \end{equation}
 \textit{Centroid} ditentukan dengan menghitung \textit{moment} pada gambar yang didefinisikan sebagai berikut:
 \begin{equation}
 	m_pq=\sum_{x,y}x^py^qI(x,y)
 \end{equation}
+Pada Persamaan~\ref{eq:centroid} $m_{10}$ merupakan \textit{moments} gambar dari arah sumbu $x$. \textit{Moments} dari arah sumbu $x$ merupakan nilai perubahan intensitas yang dihitung dari sumbu tersebut, dihitung dari total seluruh nilai \textit{pixel} dikalikan dengan posisinya pada sumbu $x$. Sedangkan $m_{01}$ merupakan \textit{moments} dari arah sumbu $y$ yang dihitung dengan cara yang sama. Kedua nilai tersebut---$m_{10}$ dan $m_{01}$---masing-masing dibagi oleh $m_{00}$ yang didapat dengan menghitung jumlah dari nilai semua \textit{pixel} pada daerah yang diperiksa.
+
 Titik \textit{centroid} dihitung pada daerah yang dikelilingi 16 \textit{pixel} yang digunakan pada tahap Penentuan \textit{Keypoint}. Dari daerah tersebut didapat titik yang merupakan \textit{centroid}. Lalu dibuat garis vektor yang berasal dari titik \textit{keypoint} (titik tengah) menuju titik \textit{centroid}. Orientasi ditentukan dari sudut antara garis lurus sumbu x dengan garis vektor.
+
+Proses penentuan orientasi ini diilustrasikan pada Gambar~\ref{fig:orb_orientation}. Pada gambar tersebut titik dengan lingkaran hijau merupakan titik ditemukannya \textit{keypoint}. Penentuan orientasi dilakukan dengan mencari titik \textit{centroid} pada daerah yang dikelilingi lingkaran biru. Setelah didapat titik \textit{centroid} (lingkaran merah) maka orientasi merupakan garis lurus dan vektor dari titik \textit{keypoint} ke \textit{centroid}, ditunjukkan oleh $\theta$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{orb_orientation.png}
+	\caption{Ilustrasi penentuan orientasi pada ORB.}
+	\label{fig:orb_orientation}
+\end{figure}
 
 \subsection{Pembuatan Deskriptor}
 \label{subsec:orb_deskriptor}
+Untuk setiap \textit{keypoint} yang dihasilkan perlu untuk dibuat sebuah vektor yang mendeskripsikan daerah di sekitar \textit{keypoint} tersebut. Vektor deskriptor berguna untuk melakukan identifikasi pada \textit{keypoint} tersebut. Pada ORB, vektor deskriptor berbentuk vektor biner berjumlah 256 elemen. Vektor didapat dengan melihat perbandingan nilai intensitas \textit{pixel} pada daerah di sekitar \textit{keypoint}.
+
+Agar deskriptor bersifat invarian terhadap rotasi gambar terlebih dahulu di rotasi sesuai dengan orientasi yang sudah didapat sebelumnya. Dari gambar yang telah dirotasi diambil daerah berukuran $31\times31$ untuk dilakukan \textit{binary test}. \textit{Binary test} adalah fungsi yang membandingkan nilai intensitas antar dua titik pada gambar. Fungsi \textit{binary test} $\tau$ didefinisikan sebagai berikut:
+\begin{equation}
+	\tau(p;x,y)=\begin{cases}
+		1 & :p(x) < p(y), \\
+		0 & :p(x) \geq p(y)
+	\end{cases}
+\end{equation}
+Fungsi tersebut akan menghasilkan nilai $1$ atau $0$ bergantung pada nilai intensitas dari dua titik yang dibandingkan.
+
+Hasil dari \textit{binary test} yang dilakukan dengan membandingkan nilai dari pasangan-pasangan \textit{pixel} pada gambar akan sangat terpengaruh oleh \textit{noise} yang ada pada gambar. Untuk menangani masalah ini perlu terlebih dahulu dilakukan \textit{smoothing} pada gambar tersebut. ORB melakukan \textit{smoothing} dengan menggunakan \textit{integral image}. 
+
+\textit{Integral image} adalah sebuah \textit{matrix} 2 dimensi yang dapat digunakan untuk menghitung hasil penjumlahan semua nilai \textit{pixel} di sebuah daerah pada gambar. \textit{Integral Image} dapat mempercepat proses penghitungan total nilai \textit{pixel} pada sebuah daerah dari gambar dengan ukuran berapapun. Nilai sebuah elemen pada koordinat $(x,y)$ di \textit{Integral Image} adalah total penjumlahan semua nilai yang posisi koordinatnya lebih kecil atau sama dengan $(x,y)$, seperti diilustrasikan pada~\ref{fig:integral_image1}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{ilustrasi_integral_image1.png}
+	\caption{Ilustrasi penghitungan \textit{Integral Image}. \textit{Matrix} $I$ merupakan \textit{matrix} awal dan \textit{Matrix} $I_\Sigma$ merupakan \textit{Integral Image} dari $I$.}
+	\label{fig:integral_image1}
+\end{figure}
+
+Gambar~\ref{fig:integral_image1} menunjukkan cara menghitung nilai elemen pada sebuah koordinat. Kotak pada \textit{Matrix} $I$ merupakan daerah yang dihitung total nilainya untuk mendapatkan nilai pada \textit{Matrix} $I_\Sigma$ yang ditunjuk oleh tanda panah. 
+
+\textit{Matrix Integral Image} yang sudah dihasilkan dapat digunakan untuk menghitung nilai total dari sebuah daerah berukuran berapapun dengan melakukan operasi penjumlahan dan pengurangan pada 4 angka. Sebuah daerah pada Gambar I yang sudah dibuat \textit{Integral Image}-nya ($I_\Sigma$) yang berada pada persegi dengan titik pojok kiri atas $(T_x, T_y)$ dan pojok kanan bawah $(B_x, B_y)$ dapat dihitung nilai total elemennya dengan persamaan berikut:
+\begin{equation}
+	Su(T_x, T_y, B_x, B_y) = I_\Sigma(B_x, B_y) - I_\Sigma(B_x, T_y-1) - I_\Sigma(T_x-1, B_y) + I_\Sigma(T_x-1,T_y-1)
+\end{equation}
+Proses penghitungan nilai total sebuah daerah menggunakan \textit{Integral Image} diilustrasikan pada Gambar~\ref{fig:integral_image2}. Total nilai elemen dari daerah yang di dalam kotak biru pada Gambar $I$ dapat dihitung dengan menjumlahkan elemen pada Gambar $I_\Sigma$ yang diberi kotak hijau dan menguranginya dengan elemen yang diberi kotak merah. Daerah di dalam kotak biru tersebut memiliki nilai total $141-41-36+8=72$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{ilustrasi_integral_image2.png}
+	\caption{Penghitungan nilai total sebuah daerah dengan menggunakan \textit{Integral Image}}
+	\label{fig:integral_image2}
+\end{figure}
+
+\textit{Smoothing} pada ORB dilakukan dengan mengubah \textit{binary test} yang dilakukan. \textit{Binary test} pada ORB dilakukan dengan membandingkan nilai total \textit{pixel} dari dua daerah berukuran $5\times5$ dalam daerah $31\times31$ yang digunakan untuk menghitung deskriptor. Penghitungan nilai total pada daerah $5\times5$ dilakukan dengan menggunakan \textit{Integral Image} untuk mempercepat proses. 
+
+\textit{Binary test} pada ORB dilakukan sebanyak 256 kali untuk menghasilkan 256 elemen untuk vektor. ORB menggunakan 256 pasangan \textit{binary test} yang sudah ditentukan sebelumnya. Pasangan-pasangan tersebut didapat dari eksperimen yang dilakukan pada~\cite{rublee2011orb}.
 
 \section{BSIS (Best Score Increasing Subsequence)}
 \label{sec:bsis}
-Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap objek (fitur lokal) di sekitarnya. Salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris adalah BSIS. Seluruh isi bab ini didapatkan dari~\cite{kusuma2019bsis}
+Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap objek (fitur lokal) di sekitarnya. Salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris adalah BSIS~\cite{kusuma2019bsis}. 
 
-BSIS dilakukan dengan memberikan modifikasi metode OIR. Perubahan terdapat pada tahap \textit{Pairing}, \textit{Verification}, dan \textit{Scoring}. Langkah-langkah BSIS secara rinci dijelaskan pada subbab-subbab berikut, dilakukan setelah dilakukan ekstraksi fitur lokal pada gambar masukkan:
+BSIS merupakan modifikasi dari metode WLIS~\cite{kusuma2012appearance} yang merupakan modifikasi OIR. Modifikasi terdapat pada tahap \textit{Pairing}, \textit{Verification}, dan \textit{Scoring}. 
+
+Tahapan dari BSIS dilakukan setelah dilakukan tahap ekstraksi fitur lokal dari gambar \textit{query} dan gambar \textit{training} (gambar yang ada di \textit{dataset}). Tahapan BSIS ini dilakukan untuk setiap pemasangan gambar \textit{query} dan gambar \textit{training}. Pasangan gambar dengan skor tertinggi ditentukan sebagai pasangan yang benar dari gambar \textit{query}. Rincian tahapan dijabarkan pada subbab-subbab di bawah ini. 
 
 \subsection{Pairing}
 \label{subsec:bsis_pairing}
-Pertama untuk setiap fitur lokal pada gambar masukkan akan dicari $N$ fitur lokal dari \textit{dataset} yang nilai vektor deskriptornya paling mirip atau memiliki jarak yang \textit{euclidean} paling kecil. BSIS mengasumsikan jarak \textit{euclidean} tiap pasangan sebuah fitur lokal tersebar secara normal. 
+Pada tahap awal setiap fitur lokal pada gambar \textit{query} akan dicari $N$ fitur lokal dari gambar \textit{training} yang nilai kemiripan vektor deskriptornya paling tinggi. Pencarian $N$ pasangan paling mirip dilakukan dengan menggunakan KD-Tree (lihat~\ref{sec:kdtree}) untuk mempercepat waktu komputasi. Pasangan-pasangan ini akan memiliki sebuah skor kemiripan yang dihitung dari vektor deskriptor kedua fitur lokal.Tidak semua dari $N$ pasangan paling mirip akan digunakan dalam proses BSIS. 
 
-Pasangan-pasangan yang sudah dihitung lalu di-\textit{filter} dengan mengambil hanya nilai yang merupakan \textit{outlier} di sisi kiri. Pasangan yang digunakan hanya merupakan pasangan yang nilainya kurang dari $m - (K \times \sigma)$, $m$ merupakan \textit{mean} dan $\sigma$ merupakan standar deviasi dengan nilai $K = 4$.
+Untuk setiap fitur lokal, BSIS hanya akan mengambil beberapa pasangan yang benar-benar mirip atau paling berpeluang menjadi pasangan yang benar. Pasangan yang benar-benar mirip pada BSIS adalah pasangan yang nilai kemiripannya tinggi dan memiliki perbedaan yang cukup jauh dengan nilai kemiripan pasangan lain. 
 
-Setelah itu untuk setiap pasangan akan diberi bobot. Bobot, $P_w$, dihitung dengan $P_w=(\frac{distance(P_Q, P_T) - m}{\sigma})^2$, $P_Q$ merupakan fitur lokal gambar masukkan dan $P_T$ merupakan fitur lokal dari \textit{dataset}. Bobot tersebut pada dasarnya menghitung sejauh apa nilai jarak pasangan tersebut terhadap rata-ratanya. Karena pasangan yang digunakan pada tahap ini hanya pasangan yang nilai jaraknya lebih kecil dari rata-rata maka nilai bobot menunjukkan tingkat kemungkinan pasangan tersebut merupakan pasangan yang benar.
+BSIS menganggap pasangan-pasangan yang sangat mirip adalah pasangan yang nilai kemiripannya tinggi dan merupakan \textit{outlier}. Penentuan \textit{outlier} dilakukan dengan menggunakan \textit{mean} dan standar deviasi. Penggunaan \textit{mean} dan standar deviasi untuk menentukan \textit{outlier} karena BSIS mengasumsikan bahwa nilai kemiripan pasangan-pasangan dari sebuah fitur lokal terdistribusi secara normal. 
+
+BSIS menentukan \textit{outlier} seperti pada Persamaan~\ref{eq:outlier}. Untuk sebuah fitur lokal gambar \textit{trainig} $P_Q$ yang dipasangkan dengan gambar \textit{training} $P_T$, pasangan tersebut hanya akan digunakan jika nilai kemiripannya lebih dari \textit{mean} $(m)$ ditambah konstanta $K$ dikali standar deviasi $(\sigma)$. \textit{Mean} merupakan rata-rata dari nilai kemiripan dari $N$ pasangan $P_Q$ dan $\sigma$ merupakan nilai deviasi standarnya sedangkan untuk konstanta digunakan nilai $K=4$.
+\begin{equation}
+	\label{eq:outlier}
+	similarity(P_Q, P_T) > m + (K \times \sigma)
+\end{equation}
+
+Pasangan-pasangan yang telah dipilih (merupakan \textit{outlier}) tersebut lalu diberi bobot berdasarkan nilai kemiripannya. Bobot sebuah pasangan didapatkan dengan menghitung seberapa jauh nilai kemiripan pasangan tersebut terhadap rata-rata dengan memperhatikan penyebaran nilainya. Bobot $(P_w)$ untuk sebuah pasangan dari fitur lokal $P_Q$ dan $P_T$ didefinisikan pada Persamaan~\ref{eq:pair_weight}.
+\begin{equation}
+	\label{eq:pair_weight}
+	P_w(P_Q, P_T)=(\frac{similarity(P_Q, P_T) - m}{\sigma})^2
+\end{equation}
+$P_Q$ merupakan fitur lokal gambar \textit{query} dan $P_T$ merupakan fitur lokal dari gambar \textit{training}. Nilai $P_w$ yang semakin tinggi menunjukkan bahwa pasangan tersebut semakin berpotensi untuk menjadi pasangan yang tepat.
 
 \subsection{Verification}
-\label{subsec:bsis_verification}
-Pada tahap ini akan dilakukan pemeriksaan pada pasangan-pasangan fitur lokal untuk mencari pasangan mana saja yang konsisten secara geometris. Pasangan yang digunakan adalah pasangan yang sudah di-\textit{filter} pada tahap sebelumnya dan diberi bobot. Setiap fitur lokal dari gambar masukkan dapat dipasangkan dengan lebih dari satu fitur lokal dari gambar \textit{dataset} di pasangan yang berbeda. Langkah untuk melakukan verifikasi adalah sebagai berikut:
+Pada tahap \textit{Pairing} telah didapat beberapa pasangan antara fitur lokal gambar \textit{query} dan gambar \textit{training} yang paling berpotensi merupakan pasangan yang benar. (sebelumnya bisa...) Setiap fitur lokal pada gambar \textit{query} dapat dipasangkan dengan lebih dari 1 fitur lokal pada gambar \textit{training}. Pasangan-pasangan tersebut akan diperiksa pada tahap ini untuk mencari pasangan mana saja yang konsisten secara geometris.
+
+Pasangan yang konsisten secara geometris adalah pasangan-pasangan yang memiliki posisi spasial yang konsisten terhadap pasangan fitur lokal lain di sekitarnya. Sifat konsisten ini ditunjukkan oleh posisi fitur-fitur lokal pada gambar \textit{query} dan gambar \textit{training}. Sebagai contoh, dua buah fitur lokal dari gambar \textit{query} $PQ_1$ dan $PQ_2$ dipasangkan dengan fitur lokal $PT_1$ dan $PT_2$ dari gambar \textit{training}. Jika $PQ_1$ berada di sebelah kiri $PQ_2$ ($PQ_1$ muncul lebih dulu dalam proyeksi sumbu $x$) maka $PT_1$ juga harus berada di sebelah kiri $PT_2$ untuk agar kedua pasangan tersebut dikatakan konsisten secara geometris.
+
+Tahap \textit{Verification} pada BSIS bertujuan untuk menemukan pasangan-pasangan fitur lokal yang konsisten secara geometris sesuai dengan penjelasan di atas. BSIS melakukan verifikasi dengan memproyeksikan seluruh fitur lokal dari gambar \textit{query} dan \textit{training} pada sumbu $x$ dan mencari pasangan yang konsisten dan memiliki skor yang paling tinggi. Langkah-langkah verifikasi pada BSIS secara rinci adalah sebagai berikut:
 \begin{enumerate}
-	\item Pada gambar masukkan, berikan label pada tiap fitur lokal berdasarkan urutan kemunculannya dari sumbu x. Label urutan ini disebut \textit{order}.
-	\item Urutkan fitur lokal pada gambar \textit{dataset} berdasarkan sumbu x dan masukkan ke dalam kolom-kolom. Untuk kolom tulis semua pasangan dari fitur lokal tersebut dan beri \textit{order} dari fitur lokal gambar masukkan pasangan tersebut. Catat juga $P_w$ dari tiap pasangan
-	\item Dari urutan kolom fitur lokal gambar \textit{dataset} buat sebuah \textit{subsequence} yang memaksimalkan nilai total $P_w$. \textit{Subsequence} dibuat dengan aturan berikut:
-	\begin{itemize}
-		\item Dari tiap kolom hanya dapat diambil satu pasangan.
-		\item \textit{Order} dari pasangan pada \textit{subsequence} harus selalu meningkat.
-	\end{itemize}
-	\item Simpan pasangan-pasangan yang membentuk \textit{subsequence} ke dalam $V_x$.
-	\item Ulangi lagi tahapan dengan menggunakan sumbu y pada pasangan-pasangan di $V_x$. Untuk lebih lanjut lagi mencari pasangan yang tidak konsisten dari sumbu y.
+	\item Ambil semua fitur lokal dari gambar \textit{query} dan proyeksikan pada sumbu $x$. Setiap fitur lokal akan diberi sebuah \textit{order} sesuai dengan urutan kemunculannya.
+	\item Ambil semua fitur lokal dari gambar \textit{training} dan proyeksikan pada sumbu $x$. Urutkan fitur lokal tersebut sesuai dengan urutan kemunculannya.
+	\item Buat tabel untuk fitur lokal pada dari gambar \textit{training} dengan setiap kolom merupakan fitur lokal yang diurutkan berdasarkan kemunculannya pada sumbu $x$;   
+	\item Isi setiap kolom dengan pasangan-pasangan fitur lokal yang melibatkan fitur lokal kolom tersebut. Untuk tiap isi kolom, catat nomor \textit{order} dari fitur lokal gambar \textit{query} pasangan tersebut dan bobot $(P_w)$ pasangan tersebut. Kolom pada tabel merupakan fitur lokal pada gambar \textit{training} dan tiap barisnya merupakan fitur lokal pada gambar \textit{query}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=0.6]{bsis_verifikasi.png}
+		\label{fig:bsis_verifikasi}
+		\caption{Tahapan verifikasi pada BSIS.}
+	\end{figure}
+	\item BSIS hanya mengambil satu pasangan dari setiap fitur lokal di gambar \textit{query} dengan bobot pasangan yang tertinggi. Untuk itu buat sebuah \textit{subsequence} dengan mengambil satu baris dari tiap kolom berurutan mulai dari kolom paling kiri. \textit{Order} menunjukkan urutan kemunculan pasangan tersebut pada gambar \textit{query}, untuk itu \textit{order} dari \textit{subsequence} perlu untuk terus bertambah tiap elemen. \textit{Subsequence} yang dicari adalah yang memiliki total nilai bobot pasangan paling banyak.
+	\item Verifikasi juga perlu dilakukan untuk sumbu $y$. Fitur lokal yang telah dipilih pada langkah sebelumnya (fitur lokal yang masuk dalam \textit{subsequence}) akan dilakukan verifikasi ulang menggunakan urutannya pada sumbu $y$.
 \end{enumerate}
-Tahapan di atas dilakukan beberapa kali pada rotasi fitur lokal gambar \textit{dataset} yang berbeda untuk mencari rotasi gambar yang memberikan paling banyak pasangan fitur lokal yang konsisten.
+Tahapan di atas dilakukan beberapa kali pada untuk orientasi fitur lokal gambar \textit{training} yang berbeda untuk mencari orientasi gambar yang memberikan paling banyak pasangan fitur lokal yang konsisten.
 
 \subsection{Scoring}
 \label{subsec:bsis_scoring}
-Setelah dipilih dan didapat pasangan fitur lokal yang konsisten secara geometris akan dihitung nilai kemiripan gambar masukkan dengan gambar \textit{dataset} yang terpilih. Tingkat kemiripan ditentukan dengan menghitung total $P_w$ dari pasangan yang terpilih pada tahap \textit{Verification}. Nilai kemiripan ini dapat digunakan untuk menentukan apakah pasangan gambar cukup mirip untuk menjadi pasangan yang benar.
+Setelah dipilih dan didapat pasangan fitur lokal yang konsisten secara geometris akan dihitung nilai kemiripan gambar masukkan dengan gambar \textit{training} yang terpilih. Tingkat kemiripan ditentukan dengan menghitung total $P_w$ dari pasangan yang terpilih pada tahap \textit{Verification}. Nilai kemiripan ini dapat digunakan untuk menentukan apakah pasangan gambar cukup mirip untuk menjadi pasangan yang benar.
 
 \section{KD-Tree}
 \label{sec:kdtree}
+KD-Tree~\cite{bentley1975multidimensional} merupakan sebuah struktur data yang dapat digunakan untuk mencari vektor yang paling mirip dengan waktu proses yang relatif lebih singkat. Struktur KD-Tree digunakan untuk mencari sejumlah pasangan fitur lokal yang sifatnya paling mirip pada tahapan \textit{Pairing} di BSIS~\ref{sec:bsis}. 
+
+Secara umum KD-Tree merupakan sebuah pohon pencarian biner di mana setiap \textit{node}-nya merupakan sebuah vektor berjumlah $k$-elemen. Setiap \textit{level} pada pohon membandingkan elemen vektor yang berbeda. \textit{Level} pertama pohon akan menggunakan elemen pertama dari vektor sebagai pembanding, elemen kedua pada \textit{level} kedua dan seterusnya. Saat \textit{level} dari pohon sudah mencapai $k - 1$, maka akan kembali ke elemen pertama. Elemen yang diperiksa pada \textit{level} $l$ di KD-Tree dengan jumlah $k$ elemen didefinisikan pada Persamaan~\ref{eq:target_kd-tree}.
+\begin{equation}
+	\label{eq:target_kd-tree}
+	target(l, k) = l % k
+\end{equation}
+Gambar~\ref{fig:kd-tree} menunjukkan contoh pohon KD-Tree dengan jumlah 3 elemen.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.4]{kd-tree.png}
+	\caption{Contoh pohon struktur KD-Tree. Angka di sebelah kanan menunjukkan elemen vektor yang diperiksa pada level tersebut.}
+	\label{fig:kd-tree}
+\end{figure}
+
+KD-Tree membuat pohon dari sekumpulan vektor di \textit{dataset}. Vektor pertama yang masuk akan menjadi \textit{root} dari pohon. Vektor selanjutnya akan dibandingkan nilai elemen pertamanya dengan elemen pertama dari \textit{root}, jika nilainya lebih kecil maka vektor tersebut akan menjadi \textit{child} sebelah kiri dan menjadi \textit{child} sebelah kanan jika sebaliknya. Proses berlanjut untuk vektor selanjutnya, elemen di vektor yang masuk akan dibandingkan dengan vektor pada \textit{node} pohon sesuai dengan \textit{level} pohon saat itu. 
+
+Setelah terbentuk pohon dari semua vektor pada \textit{dataset}, pohon tersebut dapat digunakan untuk pencarian tetangga terdekat (\textit{nearest neighbor search}) dari sebuah vektor masukkan baru. Tahapan untuk mencari tetangga terdekat dari vektor $Q$ pada sebuah pohon KD-Tree $K$ adalah sebagai berikut:
+\begin{enumerate}
+	\item Jelajahi pohon $K$ seperti biasa, dimulai dari \textit{node} \textit{root}. Bandingkan elemen pada \textit{node} tersebut dengan elemen pada $Q$. 
+	\item Untuk semua \textit{node} yang diperiksa hitung jaraknya ke $Q$. Simpan jarak tersebut ke dalam variabel $closest$. Jika pada \textit{node} selanjutnya didapat jarak yang lebih kecil maka ganti $closest$ dengan jarak tersebut.
+	\item Jelajahi sampai sudah mencapai \textit{node} yang merupakan \textit{leaf}. Pada titik ini masih mungkin ada \textit{node} pada bagian pohon yang tidak dijelajahi yang jaraknya lebih kecil dari $closest$.
+	\item Jelajahi balik pohon $K$, periksa jarak elemen ke-$n$ dari $Q$ ke elemen ke-$n$ \textit{node parent} dari \textit{leaf}. $n$ merupakan elemen yang diperiksa pada \textit{level} \textit{node parent} dari \textit{leaf}. 
+\end{enumerate}
 
 \section{Clustering}
 \label{sec:clustering}
-\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda.
+\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek-objek pada \textit{dataset}  menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek-objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda.
 
-Beberapa contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative} dan DBSCAN. Kedua teknik tersebut menggunakan metode dasar yang berbeda dan akan menghasilkan \textit{cluster} dengan ciri yang berbeda juga. Kedua metode tersebut dijelaskan pada dua subbab berikut. Penjelasan berdasarkan pada~\cite{han2011data}
+Beberapa contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative Clustering} dan DBSCAN. Kedua teknik tersebut menggunakan metode dasar yang berbeda dan akan menghasilkan \textit{cluster} dengan ciri yang berbeda juga. Kedua metode tersebut dijelaskan pada dua subbab berikut. Penjelasan berdasarkan pada~\cite{han2011data}
 
-\subsection{Agglomerative}
+\subsection{Agglomerative Clustering}
 \label{subsec:clustering_agglomerative}
-Teknik \textit{clustering Agglomerative} adalah salah satu teknik \textit{clustering} yang berbasis hierarki (\textit{hierarchical}). Teknik ini membentuk \textit{cluster} dengan menyusun hierarki antar objek berdasarkan kemiripanya. \textit{Agglomerative} adalah teknik \textit{clustering hierarchical} yang menggunakan metode \textit{bottom-up}. Tahapan dimulai dengan membentuk \textit{cluster-cluster} kecil dan kemudian menggabungkan \textit{cluster} kecil tersebut menjadi \textit{cluster} yang lebih besar.
+Teknik \textit{Agglomerative Clustering} adalah salah satu teknik \textit{clustering} yang berbasis hierarki (\textit{hierarchical}). Teknik ini membentuk \textit{cluster} dengan menyusun hierarki atau tingkatan antar objek berdasarkan kemiripannya. Pasangan objek dengan jarak yang paling kecil akan berada di tingkatan terendah, jarak terkecil selanjutnya akan berada di tingkat atasnya, dan seterusnya hingga semua objek telah tercakup. 
 
-Tahapan \textit{clustering} pada \textit{Agglomerative} dimulai dengan terlebih dahulu menghitung jarak \textit{euclidean} antar tiap objek. Setelah itu ambil pasangan dengan jarak paling kecil dan gabungkan menjadi satu \textit{cluster} dan lakukan juga untuk jarak paling kecil berikutnya. Jika jarak terkecil yang ada adalah antara objek yang sudah berada di dalam \textit{cluster}, maka gabungkan kedua \textit{cluster} tersebut menjadi \textit{cluster} yang lebih besar. 
+\textit{Agglomerative Clustering} adalah teknik \textit{clustering} berbasis hierarki yang menggunakan metode \textit{bottom-up}. Metode \textit{bottom-up} memulai tahapan dengan membentuk \textit{cluster-cluster} kecil dan kemudian menggabungkan \textit{cluster} kecil tersebut menjadi \textit{cluster} yang lebih besar.
+
+Tahapan \textit{Agglomerative Clustering} dimulai dengan terlebih dahulu menghitung jarak antar tiap objek. Setelah itu ambil pasangan dengan jarak paling kecil dan gabungkan menjadi satu \textit{cluster} dan lakukan juga untuk jarak paling kecil berikutnya. Jika jarak terkecil yang ada adalah antara objek yang sudah berada di dalam \textit{cluster}, maka gabungkan kedua \textit{cluster} tersebut menjadi \textit{cluster} yang lebih besar. 
 
 Langkah-langkah pada tahapan tersebut dilakukan hingga semua objek sudah berada di dalam satu \textit{cluster} yang sama. \textit{Cluster} besar tersebut lalu dapat dibagi berdasarkan dari jaraknya dengan menggunakan \textit{threshold} yang dapat ditentukan secara manual.
 
+Algoritma \textit{clustering Agglomerative} dapat dibagi menjadi beberapa tipe dibedakan dari cara menghitung jarak antar \textit{cluster-cluster}-nya. Teknik \textit{single-linkage} menghitung jarak antar \textit{cluster} dengan jarak objek terdekat antar kedua \textit{cluster} tersebut. Sedangkan teknik \textit{complete-linkage} menghitung jarak dengan jarak objek terjauh antar dua \textit{cluster}.
+
+\begin{algorithm}[H]
+	\caption{Agglomerative Clustering}
+	\label{alg:agglomerative}
+	\KwIn{\begin{itemize}
+			\item $D$: \textit{dataset} berisi $n$ buah objek
+			\item $t$: \textit{threshold} untuk menghentikan penggabungan
+	\end{itemize}}
+	\KwOut{set berisi \textit{cluster-cluster}}
+	\begin{algorithmic}[1]
+		\STATE Buat semua objek dalam $D$ menjadi \textit{cluster} dengan 1 anggota
+		\STATE Hitung jarak untuk tiap \textit{cluster}
+		\WHILE{jumlah \textit{cluster} dalam $D$ > 1}
+		\STATE Ambil jarak dari \textit{cluster} $r$ dan $s$, di mana $r$ dan $s$ adalah dua cluster dalam $D$ dengan jarak terkecil.
+		\STATE Gabungkan $r$ dan $s$ menjadi satu \textit{cluster} $t$. 
+		\STATE Hitung jarak $t$ ke semua \textit{cluster} lain, sesuai dengan metode \textit{linkage} yang digunakan.
+		\ENDWHILE
+	\end{algorithmic}
+\end{algorithm}
+
 \subsection{DBSCAN}
 \label{subsec:clustering_dbscan}
-DBSCAN atau \textit{Density-Based Spatial Clustering of Applications with Noise} adalah salah satu metode \textit{clustering} yang berbasis kepadatan (\textit{density based}). Pada DBSCAN sebuah \textit{cluster} merupakan sebuah daerah padat yang dipisahkan oleh daerah yang jarang. \textit{Cluster} yang dihasilkan tidak selalu berbentuk \textit{circular} dan objek-objek yang berada dalam satu \textit{cluster} tidak selalu merupakan data yang mirip. Karena bentuknya yang tidak \textit{circular} dan tidak tentu miripnya objek, \textit{cluster} tidak dapat direpresentasikan dengan sebuah titik tengah atau \textit{centroid}.
+DBSCAN atau \textit{Density-Based Spatial Clustering of Applications with Noise} adalah salah satu metode \textit{clustering} yang berbasis kepadatan (\textit{density based}). Pada DBSCAN sebuah \textit{cluster} merupakan sebuah daerah \textit{dense} yang dipisahkan oleh daerah \textit{sparse}. Daerah \textit{dense} adalah sebuah kumpulan yang terdiri dari beberapa objek, di mana objek-objek tersebut memiliki ciri yang mirip. Sedangkan daerah \textit{sparse} adalah daerah di mana hanya terdapat sedikit objek dengan sifat yang saling mirip.
+
+\textit{Cluster} yang dihasilkan oleh DBSCAN tidak selalu berbentuk \textit{circular} dan objek-objek yang berada dalam satu \textit{cluster} tidak selalu merupakan data yang mirip. Selama sebuah daerah \textit{dense} memiliki daerah \textit{dense} lain di dekatnya, kedua daerah tersebut akan terus bergabung menjadi satu daerah \textit{dense} yang lebih besar. Untuk sebuah daerah \textit{dense} $D$ dapat bergabung ke daerah lain yang terdiri dari lebih dari satu daerah \textit{dense} $C$, daerah \textit{dense} $D$ hanya perlu untuk dekat dengan salah satu daerah \textit{dense} dari $C$. Karena bentuknya yang tidak \textit{circular} dan tidak tentu miripnya objek dalam satu \textit{cluster}, maka \textit{cluster} tidak dapat direpresentasikan dengan sebuah titik tengah atau \textit{centroid}.
 
 Penyusunan \textit{cluster} pada DBSCAN dimulai dengan mencari objek yang merupakan \textit{core object}. \textit{Core object} merupakan objek yang memiliki setidaknya $MinPts$ objek lain pada radius $\epsilon$ yang berpusat pada objek tersebut. $MinPts$ dan $\epsilon$ adalah parameter yang ditentukan secara manual. Nilai $MinPts$ dan $\epsilon$ akan memengaruhi hasil \textit{cluster} yang dihasilkan.
 
 Setiap objek yang merupakan \textit{core object} beserta anggotanya (objek lain pada radius $\epsilon$) akan menjadi satu \textit{cluster}. Jika dalam radius $\epsilon$ objek tersebut terdapat objek lain yang juga merupakan \textit{core object}, maka akan digabungkan menjadi satu \textit{cluster}. \textit{Core object} yang saling berdekatan ini akan terus digabungkan menjadi \textit{cluster} yang besar.
+
+Proses pencarian \textit{cluster} pada DBSCAN dimulai dengan pertama menandai semua objek pada dataset, $D$ dengan \textit{unvisited}. Dari $D$ diambil sebuah objek, $p$ secara acak dan ditandai sebagai $visited$. Jika $p$ bukan merupakan \textit{core object} maka objek tersebut merupakan \textit{noise}. Sebaliknya jika $p$ adalah \textit{core object} maka $p$ akan dimasukkan ke \textit{cluster} $C$ dan semua objek pada daerah $\epsilon$-nya dimasukkan ke dalam set $N$. Objek-objek pada $N$ akan diiterasi dan dimasukkan ke \textit{cluster} C. Jika ditemukan objek yang merupakan \textit{core object} maka semua objek lain pada daerah $\epsilon$ objek tersebut akan dimasukkan juga ke $N$. Proses berlanjut sampai tidak ada lagi objek di $N$. Objek-objek yang sudah diperiksa tersebut akan ditandai sebagai \textit{visited}. Setelah itu akan diambil lagi sebuah objek secara acak yang masih bertanda \textit{unvisited} dan proses diulang untuk membentuk \textit{cluster} baru.
+
+Proses didefinisikan pada \textit{pseudocode}~\ref{alg:dbscan} berikut: \\
+\begin{algorithm}[H]
+	\caption{DBSCAN}
+	\label{alg:dbscan}
+	\KwIn{\begin{itemize}
+			\item \textit{D}: \textit{dataset} berisi $n$ buah objek
+			\item $\epsilon$: parameter radius untuk menghitung daerah
+			\item \textit{MinPts}: batas kepadatan suatu daerah.
+	\end{itemize}}
+	\KwOut{set berisi \textit{cluster-cluster}}
+	\begin{algorithmic}[1]
+		\STATE tandai semua objek sebagai \textit{\textbf{unvisited}}
+		\WHILE{masih terdapat objek yang \textit{\textbf{unvisited}}}
+		\STATE pilih objek \textit{\textbf{p}} secara acak
+		\STATE tandai \textit{\textbf{p}} sebagai \textit{\textbf{visited}}
+		\IF{dalam radius $\epsilon$ dari \textit{\textbf{p}} terdapat setidaknya \textit{MinPts} objek}
+		\STATE buat \textit{cluster} baru \textit{\textbf{C}}, masukkan \textit{\textbf{p}} ke dalam \textit{\textbf{C}}
+		\STATE buat variabel \textit{\textbf{N}}, berisi semua objek dalam radius $\epsilon$ dari \textit{\textbf{p}}
+		\FOR{semua objek \textit{\textbf{p'}} di \textit{\textbf{N}}}
+		\IF{objek \textit{\textbf{p'}} \textit{\textbf{unvisited}}}
+		\STATE tandai \textit{\textbf{p'}} sebagai \textit{\textbf{visited}}
+		\IF{dalam radius $\epsilon$ dari \textit{\textbf{p'}} terdapat setidaknya \textit{MinPts} objek}
+		\STATE masukkan semua objek tersebut ke dalam \textit{\textbf{N}}
+		\ENDIF
+		\IF{\textit{\textbf{p'}} bukan anggota dari \textit{cluster} manapun}
+		\STATE masukkan \textit{\textbf{p'}} ke dalam \textit{\textbf{C}}
+		\ENDIF
+		\ENDIF
+		\ENDFOR
+		\STATE \textit{output} \textit{\textbf{C}}
+		\ELSE
+		\STATE tandai \textit{\textbf{p}} sebagai \textit{\textbf{noise}}
+		\ENDIF
+		\ENDWHILE
+	\end{algorithmic}
+\end{algorithm}
+ 
