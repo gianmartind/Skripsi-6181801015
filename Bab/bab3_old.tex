@@ -1,0 +1,81 @@
+\chapter{Analisis}
+\label{chap:analisis}
+
+\section{Analisis Penggunaan Logo POI untuk Mengenali POI}
+\label{sec:analisis_logo}
+Seperti telah dijelaskan sebelumnya pada~\ref{sec:latar_belakang} terdapat beberapa POI yang memiliki logo yang unik. POI dengan logo unik tersebut dapat dikenali hanya dengan melihat logonya saja. Pada tahap ini akan dilakukan analisis untuk menguji apakah logo pada sebuah POI dapat memberikan fitur unik yang cukup kuat untuk mengenali POI tersebut.
+
+Analisis yang dilakukan pada tahap ini hanya adalah analisis tahap awal untuk membuktikan bahwa logo POI dapat memberikan fitur unik. Saat ini belum dilakukan \textit{clustering} untuk memisahkan fitur lokal yang unik dan konsisten dengan yang tidak. Analisis ini juga belum menggunakan metode OIR BSIS.
+
+Analisis dilakukan dengan menggunakan dua buah gambar (Gambar $Q$ dan Gambar $T$). Kedua gambar tersebut merupakan gambar dari sebuah POI yang sama yang diambil pada waktu yang berbeda dan dengan sudut pengambilan yang berbeda. Kedua gambar yang digunakan dapat dilihat pada Gambar~\ref{fig:analisis_asus}. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.55]{asus\_1\_bw.jpg}
+	\includegraphics[scale=0.55]{asus\_2\_bw.jpg}
+	\caption{Dua gambar yang digunakan untuk melakukan analisis pengenalan POI dengan logo. Gambar yang di sebelah kiri adalah Gambar $Q$ dan yang di sebelah kanan adalah Gambar $T$.}
+	\label{fig:analisis_asus}
+\end{figure}
+
+Menggunakan kedua gambar pada Gambar~\ref{fig:analisis_asus} analisis dilakukan dengan terlebih dahulu melakukan ekstraksi fitur lokal dari kedua gambar. Lalu untuk semua fitur lokal pada Gambar $Q$ dicari pasangannya pada Gambar $T$. Pencarian pasangan fitur lokal dilakukan mencari fitur lokal yang paling mirip vektor deskriptornya. Setelah didapatkan pasangan fitur lokal maka akan dipilih beberapa pasangan saja yang cukup kuat. Pasangan-pasangan kuat yang terpilih tersebut lalu ditampilkan pada gambar untuk melihat objek apa pada POI yang menghasilkan fitur lokal pada pasangan tersebut.
+
+Tahapan analisis dilakukan dengan membuat implementasi menggunakan Python versi $3.7.5$ dari distribusi Anaconda. Serta untuk pemrosesan gambar termasuk dengan ekstraksi fitur lokal dari gambar dilakukan dengan menggunakan \textit{library} OpenCV versi $4.5.5.64$ yang diimplementasi melalui Python. Seluruh tahapan yang dilakukan secara rinci adalah sebagai berikut (setelah melakukan instalasi untuk semua program/\textit{library} yang diperlukan):
+\begin{enumerate}
+	\item Membaca \textit{file} gambar (\texttt{.jpg}) untuk masing-masing Gambar $Q$ dan Gambar $T$. Pembacaan gambar dilakukan dengan menggunakan fungsi \texttt{imread}. Fungsi \textit{imread} mengembalikan sebuah \textit{array} 2 dimensi berukuran sesuai dengan ukuran gambar, masing-masing elemen pada \textit{array} menunjukkan nilai intensitas pada setiap \textit{pixel} di gambar.
+	\item Melakukan ekstraksi fitur lokal menggunakan SIFT. Ektraksi fitur lokal dilakukan menggunakan implementasi metode SIFT yang tersedia di \textit{library} OpenCV. Untuk melakukan ekstraksi fitur terlebih dahulu dibuat sebuah objek SIFT dengan menggunakan fungsi \texttt{SIFT\_create}. Objek SIFT yang telah dibuat tersebut lalu digunakan untuk melakukan ekstraksi fitur dari gambar dengan menggunakan fungsi \texttt{detectAndCompute}. Fungsi \texttt{detectAndCompute} tersebut akan mengembalikan sebuah \textit{tuple} yang berisi setiap \textit{keypoint} yang dideteksi dalam gambar dan sebuah \textit{array} 2 dimensi berukuran $n\times128$ di mana $n$ merupakan ukuran dari \textit{tuple keypoint}. \textit{Array} 2 dimensi tersebut berisi vektor deskriptor untuk setiap \textit{keypoint}, setiap menunjukkan satu vektor untuk sebuah \textit{keypoint}.
+    \item Membuat pasangan fitur lokal untuk fitur lokal dari Gambar $Q$ dan Gambar $T$. Pembuatan pasangan fitur lokal dilakukan dengan menggunakan \textit{descriptor matcher} berbasis FLANN yang tersedia di OpenCV. Objek \textit{descriptor matcher} dibuat dengan menggunakan fungsi \texttt{DescriptorMatcher\_create(DescriptorMatcher\_FLANNBASED)}. Objek tersebut lalu digunakan untuk mencari pasangan fitur lokal dengan menggunakan fungsi \texttt{knnMatch}. Untuk setiap fitur lokal dari Gambar $Q$ akan dicari 2 fitur lokal dari Gambar $T$ yang paling mirip.
+    \item Memilih hanya pasangan yang cukup kuat saja. Pemilihan pasangan yang kuat dilakukan dengan menggunakan \textit{Lowe's Ratio Test}. Pasangan yang dinilai cukup kuat dihitung dengan membandingkan nilai kemiripan sebuah fitur lokal dari Gambar $Q$ dengan 2 fitur lokal paling mirip dari Gambar $T$. Jika nilai kemiripan fitur lokal Gambar $Q$ terhadap fitur lokal Gambar $T$ paling mirip cukup jauh dengan nilai kemiripannya terhadap fitur lokal Gambar $T$ kedua termirip maka pasangan fitur lokal Gambar $Q$ tersebut dengan fitur lokal Gambar $T$ paling mirip merupakan pasangan yang kuat. Pada kasus ini jika nilai kemiripan terhadap fitur lokal paling mirip lebih kecil dari $0.3$ kali nilai kemiripan terhadap fitur lokal kedua termirip maka pasangan tersebut akan digunakan.
+    \item Visualisasi pasangan fitur lokal yang mirip. Setelah didapat pasangan-pasangan fitur lokal yang kuat, pasangan fitur lokal tersebut lalu ditampilkan dalam gambar untuk dianalisis. Untuk menampilkan pasangan fitur lokal terlebih dahulu \textit{array} dari kedua gambar digabungkan menjadi satu \textit{array} dengan meletakkannya saling bersebelahan. Setelah itu digambarkan pasangan pada \textit{array} gabungan tersebut dengan menggunakan fungsi \texttt{drawMatches} dari OpenCV. \textit{Array} gambar gabungan yang sudah digambarkan pasangan fitur lokalnya tersebut lalu ditampilkan ke layar dengan menggunakan fungsi \texttt{imshow} dari OpenCV. Hasil dapat dilihat pada Gambar~\ref{fig:keypoint_matches}.
+\end{enumerate}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.3]{img\_matches.jpg}
+	\caption{Pasangan \textit{keypoint} dari Gambar $Q$ dan Gambar $T$ yang kuat.}
+	\label{fig:keypoint_matches}
+\end{figure}
+
+Dapat dilihat dari Gambar~\ref{fig:keypoint_matches} tersebut bahwa fitur-fitur lokal yang dipasangkan dari Gambar $Q$ dan Gambar $T$ merupakan fitur lokal yang berasal dari objek yang merupakan logo POI. Semua fitur lokal yang dipasangkan berasal dari objek logo baik yang berada di bagian atas POI maupun logo yang berada di bagian tembok belakang. Tidak ada pasangan fitur lokal yang berasal dari objek latar belakang seperti orang (pengunjung). Berdasarkan dari hasil analisis pada tahap ini didapati bahwa fitur lokal yang berasal dari logo sebuah POI merupakan fitur lokal yang cukup kuat jika digunakan untuk melakukan identifikasi dari sebuah POI.
+
+Berdasarkan kesimpulan bahwa fitur lokal yang berasal dari logo merupakan fitur lokal yang kuat jika digunakan untuk melakukan identifikasi maka proses OIR seharusnya dapat dilakukan dengan hanya menggunakan beberapa fitur lokal yang berasal dari logo saja. Fitur lokal dari logo tersebut karena sifatnya yang kuat diharapkan dengan hanya menggunakan beberapa fitur lokal itu saja sudah dapat memberikan hasil yang akurat. Jika dilakukan OIR dengan hanya menggunakan beberapa fitur lokal yang kuat saja maka waktu pemrosesan dapat menjadi lebih cepat, karena fitur lokal yang diproses lebih sedikit. Oleh karena itu pada tahap berikutnya akan dilakukan analisis sifat fitur lokal pada gambar POI untuk dapat memilih fitur lokal yang hanya berasal dari logo saja.
+
+\section{Analisis Terhadap Sifat-sifat Fitur Lokal pada Gambar POI}
+\label{sec:analisis_sifat}
+Pada \ref{sec:latar_belakang} disebutkan bahwa perlu dicari fitur lokal yang bersifat unik dan konsisten terhadap sebuah POI untuk membantu proses OIR. Sedangkan pada tahap analisis yang telah dilakukan sebelumnya didapat bahwa fitur lokal yang berasal dari logo merupakan fitur lokal yang kuat. Pada tahap kali ini akan dilakukan analisis untuk mencari tahu apakah fitur lokal yang berasal dari logo tersebut dapat ditemukan dengan cara mencari fitur lokal yang sifatnya unik dan konsisten.
+
+Secara garis besar penelitian dilakukan dengan melakukan \textit{clustering} pada fitur lokal dari gambar dan melihat sifat-sifat dari \textit{cluster} fitur lokal. Penelitian menggunakan gambar dari beberapa POI berbeda dan untuk setiap POI memiliki beberapa gambar POI tersebut yang diambil dari sudut pengambilan dan waktu pengambilan yang berbeda (ada objek latar belakang yang berbeda). 
+
+Keunikan sebuah \textit{cluster} fitur lokal dinilai dari seberapa banyak anggota \textit{cluster} tersebut yang berasal dari POI berbeda, jika sebuah \textit{cluster} berisi fitur lokal yang hanya berasal dari satu jenis POI maka fitur lokal pada \textit{cluster} tersebut dinilai unik terhadap POI-nya. Sedangkan untuk kekonsistenan dinilai dengan berapa banyaknya gambar berbeda dari jenis POI yang sama dalam satu \textit{cluster}, sebagai contoh jika di sebuah \textit{cluster} terdapat 4 fitur lokal yang berasal dari sebuah POI yang sama dan dari gambar 4 gambar yang berbeda maka fitur-fitur lokal tersebut dapat dikatakan konsisten terhadap POI.
+
+Analisis pada tahap ini hanya menggunakan total sebanyak 12 gambar. Ke-12 gambar tersebut terbagi menjadi 3 kelas sesuai dengan POI-nya, dengan masing-masing kelas memiliki sebanyak 4 gambar. Beberapa contoh gambar yang digunakan dapat dilihat pada Gambar~\ref{fig:contoh_gambar_clustering}. Sama seperti analisis pada \ref{sec:analisis_logo} analisis ini dilakukan dengan membuat implementasi di Python dengan memanfaatkan \textit{library} OpenCV untuk melakukan pemrosesan gambar dan ekstraksi fitur. Teknik \textit{clustering} yang digunakan dilakukan menggunakan implementasi \textit{Agglomerative Clustering} dari \textit{library} Scikit-learn versi $1.0.2$.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\linewidth, height=4cm]{asus\_1\_bw2.jpg}
+	\includegraphics[width=0.4\linewidth, height=4cm]{asus\_3\_bw2.jpg}
+	\includegraphics[width=0.4\linewidth, height=4cm]{cgv\_1\_bw.jpg}
+	\includegraphics[width=0.4\linewidth, height=4cm]{cgv\_3\_bw.jpg}
+	\includegraphics[width=0.4\linewidth, height=4cm]{hnm\_1\_bw.jpg}
+	\includegraphics[width=0.4\linewidth, height=4cm]{hnm\_2\_bw.jpg}
+	\caption{Contoh beberapa gambar yang digunakan pada analisis ini.}
+	\label{fig:contoh_gambar_clustering}
+\end{figure}
+
+Tahapan \textit{clustering} dalam analisis ini dibagi menjadi dua tahap. \textit{Clustering} tahap pertama dilakukan pada seluruh fitur lokal untuk masing-masing gambar. Tahap pertama ini bertujuan untuk menangani masalah seperti objek tembok atau keramik lantai yang memiliki sebuah pola tertentu. Objek dengan sebuah pola yang berulang akan menghasilkan banyak fitur lokal dengan sifat yang relatif sama. Untuk mengatasi fitur lokal yang berulang ini maka dilakukan \textit{clustering} untuk fitur lokal pada tiap gambar terlebih dahulu dan dihitung \textit{centroid}-nya untuk tiap \textit{cluster} yang dihasilkan. Fitur-fitur lokal dari pola berulang tadi akan tergabung menjadi satu \textit{cluster} dan direpresentasikan dengan sebuah \textit{centroid}. 
+
+Tahapan \textit{clustering} yang kedua dilakukan pada \textit{centroid} yang dihasilkan dari \textit{clustering} pada tahap sebelumnya. \textit{Centroid-centroid} yang dihasilkan dari hasil \textit{clustering} tiap gambar digabungkan ke dalam satu \textit{array} dan dilakukan \textit{clustering} pada \textit{array} tersebut. \textit{Cluster-cluster} yang didapat dari \textit{clustering} tahap ini adalah yang akan dianalisis untuk dinilai keunikan dan kekonsistenannya.
+
+Seluruh tahapan yang dilakukan dalam analisis ini secara lebih rinci adalah sebagai berikut:
+\begin{enumerate}
+	\item Membaca seluruh \textit{file} gambar \textit{dataset}. Gambar terbagi menjadi 3 kelas: \textbf{asus}, \textbf{cgv}, dan \textbf{hnm}. Gambar-gambar yang telah dibaca dimasukkan ke dalam \textit{dictionary} dengan nama kelas sebagai \textit{key} dan setiap \textit{key} berisi \textit{list} yang menyimpan \textit{array} gambar.
+	\item Melakukan ekstraksi fitur lokal dari gambar-gambar yang telah di baca. Isi dari \textit{dictionary} berisi gambar diiterasi dan untuk setiap gambar dilakukan ekstraksi fitur lokal menggunakan fungsi \texttt{detectAndCompute} dari objek SIFT yang telah dibuat terlebih dahulu. Semua \textit{keypoint} yang terdeteksi dimasukkan ke dalam sebuah \textit{list} yang sama untuk semua gambar sedangkan untuk deskriptor dimasukkan ke dalam sebuah \textit{dataframe} yang juga sama untuk setiap gambar. \textit{Dataframe} yang menyimpan deskriptor ditambah 3 kolom baru yang menyimpan nilai sebagai berikut:
+	\begin{itemize}
+		\item \texttt{img}: nama dari gambar asal deskriptor
+		\item \texttt{img\_class}: kelas dari gambar asal deskriptor
+		\item \texttt{kp\_idx}: indeks yang menunjukkan posisi \textit{keypoint} dari deskriptor tersebut di \textit{list} \textit{keypoint}.
+	\end{itemize}
+	\item Melakukan \textit{clustering} pada vektor deskriptor di gambar yang sama. \textit{Dataframe} berisi deskriptor dikelompokkan berdasarkan kolom \texttt{img} dan untuk tiap kelompok dilakukan \textit{clustering} dengan menggunakan objek \texttt{AgglomerativeClustering} dari \textit{library} Scikit-learn. \textit{Clustering Agglomerative} dilakukan dengan menggunakan parameter \texttt{distance\_threshold} yang menentukan jarak maksimal di mana dua objek atau \textit{cluster} dapat digabungkan menjadi satu \textit{cluster}. Parameter \texttt{distance\_threshold} diisi dengan menghitung jarak rata-rata antar objek dalam \textit{dataset} yang digunakan. Untuk mempercepat proses komputasi penghitungan rata-rata jarak tidak menggunakan semua data melainkan hanya menggunakan sampel sebanyak 50 data yang diambil secara acak. 
+	\item Menghitung \textit{centroid} untuk hasil \textit{clustering} tiap gambar. Untuk vektor deskriptor pada gambar yang sama setelah dilakukan \textit{clustering} dan telah didapat nomor \textit{cluster}-nya maka akan dicari \textit{centroid} untuk semua \textit{cluster} dengan menghitung vektor rata-rata dari semua objek dalam \textit{cluster} yang sama. \textit{Centroid} yang didapat tersebut lalu dimasukkan kedalam satu \textit{dataframe} yang sama untuk semua gambar. Isi dari \textit{dataframe} tersebut yang nantinya akan digunakan untuk melakukan \textit{clustering} tahap selanjutnya. Untuk setiap fitur lokal pada \textit{dataframe} juga disimpan gambar asal dan kelas dari gambar asalnya.
+	\item Melakukan \textit{clustering} pada \textit{dataframe} berisi \textit{centroid}. \textit{Clustering} dilakukan sama seperti pada tahap sebelumnya yaitu dengan menggunakan \textit{Clustering Agglomerative} dari \textit{library} Scikit-learn. \textit{Clustering} dilakukan dengan terlebih dahulu membuang kolom yang bukan merupakan bagian dari 128 elemen deskriptor (kolom gambar asal dan kelas gambar asal). \textit{Cluster-cluster} yang didapat dari tahap ini akan digunakan untuk menghitung tingkat keunikan dan kekonsistenan dari sebuah fitur lokal.
+	\item Menghitung nilai keunikan fitur lokal. Nilai keunikan sebuah fitur lokal ditentukan dengan menghitung ada berapa banyak gambar asal berbeda yang berada dalam \textit{cluster} yang sama dengan fitur lokal tersebut. Penghitungan dilakukan dengan terlebih dahulu membagi mengelompokkan \textit{dataframe centroid} berdasarakan nomor \textit{cluster}-nya. Untuk setiap kelompok pertama buang fitur lokal yang memiliki duplikat pada gambar asalnya, sehingga jika sebelumnya terdapat beberapa fitur lokal dari gambar yang sama pada \textit{cluster} tersebut maka hanya akan digunakan satu fitur lokal saja. Setelah dibuang duplikatnya maka dihitung jumlah kemunculan setiap kelas gambar pada \textit{cluster} tersebut, julmah setiap kelas tersebut lalu dibagi dengan jumlah elemen pada \textit{cluster} tersebut (setelah dibuang duplikatnya). Setelah didapat angka yang menunjukkan tingkat keunikan berdasarkan kelas gambar asal, angka tersebut lalu dipasangkan pada setiap fitur lokal pada \textit{cluster} tersebut sesuai dengan kelas gambar asalnya. 
+\end{enumerate}
+
+
+

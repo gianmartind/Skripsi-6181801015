@@ -1,0 +1,200 @@
+\chapter{Perancangan}
+
+\section{Perancangan Implementasi Metode Clustering Pembuatan Model} 
+Metode \textit{clustering} diimplementasi dalam sebuah modul Python yang menerima \textit{file} dalam bentuk gambar dan menghasilkan sebuah \textit{dataframe} yang berisi detail-detail fitur lokal dari gambar. Gambar-gambar masukkan yang digunakan perlu untuk memiliki sebuah struktur \textit{folder} tertentu. Keterangan struktur \textit{folder} masukkan serta fungsi-fungsi dalam modul hingga struktur \textit{file} keluaran akan dijelaskan pada subbab-subbab berikut ini.
+
+\subsection{Rancangan Struktur Folder}
+\label{subsec:struktur_folder_clustering}
+Rancangan struktur \textit{folder} yang diperlukan untuk dapat digunakan sebagai masukkan pada modul \textit{clustering} adalah sebagai berikut, dapat dilihat pada Gambar~\ref{fig:struktur_folder}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{struktur\_folder.png}
+	\caption{Rancangan struktur \textit{folder} untuk pembuatan model.}
+	\label{fig:struktur_folder}
+\end{figure}
+Gambar tersebut menunjukkan struktur \textit{folder} masukkan yang diperlukan pada modul ini. \textit{Folder} yang paling atas merupakan \textit{folder} utama yang juga menjadi nama dataset. \textit{Folder} utama akan berisi beberapa \textit{subfolder} yang menunjukkan kelas dari gambar. Setiap \textit{subfolder} ini berisi beberapa \textit{file} gambar yang merupakan bagian dari kelas tersebut. Gambar-gambar dataset yang sudah dalam struktur seperti ini dapat digunakan dalam proses \textit{clustering}
+
+\subsection{Rancangan Proses Clustering}
+\label{subsec:rancangan_proses_clustering}
+Proses \textit{clustering} menerima dataset gambar sesuai dengan struktur \textit{folder} yang telah dijelaskan sebelumnya pada \ref{subsec:struktur_folder_clustering}. Dari dataset tersebut diproses dan dihasilkan \textit{dataframe} yang berisi deskriptor dari setiap fitur lokal serta nilai keunikan dan konsistensi. Langkah-langkah yang dilakukan proses ini serta hasil keluaran dari setiap langkah dapat dilihat pada diagram di Gambar~\ref{fig:dfd_clustering}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{dfd\_clustering.png}
+	\caption{Tahapan proses \textit{clustering} hingga didapat nilai keunikan dan konsistensi.}
+	\label{fig:dfd_clustering}
+\end{figure}
+Langkah-langkah tersebut merupakan langkah-langkah implementasi yang dilakukan pada tahap pencarian nilai konsistensi dan keunikan yang dilakukan di \ref{sec:analisis_sifat}. \textit{Clustering} yang dilakukan pada langkah 2 dan 3 dilakukan dengan menggunakan fungsi \texttt{agglo\_cluster} dari kelas \texttt{Util} yang dijelaskan pada \ref{sec:data_class}. Proses penghitungan nilai keunikan dapat dilihat pada Pseudocode~\ref{alg:uniqueness}. \\
+\begin{algorithm}[H]
+	\caption{UNIQUENESS}
+	\label{alg:uniqueness}
+	\KwIn{\begin{itemize}[nosep]
+			\item \textit{D}: \textit{dataframe} yang memiliki kolom berisi nama gambar (\texttt{img}), kelompok gambar (\texttt{img\_class}), dan label \textit{cluster} (\texttt{cluster\_label}).
+	\end{itemize}}
+	\KwOut{list berisi nilai keunikan}
+	\begin{algorithmic}[1]
+		\STATE buat \textit{dictionary} \textit{class\_count}
+		\STATE kelompokan \textit{D} berdasarkan kolom \texttt{cluster\_label}.
+		\FOR{semua \texttt{cluster\_label} \textit{\textbf{c}} kelompok \texttt{cluster\_label}}
+		\STATE buat variabel \textit{\textbf{o}} yang berisi semua elemen \textit{D} yang memiliki \texttt{cluster\_label} \textit{\textbf{c}}
+		\STATE hapus baris dalam \textit{\textbf{o}} yang nilai kolom \texttt{img}-nya duplikat sehingga untuk setiap nilai \texttt{img} yang berbeda hanya muncul satu kali.
+		\STATE hitung jumlah setiap \texttt{img\_class} yang ada dalam \textit{\texttt{o}} dan bagi nilainya dengan jumlah elemen dalam \textit{\textbf{o}}
+		\STATE masukkan nilai penghitungan jumlah tiap \texttt{img\_class} ke dalam sebuah \textit{dictionary} dua tingkat dengan \textit{key} pertama adalah \textit{\textbf{c}} dan \textit{key} kedua adalah isi \texttt{img\_class}.
+		\ENDFOR
+		\STATE buat \textit{list} \textit{\textbf{uniqueness}}
+		\FOR{baris \textit{\texttt{r}} dalam \textit{D}}
+		\STATE ambil nilai keunikan dari \textit{\textbf{class\_count}} dengan menggunakan \texttt{cluster\_label} dan \texttt{img\_class} sebagai \textit{key}
+		\STATE masukkan nilai keunikan tersebut ke \textit{\textbf{uniqueness}}. 
+		\ENDFOR
+		\RETURN \textit{\textbf{uniqueness}}
+	\end{algorithmic}
+\end{algorithm}
+Sedangkan untuk penghitungan nilai konsistensi mengikuti proses pada Pseudocode~\ref{alg:consistency}. \\
+\begin{algorithm}[H]
+	\caption{CONSISTENCY}
+	\label{alg:consistency}
+	\KwIn{\begin{itemize}[nosep]
+			\item \textit{D}: \textit{dataframe} yang memiliki kolom berisi nama gambar (\texttt{img}), kelompok gambar (\texttt{img\_class}), dan label \textit{cluster} (\texttt{cluster\_label}).
+	\end{itemize}}
+	\KwOut{\textit{list} berisi nilai konsistensi}
+	\begin{algorithmic}[1]
+		\STATE kelompokan \textit{D} berdasarkan \texttt{cluster\_label} dan \texttt{img\_class}.
+		\STATE hitung jumlah gambar yang unik untuk tiap kelompok. Masukkan hasilnya ke dalam \textit{dictionary} dua tingkat \textit{\textbf{d}} yang memiliki \textit{key} pertama adalah isi dari \texttt{cluster\_label} dan \textit{key} keduanya adalah isi dari \texttt{img\_class}.
+		\STATE buat \textit{list} \textit{\textbf{consistency}}
+		\FOR{baris \textit{\textbf{r}} dalam \textit{D}}
+		\STATE buat variabel \textit{\textbf{v}} dengan mengambil nilai \textit{\texttt{d}} menggunakan \texttt{cluster\_label} dan \texttt{img\_class} dari \textit{\textbf{r}} sebagai \textit{key}.
+		\STATE bagi nilai \textit{\textbf{v}} dengan jumlah gambar pada dataset yang kelasnya sama dengan \texttt{img\_class} dari \textit{\textbf{r}}.
+		\STATE masukkan \textit{\textbf{v}} ke \textit{\textbf{consistency}}
+		\ENDFOR
+		\RETURN \textit{\textbf{consistency}}
+	\end{algorithmic}
+\end{algorithm}
+Proses yang dilakukan pada Gambar~\ref{fig:dfd_clustering} akan menghasilkan sebuah \textit{dataframe} dengan ketentuan kolom seperti pada Tabel~\ref{tab:df_clustering}. \textit{Dataframe} tersebut disimpan ke dalam \textit{file} \texttt{pickle} dengan menggunakan \textit{library} Pickle di Python.
+\begin{table}[H]
+	\begin{tabular}{|p{0.25\textwidth}|p{0.25\textwidth}|p{0.45\textwidth}|}
+		\hline
+		Nama Kolom      & Kelompok Kolom                            & Deskripsi                                                                                                   \\ \hline
+		0               & \multirow{5}{0.45\textwidth}{Deskriptor}               & \multirow{5}{0.45\textwidth}{Berjumlah 128 kolom yang masing-masing merupakan satu elemen dalam vektor deskriptor SIFT.} \\ \cline{1-1}
+		1               &                                           &                                                                                                             \\ \cline{1-1}
+		...             &                                           &                                                                                                             \\ \cline{1-1}
+		126             &                                           &                                                                                                             \\ \cline{1-1}
+		127             &                                           &                                                                                                             \\ \hline
+		img             & \multirow{2}{*}{Informasi Gambar}         & Nama gambar asal fitur lokal                                                                                \\ \cline{1-1} \cline{3-3} 
+		img\_class      &                                           & Kelas dari gambar asal fitur lokal                                                                          \\ \hline
+		cluster\_label  & \multirow{2}{*}{Label \textit{Cluster}}            & Label \texttt{cluster} dari hasil \textit{clustering} per gambar                                                              \\ \cline{1-1} \cline{3-3} 
+		cluster2\_label &                                           & Label \textit{cluster} dari hasil \texttt{clustering} \textit{centroid}                                                                \\ \hline
+		uniqueness      & \multirow{2}{*}{Nilai Hasil Penghitungan} & Nilai keunikan fitur lokal yang didapat dari hasil \textit{clustering}                                               \\ \cline{1-1} \cline{3-3} 
+		consistency     &                                           & Nilai konsistensi fitur lokal yang didapat dari hasil \textit{clustering}                                            \\ \hline
+		kp\_point\_x    & \multirow{7}{*}{Atribut \textit{keypoint}}         & Koordinat x dari \textit{keypoint}                                                                                   \\ \cline{1-1} \cline{3-3} 
+		kp\_point\_y    &                                           & Koordinat y dari \textit{keypoint}                                                                                   \\ \cline{1-1} \cline{3-3} 
+		size            &                                           & Diameter daerah di sekitar \textit{keypoint} yang diperiksa                                                          \\ \cline{1-1} \cline{3-3} 
+		angle           &                                           & Orientasi dari \textit{keypoint}                                                                                     \\ \cline{1-1} \cline{3-3} 
+		response        &                                           & Tingkat respon yang menyatakan seberapa kuat \textit{keypoint}                                                       \\ \cline{1-1} \cline{3-3} 
+		octave          &                                           & Oktaf di mana \textit{keypoint} tersebut didapat                                                                     \\ \cline{1-1} \cline{3-3} 
+		class\_id       &                                           & Kelas objek yang menyatakan kelompok dari \textit{keypoint} jika dikelompokkan                                       \\ \hline
+	\end{tabular}
+	\caption{Rincian kolom dari \textit{dataframe} yang dihasilkan modul proses \textit{clustering}.}
+	\label{tab:df_clustering}
+\end{table}
+ 
+\section{Rancangan Kelas Data}
+\label{sec:data_class}
+Kelas \texttt{Data} adalah kelas yang digunakan untuk membaca file \texttt{pickle} berisi \textit{dataframe} yang dihasilkan dari proses pada \ref{subsec:rancangan_proses_clustering}. Kelas ini membaca data dan memiliki beberapa \textit{method} yang digunakan untuk mengubah data dalam \textit{dataframe} menjadi format yang dapat digunakan. Diagram untuk kelas \texttt{Data} dapat dilihat pada Gambar~\ref{fig:data_class}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{data\_class.png}
+	\caption{Diagram kelas \texttt{Data}.}
+	\label{fig:data_class}
+\end{figure}
+Atribut \texttt{data} pada kelas tersebut adalah \textit{dataframe} yang dihasilkan dari modul sebelumnya dan dibaca dengan kelas ini. Kegunaan fungsi-fungsi dari kelas \texttt{Data} adalah sebagai berikut:
+\begin{enumerate}
+	\item \texttt{\_\_init\_\_} \\
+	Fungsi konstruktor kelas \texttt{Data} menerima parameter \texttt{path} yang merupakan direktori tempat \textit{file} \textit{dataframe} yang ingin digunakan. Fungsi akan memasukkan \textit{file} pada direktori \texttt{path} ke atribut \texttt{data}.
+	\item \texttt{get\_keypoints\_with\_mapper} \\
+	Fungsi menyaring \texttt{data} dengan menetapkan batas bawah pada kolom \texttt{uniqueness} dan \texttt{consistency}. Fungsi ini memberikan tiga keluaran, yaitu sebuah \textit{list} berisi objek \textit{keypoint}, sebuah \textit{array} 2 dimensi berisi deskriptor, dan sebuah \textit{dictionary} yang menunjukkan asal gambar dari setiap \textit{keypoint}.
+	\item \texttt{get\_keypoint} \\
+	Fungsi berguna untuk membuat objek \textit{keypoint} dari sebuah baris \textit{dataframe}. Fungsi ini mengambil nilai dari kolom \texttt{kp\_point\_x}, \texttt{kp\_point\_y}, \texttt{size}, \texttt{angle}, \texttt{response}, \texttt{octave}, \texttt{class\_id} dan membuat objek \textit{keypoint} dari nilai-nilai tersebut.
+	\item \texttt{get\_descriptor} \\
+	Fungsi mengambil 128 kolom pertama dari sebuah baris \textit{dataframe} dan mengembalikan \textit{list} berisi nilai-nilai tersebut.
+\end{enumerate}
+
+\section{Rancangan Kelas Util}
+Kelas \textit{Util} berisi fungsi-fungsi yang banyak digunakan pada kelas-kelas lainnya. Fungsi-fungsi ini berguna untuk mempermudah proses komputasi saat menggunakan kelas lainnya dan saat melakukan analisis. Fungsi-fungsi dalam kelas \textit{Util} dapat dilihat pada diagram di Gambar~\ref{fig:util_class}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{util\_class.png}
+	\caption{Diagram kelas \texttt{Util}}
+	\label{fig:util_class}
+\end{figure}
+Beberapa fungsi penting dari kelas \texttt{Util} adalah sebagai berikut:
+\begin{enumerate}
+	\item \texttt{get\_image} \\
+	Fungsi untuk memuat gambar dari \textit{file}. Parameter \texttt{bw} menyatakan apakah gambar yang dimuat akan diubah menjadi format \textit{grayscale}. Sedangkan untuk \texttt{maxwidth} dan \texttt{maxheight} digunakan untuk mengatur ukuran dari gambar.
+	\item \texttt{get\_all\_image} \\
+	Fungsi untuk memuat semua gambar dalam suatu \textit{folder}. Fungsi ini memanggil fungsi \texttt{get\_image} untuk semua \textit{file} gambar dalam \textit{folder} di \texttt{directory}.
+	\item \texttt{get\_dataset} \\
+	Fungsi untuk memuat semua \textit{file} gambar dengan fungsi \texttt{get\_image} dari \textit{file} yang tersusun sesuai struktur \textit{folder} seperti yang dijelaskan pada \ref{subsec:struktur_folder_clustering}. Fungsi ini digunakan untuk mendapatkan gambar masukkan pada \ref{subsec:rancangan_proses_clustering}.
+	\item \texttt{agglo\_cluster} \\
+	Fungsi untuk melakukan \textit{Agglomerative Clustering} pada dataset. Fungsi akan mengembalikan sebuah \textit{array} yang berisi label \textit{cluster}. Fungsi ini digunakan untuk melakukan \textit{clustering} per gambar dan \textit{clustering} \textit{centroid} pada analisis yang dilakukan di \ref{sec:analisis_sifat} dengan mengikuti rancangan pada \ref{subsec:rancangan_proses_clustering}.
+	\item \texttt{show\_keypoints} \\
+	Fungsi untuk menampilkan \textit{keypoint} pada gambar. Fungsi digunakan untuk melakukan visualisasi \textit{keypoint} di gambar yang dilakukan pada \ref{sec:analisis_sifat}.
+	\item \texttt{show\_matches} \\
+	Fungsi untuk menampilkan pasangan \textit{keypoint} dari dua gambar. Fungsi ini digunakan untuk menampilkan pasangan \textit{keypoint} yang kuat pada analisis di \ref{sec:analisis_poi}.
+\end{enumerate}
+
+
+\section{Rancangan Kelas-kelas Implementasi BSIS}
+Implementasi BSIS dibuat dalam sebuah \textit{package} yang didalamnya berisi beberapa kelas yang saling berhubungan. Kelas-kelas beserta fungsi dalam kelas yang ada di \textit{package} BSIS dapat dilihat pada Gambar~\ref{fig:bsis_package}. Kelas-kelas pada \textit{package} ini digunakan untuk melakukan BSIS pada \ref{sec:analisis_bsis} dan \ref{sec:analisis_batas_keunikan} dengan memanggil kelas \texttt{BSIS}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{bsis\_package.png}
+	\caption{Diagram \textit{Package} \texttt{bsis}.}
+	\label{fig:bsis_package}
+\end{figure}
+Untuk melakukan BSIS terhadap sebuah gambar pertama perlu dibuat sebuah objek kelas \texttt{BSIS}. Pembuatan objek BSIS menerima satu masukkan yaitu sebuah \textit{dictionary} yang berisi \textit{list} \textit{keypoint} dan \textit{array} deskriptor. Setelah itu isi \texttt{train\_set} dengan memanggil fungsi \texttt{set\_train\_data}. Fungsi \texttt{set\_train\_data} menerima sebuah \textit{dictionary} yang dihasilkan oleh fungsi \texttt{get\_keypoints\_with\_mapper} dari kelas \texttt{Data}. Setelah objek BSIS telah mendapatkan gambar masukkan dan dataset \textit{train} panggil fungsi \texttt{run} untuk menjalankan proses identifikasi. Setelah proses identifikasi selesai objek BSIS tersebut akan menyimpan hasil dari identifikasi.
+
+Fungsi-fungsi lain dalam \textit{package} tersebut dipanggil oleh kelas \texttt{BSIS} saat pemrosesan, kegunaan masing-masing kelas adalah sebagai berikut:
+\begin{enumerate}
+	\item \texttt{TrainSet} \\
+	Kelas untuk mengatur dataset yang digunakan pada kelas \texttt{BSIS}.
+	\item \texttt{Pair} \\
+	Kelas untuk menyimpan pasangan fitur lokal. Fungsi \texttt{make\_pairs\_kdtree} dari \texttt{BSIS} mengembalikan sebuah \textit{list} yang berisi objek \texttt{Pair}.
+	\item \texttt{BPair} \\
+	Kelas untuk menyimpan sebuah \textit{sequence} \texttt{Pair}. Digunakan pada tahap verifikasi (\texttt{find\_best\_subsequence}) di \texttt{BSIS\_Verify}. \textit{Sequence} \texttt{Pair} diimplementasikan dalam bentuk objek \texttt{BPair} dalam objek \texttt{BPair}. Atribut \texttt{prev} dalam \texttt{BPair} akan diisi dengan objek \texttt{BPair} lain yang juga dapat memiliki objek \texttt{BPair} di atribut \texttt{prev}-nya. 
+	\item \texttt{BSIS\_Verify} \\
+	Kelas untuk melakukan verifikasi geometris dari pasangan fitur lokal yang dihasilkan oleh fungsi \texttt{make\_pairs\_kdtree} dari BSIS. Pada kelas ini pertama dilakukan pembuatan \textit{list} 2 dimensi yang mengurutkan pasangan berdasarkan \textit{order} x (urutan kemunculan \textit{keypoint} di sumbu x) dari \textit{keypoint} di gambar \textit{train} yang dilakukan oleh fungsi \texttt{get\_pair\_list\_ordered}. \textit{List} yang dihasilkan oleh fungsi \texttt{get\_pair\_list\_ordered} memiliki elemen yang merupakan \textit{list} juga dengan panjang yang dapat berbeda-beda dan isinya merupakan objek \texttt{BPair} yang menyimpan informasi \textit{Pair} dan atribut \texttt{prev}-nya kosong (berisi \texttt{None}). Setelah itu dilakukan verifikasi pada \textit{list} tersebut dengan menggunakan fungsi \texttt{find\_best\_subsequence}. Proses verifikasi pada \texttt{find\_best\_subsequence} didefinisikan pada Pseudocode~\ref{alg:find_best_subsequence}. \\
+	\begin{algorithm}[H]
+		\caption{FIND\_BEST\_SUBSEQUENCE}
+		\label{alg:find_best_subsequence}
+		\KwIn{\begin{itemize}[nosep]
+				\item \textit{D}: sebuah \textit{list} dengan setiap elemennya merupakan \textit{list} berisi objek \texttt{BPair}, dapat memiliki panjang yang berbeda-beda.
+		\end{itemize}}
+		\KwOut{\textit{sequence} \texttt{BPair} yang merupakan pasangan yang konsisten secara geometris dan nilai total bobotnya paling tinggi}
+		\begin{algorithmic}[1]
+			\STATE buat objek \texttt{BPair} \textit{\textbf{best\_subsequence}}.
+			\STATE buat \textit{dictionary} \textit{\textbf{best\_per\_order}}.
+			\FOR{\textit{\textbf{i}}=1 hingga LENGTH(\textit{D})}
+				\FOR{\textit{\textbf{j}}=1 hingga LENGTH(\text{D[\textit{\textbf{i}}]})}
+					\IF{ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) tidak ada di \textit{\textbf{best\_per\_order}}}
+						\STATE isi \textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])] dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+					\ELSIF{BTS(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) lebih besar dari BTS(\textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])])}
+						\STATE isi \textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])] dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+					\ENDIF
+					\STATE objek \texttt{BPair} \textit{\textbf{dBestPrev}}
+					\FOR{\textit{\textbf{ord}}=1 hingga ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])}
+						\IF{\textit{\textbf{ord}} ada di \textit{\textbf{best\_per\_order}}}
+							\IF{BTS(\textit{\textbf{best\_per\_order}}) lebih besar dari BTS(\textit{\textbf{dBestPrev}})}
+								\STATE isi \textit{\textbf{dBestPrev}} dengan \textit{\textbf{best\_per\_order}}[\textit{\textbf{ord}}]
+							\ENDIF
+						\ENDIF
+					\ENDFOR
+					\STATE isi BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan WEIGHT(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) + BTS(\textit{\textbf{dBestPrev}})
+					\STATE isi PREV(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan \textit{\textbf{dBestPrev}}
+					\IF{BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) + WEIGHT(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) > BTS(\textit{\textbf{best\_subsequence}}) + WEIGHT(\textit{\textbf{best\_subsequence}})}
+						\STATE isi \textit{\textbf{best\_subsequence}} dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+					\ENDIF
+				\ENDFOR
+			\ENDFOR
+			\RETURN \textit{\textbf{best\_subsequence}}
+		\end{algorithmic}
+	\end{algorithm}
+\end{enumerate}

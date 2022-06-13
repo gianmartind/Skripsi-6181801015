@@ -125,6 +125,13 @@ Gambar~\ref{subfig:geo_ver2} dapat dirotasi sebanyak 180 derajat sehingga B2 ber
 
 Salah satu metode untuk melakukan verifikasi geometris adalah BSIS (lihat \ref{sec:bsis}). BSIS dapat mencari pasangan-pasangan fitur lokal yang posisi relatif konsisten terhadap pasangan lain. Verifikasi yang dilakukan BSIS dilakukan dengan menggunakan beberapa orientasi gambar untuk mendapatkan orientasi yang menghasilkan nilai kemiripan paling tinggi.
 
+Cara lain yang dapat dilakukan pada tahap verifikasi adalah dengan melakukan \textit{Lowe's Ratio Test}. Cara ini tidak mencari pasangan yang konsisten secara geometris melainkan hanya menyaring pasangan yang kuat. \textit{Lowe's Ratio Test} mencari pasangan yang kuat dengan membandingkan kemiripan dua pasangan paling mirip untuk tiap fitur lokal di gambar masukkan. 
+
+Untuk sebuah fitur lokal Q dari gambar masukkan dihitung nilai kemiripannya dengan setiap fitur lokal gambar \textit{dataset}, didapatkan fitur lokal T1 merupakan fitur lokal yang nilai kemiripannya paling tinggi dan T2 merupakan fitur lokal yang nilai kemiripannya kedua tertinggi. Pasangan fitur lokal Q dan T1 akan dikatakan pasangan yang jika nilai kemiripannya memenuhi persamaan berikut:
+\begin{equation}
+	similarity(Q, T1) > similarity(Q, T2) \times n
+\end{equation}
+Variabel $n$ pada persamaan di atas merupakan sebuah nilai konstan yang nilainya lebih dari 1. Persamaan tersebut bertujuan untuk mencari pasangan yang benar-benar mirip dan nilai kemiripannya berbeda jauh dengan pasangan lainnya. Nilai $n$ dapat diatur untuk menyatakan seberapa perlu seberapa jauh jarak pasangan termirip dengan kedua termirip.
 
 \section{SIFT (Scale Invariant Feature Transform)}
 \label{sec:sift}
@@ -428,7 +435,7 @@ Fungsi tersebut menghasilkan \textit{tuple} berisi objek \textit{keypoint} dan a
 
 \section{BSIS (Best Score Increasing Subsequence)}
 \label{sec:bsis}
-Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap pasangan lain di sekitarnya (contoh dapat dilihat pada Gambar~\ref{fig:geo_ver} di \ref{sec:fitur_lokal}). BSIS~\cite{kusuma2019geometric} adalah salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris. 
+Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap pasangan lain di sekitarnya (contoh dapat dilihat pada Gambar~\ref{fig:geo_ver} di \ref{sec:oir}). BSIS~\cite{kusuma2019geometric} adalah salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris. 
 
 BSIS merupakan modifikasi metode WLIS~\cite{kusuma2012appearance} yang merupakan implementasi dari OIR. Modifikasi terdapat pada tahap \textit{Pairing}, \textit{Verification}, dan \textit{Scoring}. 
 
@@ -545,7 +552,7 @@ Proses penggabungan objek menjadi \textit{cluster} pada \textit{Agglomerative Cl
 		\STATE Buat semua objek dalam $D$ menjadi \textit{cluster} dengan 1 anggota
 		\STATE Hitung jarak untuk tiap \textit{cluster}
 		\WHILE{jumlah \textit{cluster} dalam $D$ > 1}
-		\STATE Ambil jarak dari \textit{cluster} $r$ dan $s$, di mana $r$ dan $s$ adalah dua cluster dalam $D$ dengan jarak terkecil.
+		\STATE Ambil jarak dari \textit{cluster} $r$ dan $s$, di mana $r$ dan $s$ adalah dua cluster dalam $D$ \\ dengan jarak terkecil.
 		\STATE Gabungkan $r$ dan $s$ menjadi satu \textit{cluster} $t$. 
 		\STATE Hitung jarak $t$ ke semua \textit{cluster} lain, sesuai dengan metode \textit{linkage} yang digunakan.
 		\ENDWHILE
@@ -560,7 +567,7 @@ DBSCAN atau \textit{Density-Based Spatial Clustering of Applications with Noise}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.7]{dbscan_cluster.png}
+	\includegraphics[scale=0.7]{dbscan\_cluster.png}
 	\caption{Contoh \textit{cluster} dengan bentuk non-\textit{circular}. Objek-objek yang tersebar seperti ini dapat tergabung menjadi \textit{cluster} dengan menggunakan DBSCAN.}
 	\label{fig:dbscan_cluster}
 \end{figure}
