@@ -1,0 +1,63 @@
+{
+    "InternalPDFViewer": {
+        "Embedded": true,
+        "File": "skripsi.pdf"
+    },
+    "Session": {
+        "Bookmarks": [
+        ],
+        "CurrentFile": "skripsi.tex",
+        "FileVersion": 1,
+        "Files": [
+            {
+                "Col": 0,
+                "EditorGroup": 0,
+                "FileName": "skripsi.tex",
+                "FirstLine": 42,
+                "FoldedLines": "",
+                "Line": 62
+            },
+            {
+                "Col": 47,
+                "EditorGroup": 0,
+                "FileName": "data.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 32
+            },
+            {
+                "Col": 188,
+                "EditorGroup": 0,
+                "FileName": "Bab/bab1.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 7
+            },
+            {
+                "Col": 0,
+                "EditorGroup": 0,
+                "FileName": "Bab/bab2.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 0
+            },
+            {
+                "Col": 0,
+                "EditorGroup": 0,
+                "FileName": "Bab/bab3.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 0
+            },
+            {
+                "Col": 0,
+                "EditorGroup": 0,
+                "FileName": "Bab/bab4.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 11
+            }
+        ],
+        "MasterFile": ""
+    }
+}
