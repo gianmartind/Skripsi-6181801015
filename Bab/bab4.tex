@@ -23,7 +23,7 @@ Proses \textit{clustering} menerima dataset gambar sesuai dengan struktur \texti
 	\caption{Tahapan proses \textit{clustering} hingga didapat nilai keunikan dan konsistensi.}
 	\label{fig:dfd_clustering}
 \end{figure}
-Langkah-langkah tersebut merupakan langkah-langkah implementasi yang dilakukan pada tahap pencarian nilai konsistensi dan keunikan yang dilakukan di \ref{sec:analisis_sifat}. \textit{Clustering} yang dilakukan pada langkah 2 dan 3 dilakukan dengan menggunakan fungsi \texttt{agglo\_cluster} dari kelas \texttt{Util} yang dijelaskan pada \ref{sec:data_class}. Proses penghitungan nilai keunikan dapat dilihat pada Pseudocode~\ref{alg:uniqueness}. \\
+Langkah-langkah tersebut merupakan langkah-langkah implementasi yang dilakukan pada tahap pencarian nilai konsistensi dan keunikan yang dilakukan di \ref{sec:analisis_sifat}. \textit{Clustering} yang dilakukan pada langkah 2 dan 3 dilakukan dengan menggunakan fungsi \texttt{agglo\_cluster} dari kelas \texttt{Util} yang dijelaskan pada \ref{sec:clustermodel_class}. Proses penghitungan nilai keunikan dapat dilihat pada Pseudocode~\ref{alg:uniqueness}. \\
 \begin{algorithm}[H]
 	\caption{UNIQUENESS}
 	\label{alg:uniqueness}
@@ -96,21 +96,21 @@ Proses yang dilakukan pada Gambar~\ref{fig:dfd_clustering} akan menghasilkan seb
 	\label{tab:df_clustering}
 \end{table}
  
-\section{Rancangan Kelas Data}
-\label{sec:data_class}
-Kelas \texttt{Data} adalah kelas yang digunakan untuk membaca file \texttt{pickle} berisi \textit{dataframe} yang dihasilkan dari proses pada \ref{subsec:rancangan_proses_clustering}. Kelas ini membaca data dan memiliki beberapa \textit{method} yang digunakan untuk mengubah data dalam \textit{dataframe} menjadi format yang dapat digunakan. Diagram untuk kelas \texttt{Data} dapat dilihat pada Gambar~\ref{fig:data_class}
+\section{Rancangan Kelas ClusterModel}
+\label{sec:clustermodel_class}
+Kelas \texttt{ClusterModel} adalah kelas yang digunakan untuk membaca file \texttt{pickle} berisi \textit{dataframe} yang dihasilkan dari proses pada \ref{subsec:rancangan_proses_clustering}. Kelas ini membaca data dan memiliki beberapa \textit{method} yang digunakan untuk mengubah data dalam \textit{dataframe} menjadi format yang dapat digunakan. Diagram untuk kelas \texttt{ClusterModel} dapat dilihat pada Gambar~\ref{fig:clustermodel_class}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{data\_class.png}
-	\caption{Diagram kelas \texttt{Data}.}
-	\label{fig:data_class}
+	\includegraphics[width=\textwidth]{clustermodel\_class.png}
+	\caption{Diagram kelas \texttt{ClusterModel}.}
+	\label{fig:clustermodel_class}
 \end{figure}
-Atribut \texttt{data} pada kelas tersebut adalah \textit{dataframe} yang dihasilkan dari modul sebelumnya dan dibaca dengan kelas ini. Kegunaan fungsi-fungsi dari kelas \texttt{Data} adalah sebagai berikut:
+Atribut \texttt{data} pada kelas tersebut adalah \textit{dataframe} yang dihasilkan dari modul sebelumnya dan dibaca dengan kelas ini. Kegunaan fungsi-fungsi dari kelas \texttt{ClusterModel} adalah sebagai berikut:
 \begin{enumerate}
 	\item \texttt{\_\_init\_\_} \\
-	Fungsi konstruktor kelas \texttt{Data} menerima parameter \texttt{path} yang merupakan direktori tempat \textit{file} \textit{dataframe} yang ingin digunakan. Fungsi akan memasukkan \textit{file} pada direktori \texttt{path} ke atribut \texttt{data}.
+	Fungsi konstruktor kelas \texttt{ClusterModel} menerima parameter \texttt{path} yang merupakan direktori tempat \textit{file} \textit{dataframe} yang ingin digunakan. Fungsi akan memasukkan \textit{file} pada direktori \texttt{path} ke atribut \texttt{data}.
 	\item \texttt{get\_keypoints\_with\_mapper} \\
-	Fungsi menyaring \texttt{data} dengan menetapkan batas bawah pada kolom \texttt{uniqueness} dan \texttt{consistency}. Fungsi ini memberikan tiga keluaran, yaitu sebuah \textit{list} berisi objek \textit{keypoint}, sebuah \textit{array} 2 dimensi berisi deskriptor, dan sebuah \textit{dictionary} yang menunjukkan asal gambar dari setiap \textit{keypoint}.
+	Fungsi menyaring \texttt{data} dengan menetapkan batas bawah pada kolom \texttt{uniqueness} dan \texttt{consistency}. Fungsi ini memberikan tiga keluaran, yaitu sebuah \textit{list} berisi objek \textit{keypoint}, sebuah \textit{array} 2 dimensi berisi deskriptor, dan sebuah \textit{dictionary} yang menunjukkan gambar asal dari setiap \textit{keypoint}.
 	\item \texttt{get\_keypoint} \\
 	Fungsi berguna untuk membuat objek \textit{keypoint} dari sebuah baris \textit{dataframe}. Fungsi ini mengambil nilai dari kolom \texttt{kp\_point\_x}, \texttt{kp\_point\_y}, \texttt{size}, \texttt{angle}, \texttt{response}, \texttt{octave}, \texttt{class\_id} dan membuat objek \textit{keypoint} dari nilai-nilai tersebut.
 	\item \texttt{get\_descriptor} \\

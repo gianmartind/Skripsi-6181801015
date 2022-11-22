@@ -98,7 +98,116 @@ Bagian POI yang merupakan logo dan objek yang konsisten tersebut tidak selalu da
 
 Fitur lokal yang memiliki sifat konsisten dan unik tersebut dapat dicari dengan menggunakan teknik \textit{clustering}. Fitur lokal yang didapat dari gambar-gambar yang berbeda tersebut dibagi menjadi beberapa kelompok yang disebut \textit{cluster}. Dari \textit{cluster} yang terbentuk tersebut dicari kelompok mana saja yang sifatnya konsisten dan unik terhadap sebuah POI. 
 
-\section{Analisis Terhadap Sifat-sifat Fitur Lokal pada Gambar POI}
+\section{Analisis Sifat Konsisten pada Fitur Lokal dari Gambar POI}
+\label{sec:analisis_konsistensi}
+Fitur lokal yang didapat dari hasil ekstraksi fitur lokal ada yang memiliki sifat konsisten. Pada penelitian ini fitur lokal yang konsisten terhadap sebuah POI adalah fitur lokal yang memiliki sifat yang muncul pada mayoritas gambar berbeda dari POI tersebut. Sebuah fitur lokal yang dihasilkan dengan menggunakan metode SIFT---seperti yang digunakan pada penelitian ini---akan memiliki sebuah sifat yang dideskripsikan dengan sebuah vektor yang berisi nilai-nilai sudut dari \textit{pixel} disekitarnya. 
+
+Pencarian fitur lokal yang konsisten dapat dilakukan dengan mengelompokkan fitur lokal berdasarkan deskriptornya. Pengelompokkan fitur lokal ini dapat dilakukan dengan menggunakan metode \textit{Clustering}. Metode \textit{Clustering} digunakan untuk membagi fitur-fitur lokal dari berbagai gambar menjadi beberapa kelompok. Setiap kelompok tersebut berisi beberapa fitur lokal yang memiliki sifat yang mirip, di mana kemiripan tersebut ditandai dengan jarak euclidean yang kecil dari deskriptornya. 
+
+\subsection{Ide Dasar dan Tahapan Analisis}
+Analisis pada tahap ini dilakukan untuk melihat apakah ada fitur lokal yang sifatnya konsisten pada sekumpulan gambar POI. Analisis dilakukan dengan menggunakan 10 gambar berbeda dari sebuah POI yang sama. Gambar-gambar tersebut merupakan gambar sebuah POI yang diambil dari beberapa sudut pengambilan dan juga waktu pengambilan yang berbeda. Beberapa contoh gambar yang digunakan dapat dilihat pada Gambar~\ref{fig:contoh_ping}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\textwidth]{ping_1247.jpg}	
+	\caption{Beberapa contoh gambar yang digunakan pada analisis untuk melihat sifat konsisten pada fitur lokal.}
+	\label{fig:contoh_ping}
+\end{figure}
+Dari contoh-contoh gambar pada Gambar~\ref{fig:contoh_ping} terlihat bahwa ada bagian objek dari POI yang selalu muncul dan ada bagian yang hanya muncul di satu gambar saja. Objek-objek yang konsisten muncul tersebut akan menghasilkan fitur lokal dengan sifat yang saling mirip. Jika objek-objek dengan sifat yang mirip tersebut ditemukan dalam mayoritas gambar yang berbeda maka dapat dikatakan bahwa sifat tersebut merupakan sifat yang konsisten.
+
+Pencarian fitur lokal dengan sifat konsisten pada analisis ini dilakukan dengan tahapan sebagai berikut:
+\begin{enumerate}
+	\item Memuat \textit{file} gambar yang digunakan
+	\item Melakukan ekstraksi fitur pada semua gambar
+	\item Menggabungkan vektor-vektor deskriptor dari semua gambar ke dalam sebuah \textit{dataframe}. Setiap vektor deskriptor akan dicatat gambar asalnya
+	\item Melakukan \textit{clustering} pada seluruh vektor deskriptor dari \textit{dataframe}
+	\item Menghitung jumlah gambar yang berbeda untuk tiap \textit{cluster}.
+\end{enumerate}
+Langkah-langkah pada tahapan di atas akan menghasilkan kelompok-kelompok fitur lokal dengan jumlah gambar berbeda untuk tiap kelompok. Banyaknya gambar berbeda tersebut menentukan apakah fitur lokal tersebut memiliki sifat yang konsisten atau tidak. 
+
+\subsection{Implementasi}
+Analisis ini dilakukan dengan menggunakan Python versi 3.7.5 dari distribusi Anaconda. Seluruh tahap pemrosesan gambar dan ekstraksi fitur lokal dilakukan dengan menggunakan fungsi-fungsi dari \textit{library} OpenCV versi 4.5.5.64. Metode \textit{clustering} yang digunakan adalah Metode \textit{Agglomerative Clustering} dengan menggunakan implementasi dari \textit{library} Scikit-learn versi 1.0.2. Tahap pemrosesan dan tabulasi data dilakukan dengan menggunakan \textit{library} Pandas bersi 1.3.5, serta untuk visualisasi data dihasilkan dengan menggunakan \textit{library} Plotly. Tahapan implementasi yang dilakukan adalah sebagai berikut:
+\begin{enumerate}
+	\item Melakukan \textit{Import} semua \textit{library} yang diperlukan: OpenCV (\texttt{cv2}), Scikit-learn (\textit{sklearn}), Pandas (\texttt{pandas}), dan Plotly (\texttt{px})
+	\item Memuat semua gambar yang akan digunakan dengan fungsi \texttt{cv2.imread}. Setiap gambar dibatasi ukurannya menjadi kurang dari atau sama dengan $600\times600$, serta format warnanya diubah menjadi \textit{grayscale}.
+	\item Membuat objek SIFT yang akan digunakan untuk melakukan ekstraksi fitur lokal. Pembuatan objek SIFT dengan menggunakan fungsi \texttt{cv2.SIFT\_create}, objek SIFT tersebut disimpan dalam variabel dengan nama \texttt{sift}.
+	\item Menggunakan objek \texttt{sift} untuk melakukan ekstraksi fitur lokal dari masing-masing gambar yang telah dimuat sebelumnya. Ekstraksi fitur lokal dilakukan dengan menggunakan fungsi \texttt{sift.detectAndCompute}, fungsi tersebut akan menghasilkan sebuah \textit{array} yang berisi objek \textit{keypoint} dan sebuah \textit{array} yang berisi vektor deskriptor untuk tiap \textit{keypoint}. 
+	\item Menggabungkan setiap \textit{array} deskriptor dari masing-masing gambar ke dalam satu \textit{dataframe}.
+	\item Menambahkan kolom \texttt{img} ke dalam \textit{dataframe} deskriptor. Kolom \texttt{img} tersebut berisi nama gambar asal dari sebuah deskriptor.
+	\item Melakukan \textit{clustering} pada vektor deskriptor dari \textit{dataframe}. \textit{Clustering} dilakukan dengan membuat objek \textit{AgglomerativeClustering} dari \texttt{sklearn}. Pembagian \textit{cluster} ditentukan dengan menggunakan parameter \texttt{distance\_threshold}. Parameter \texttt{distance\_threshold} tersebut diisi dengan menghitung nilai jarak rata-rata dari 100 sampel data yang diambil secara acak.
+	\item Setelah didapat label \textit{cluster} untuk tiap deskriptor, masukkan label tersebut ke dalam \textit{dataframe} sebagai kolom baru \texttt{cluster\_label}.
+	\item Mengelompokkan data pada \textit{dataframe} berdasarkan kolom \texttt{cluster\_label} dengan menggunakan fungsi \texttt{groupby} yang tersedia dari Pandas.
+	\item Menghitung jumlah gambar (kolom \texttt{img}) yang unik dari setiap kelompok \texttt{cluster\_label} dengan menggunakan fungsi \texttt{nunique}.
+	\item Menampilkan sebaran jumlah gambar yang unik pada sebuah histogram.
+\end{enumerate}
+
+\subsection{Hasil}
+Dari implementasi program yang telah dilakukan didapat hasil berupa nomor \textit{cluster} beserta jumlah gambar berbeda dari \textit{cluster} tersebut. Sebaran untuk jumlah gambar unik untuk setiap \textit{cluster} dapat dilihat pada histogram di Gambar~\ref{fig:unique_image}. Histogram tersebut menunjukkan ada berapa banyak \textit{cluster} yang memiliki jumlah $n$ gambar unik. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{unique_image.png}
+	\caption{Histogram sebaran jumlah gambar unik tiap \textit{cluster}.}
+	\label{fig:unique_image}
+\end{figure}
+Dari histogram pada Gambar~\ref{fig:unique_image} terlihat bahwa ada \textit{cluster} yang berisi fitur-fitur lokal yang sifatnya konsisten ditandai dengan nilai jumlah gambar unik yang tinggi. Jumlah gambar unik yang tinggi menunjukkan bahwa sebuah \textit{cluster} memiliki fitur-fitur lokal yang sifatnya konsisten. Sebagai contoh sebuah \textit{cluster} yang memiliki sebanyak 8 gambar unik di dalamnya berarti \textit{cluster} tersebut berisi fitur-fitur lokal dengan sifat yang muncul di 8 gambar berbeda. 
+
+Sebaran pada histogram menunjukkan bahwa mayoritas fitur lokal dari gambar merupakan fitur lokal yang sifatnya tidak konsisten. Terlihat dari sebagian besar data berada pada rentang nilai gambar unik $\leq5$ yang terbilang cukup rendah. Hanya sebagian kecil saja dari fitur lokal yang dihasilkan yang sifatnya konsisten terhadap POI.
+
+\section{Analisis Sifat Unik pada Fitur Lokal dari Gambar POI}
+
+\label{sec:analisis_keunikan}
+Fitur lokal yang didapat dari hasil ekstraksi pada gambar POI juga memiliki sifat yang unik terhadap sebuah POI. Pada penelitian ini sebuah fitur lokal dibilang unik terhadap sebuah jika fitur lokal tersebut memiliki sifat yang hanya muncul di POI tersebut saja. Sebuah sifat fitur lokal tidak perlu benar-benar hanya muncul pada satu POI saja untuk dikatakan unik, jika sebuah sifat muncul pada beberapa gambar berbeda dan mayoritas dari gambar berbeda tersebut merupakan gambar dari POI yang sama maka sifat fitur lokal tersebut juga bisa dikatakan unik. Analisis kali ini mirip dengan analisis sebelumnya yaitu dilakukan dengan melakukan \textit{clustering} pada vektor deskriptor dari fitur lokal yang dihasilkan dengan metode SIFT.
+
+\subsection{Ide Dasar dan Tahapan Analisis}
+Analisis dilakukan untuk melihat apakah ada fitur lokal yang sifatnya unik terhadap sebuah POI atau tidak. Analisis akan dilakukan dengan menggunakan gambar-gambar dari beberapa POI yang berbeda, di mana setiap POI akan memiliki lebih dari satu gambar. Pada analisis ini digunakan sebanyak 5 POI berbeda, di mana setiap POI terdiri dari 4 gambar. Contoh gambar-gambar yang digunakan pada analisis ini dapat dilihat pada Gambar~\ref{fig:analisis_uniqueness}. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth]{contoh_gambar_uniq.png}	
+	\caption{Beberapa contoh gambar yang digunakan pada analisis untuk melihat sifat unik pada gambar POI.}
+	\label{fig:analisis_uniqueness}
+\end{figure}
+
+Gambar-gambar berbeda tersebut lalu diekstrak fitur lokalnya dan vektor-vektor deskriptor dari gambar-gambar berbeda akan dikumpulkan menjadi satu. Kumpulan vektor deskriptor tersebut lalu dibagi menjadi beberapa kelompok dengan menggunakan metode \textit{clustering}. Hasil kelompok-kelompok dari \textit{clustering} tersebut lalu akan dianalisis untuk melihat apakah fitur-fitur lokal dalam kelompok tersebut memiliki sifat yang unik atau tidak.
+
+Sebuah \textit{cluster} dengan anggota beberapa fitur lokal merupakan sebuah kelompok fitur lokal yang memiliki sebuah sifat yang sama. Sifat fitur-fitur lokal tersebut dapat dikatakan unik terhadap sebuah POI jika mayoritas fitur lokal dalam \textit{cluster} tersebut berasal dari gambar sebuah POI yang sama. Sebaliknya jika ada sebuah \textit{cluster} yang memiliki anggota fitur lokal yang berasal dari banyak gambar berbeda maka fitur lokal dalam \textit{cluster} tersebut memiliki sifat yang tidak unik.
+
+Pencarian fitur lokal dengan sifat unik pada analisis ini dilakukan dengan tahapan sebagai berikut:
+\begin{enumerate}
+	\item Memuat \textit{file} gambar yang digunakan
+	\item Melakukan ekstraksi fitur pada semua gambar
+	\item Menggabungkan vektor-vektor deskriptor dari semua gambar ke dalam sebuah \textit{dataframe}. Setiap vektor deskriptor akan dicatat gambar asalnya serta kelas gambarnya (nama POI)
+	\item Melakukan \textit{clustering} pada seluruh vektor deskriptor dari \textit{dataframe}
+	\item Menghitung banyak kelas gambar berbeda yang muncul dalam setiap \textit{cluster}.
+\end{enumerate}
+Setelah melakukan semua tahapan di atas akan didapat \textit{cluster-cluster} fitur lokal beserta dengan jumlah kelas gambar yang berbeda untuk tiap \textit{cluster}-nya. Jumlah kelas gambar berbeda tersebut akan menentukan apakah fitur lokal dalam \textit{cluster} memiliki sifat yang unik atau tidak. 
+
+\subsection{Implementasi}
+Analisis ini dilakukan dengan menggunakan Python versi 3.7.5 dari distribusi Anaconda. Seluruh tahap pemrosesan gambar dan ekstraksi fitur lokal dilakukan dengan menggunakan fungsi-fungsi dari \textit{library} OpenCV versi 4.5.5.64. Metode \textit{clustering} yang digunakan adalah Metode \textit{Agglomerative Clustering} dengan menggunakan implementasi dari \textit{library} Scikit-learn versi 1.0.2. Tahap pemrosesan dan tabulasi data dilakukan dengan menggunakan \textit{library} Pandas bersi 1.3.5, serta untuk visualisasi data dihasilkan dengan menggunakan \textit{library} Plotly. Tahapan implementasi yang dilakukan adalah sebagai berikut:
+\begin{enumerate}
+	\item Melakukan \textit{Import} semua \textit{library} yang diperlukan: OpenCV (\texttt{cv2}), Scikit-learn (\textit{sklearn}), Pandas (\texttt{pandas}), dan Plotly (\texttt{px})
+	\item Memuat semua gambar yang digunakan. Gambar-gambar dimasukkan ke dalam \textit{dictionary} dengan nama kelas gambar (nama POI) sebagai \textit{key} dan \textit{value}-nya berupa \textit{list} yang menyimpan nama gambar dan file gambar.
+	\item Membuat objek SIFT yang akan digunakan untuk melakukan ekstraksi fitur lokal. Pembuatan objek SIFT dengan menggunakan fungsi \texttt{cv2.SIFT\_create}, objek SIFT tersebut disimpan dalam variabel dengan nama \texttt{sift}.
+	\item Menggunakan objek \texttt{sift} untuk melakukan ekstraksi fitur lokal dari masing-masing gambar yang telah dimuat sebelumnya. Ekstraksi fitur lokal dilakukan dengan menggunakan fungsi \texttt{sift.detectAndCompute}, fungsi tersebut akan menghasilkan sebuah \textit{array} yang berisi objek \textit{keypoint} dan sebuah \textit{array} yang berisi vektor deskriptor untuk tiap \textit{keypoint}. 
+	\item Menggabungkan setiap \textit{array} deskriptor dari masing-masing gambar ke dalam satu \textit{dataframe}.
+	\item Menambahkan kolom \texttt{img} ke dalam \textit{dataframe} deskriptor. Kolom \texttt{img} tersebut berisi nama gambar asal dari sebuah deskriptor.
+	\item Menambahkan kolom \texttt{img\_class} ke dalam \textit{dataframe} deskriptor. Kolom \texttt{img\_class} tersebut berisi kelas gambar asal dari sebuah deskriptor.
+	\item Melakukan \textit{clustering} pada vektor deskriptor dari \textit{dataframe}. \textit{Clustering} dilakukan dengan membuat objek \textit{AgglomerativeClustering} dari \texttt{sklearn}. Pembagian \textit{cluster} ditentukan dengan menggunakan parameter \texttt{distance\_threshold}. Parameter \texttt{distance\_threshold} tersebut diisi dengan menghitung nilai jarak rata-rata dari 100 sampel data yang diambil secara acak.
+	\item Setelah didapat label \textit{cluster} untuk tiap deskriptor, masukkan label tersebut ke dalam \textit{dataframe} sebagai kolom baru \texttt{cluster\_label}.
+	\item Mengelompokkan data pada \textit{dataframe} berdasarkan kolom \texttt{cluster\_label} dengan menggunakan fungsi \texttt{groupby} yang tersedia dari Pandas. 
+	\item Menghitung jumlah kelas gambar (kolom \texttt{img\_class}) yang unik untuk tiap \texttt{cluster\_label} dengan menggunakan fungsi \texttt{nunique}.
+	\item Menampilkan sebaran jumlah kelas gambar yang unik pada sebuah histogram.
+\end{enumerate}
+
+\subsection{Hasil}
+Setelah selesai dilakukan semua tahapan implementasi dalam analisis akan didapat kelompok-kelompok fitur lokal serta jumlah kelas gambar yang unik untuk setiap kelompok. Banyaknya kelas gambar yang unik tersebut menentukan apakah sifat fitur-fitur lokal dalam kelompok tersebut termasuk unik atau tidak. Jumlah kelas gambar unik yang tinggi menunjukkan bahwa sebuah kelompok memiliki sifat fitur lokal yang tidak unik. Hal tersebut karena jumlah kelas gambar unik yang tinggi berarti sifat fitur lokal pada gambar tersebut muncul di banyak jenis POI yang berbeda dan tidak unik terhadap satu POI saja. Sebaran nilai jumlah kelas gambar yang unik dapat dilihat pada histogram di Gambar~\ref{fig:unique_image_class}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{unique_image_class.png}
+	\caption{Histogram sebaran jumlah kelas gambar yang unik tiap \textit{cluster}.}
+	\label{fig:unique_image_class}
+\end{figure}
+Terlihat dari histogram pada Gambar~\ref{fig:unique_image_class} bahwa ada \textit{cluster} dengan jumlah kelas gambar unik yang sedikit seperti 1 dan 2, di mana merupakan \textit{cluster} tersebut merupakan \textit{cluster} dengan sifat yang unik. Jumlah \textit{cluster} dengan sifat yang unik termasuk sedikit dibandingkan dengan jumlah \textit{cluster} yang sifatnya tidak unik. Sedikitnya jumlah \textit{cluster} dengan sifat yang unik menunjukkan bahwa dalam sebuah gambar POI sebagian besar fitur lokal merupakan fitur lokal yang sifatnya tidak unik.
+
+\section{Analisis Tingkat Keunikan dan Kekonsistenan Fitur Lokal pada Gambar POI}
 \label{sec:analisis_sifat}
 Pada \ref{sec:analisis_logo} disebutkan bahwa untuk mendapatkan fitur lokal yang berasal dari logo dan bagian konsisten serta unik perlu dicari fitur lokal yang sifatnya konsisten dan unik terhadap suatu POI tersebut. Pencarian fitur lokal konsisten dan unik tersebut dapat dilakukan dengan menggunakan teknik \textit{clustering}. 
 
@@ -127,15 +236,10 @@ Langkah-langkah analisis yang dilakukan untuk mencari fitur lokal dengan sifat k
 Langkah-langkah pada \textit{flowchart} di Gambar~\ref{fig:tahapan_analisis_clustering} secara rinci adalah sebagai berikut:
 \begin{enumerate}
 	\item \textit{Load} Gambar \\
-	Pada analisis ini digunakan sebanyak total 12 gambar yang terbagi menjadi 3 kelas POI. Setiap kelas POI memiliki 4 gambar yang merupakan gambar POI tersebut dengan sudut pengambilan dan waktu pengambilan yang berbeda. Beberapa contoh gambar yang digunakan dapat dilihat pada Gambar~\ref{fig:gambar_analisis_clustering}.
+	Pada analisis ini digunakan sebanyak total 100 gambar yang terbagi menjadi 10 kelas POI. Setiap kelas POI memiliki 10 gambar yang merupakan gambar POI tersebut dengan sudut pengambilan dan waktu pengambilan yang berbeda. Beberapa contoh gambar yang digunakan dapat dilihat pada Gambar~\ref{fig:gambar_analisis_clustering}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.4\linewidth, height=4cm]{asus\_1\_bw2.jpg}
-		\includegraphics[width=0.4\linewidth, height=4cm]{asus\_3\_bw2.jpg}
-		\includegraphics[width=0.4\linewidth, height=4cm]{cgv\_1\_bw.jpg}
-		\includegraphics[width=0.4\linewidth, height=4cm]{cgv\_3\_bw.jpg}
-		\includegraphics[width=0.4\linewidth, height=4cm]{hnm\_1\_bw.jpg}
-		\includegraphics[width=0.4\linewidth, height=4cm]{hnm\_2\_bw.jpg}
+		\includegraphics[width=.8\textwidth]{contoh_gambar_clustering.png}
 		\caption{Contoh beberapa gambar yang digunakan pada analisis ini.}
 		\label{fig:gambar_analisis_clustering}
 	\end{figure}
@@ -158,7 +262,7 @@ Langkah-langkah pada \textit{flowchart} di Gambar~\ref{fig:tahapan_analisis_clus
 Langkah-langkah yang telah dijelaskan pada \ref{subsec:tahapan_analisis_clustering} dijalankan dengan membuat implementasi menggunakan Python. Versi Python yang digunakan adalah Python versi 3.7.5 dari distribusi Anaconda. Pemrosesan gambar serta ekstraksi fitur lokal dilakukan dengan menggunakan \textit{library} OpenCV versi 4.5.5.64. Untuk \textit{clustering} digunakan metode \textit{Agglomerative Clustering} dari \textit{library} Scikit-learn versi 1.0.2. Serta digunakan juga \textit{library} Pandas versi 1.3.5 untuk pemrosesan data. Langkah-langkah implementasi yang dilakukan adalah sebagai berikut:
 \begin{enumerate}
 	\item \textit{Import library} OpenCV (\texttt{cv2}), Scikit-learn (\texttt{sklearn}), dan Pandas (\texttt{pandas}).
-	\item \textit{Load} semua gambar yang digunakan dengan fungsi \texttt{cv2.imread}. \textit{Array} gambar disimpan dalam sebuah \textit{dictionary} dengan nama gambar sebagai \textit{key}.
+	\item Memuat semua gambar yang digunakan dengan fungsi \texttt{cv2.imread}. Gambar yang dimuat terlebih dahulu diubah ukurannya agar menjadi tidak ada sisi yang panjangnya lebih dari 600 \textit{pixel}. \textit{Array} gambar disimpan dalam sebuah \textit{dictionary} dengan nama gambar sebagai \textit{key}.
 	\item Membuat objek SIFT dengan fungsi \texttt{cv2.SIFT\_create} masukkan ke dalam objek dengan nama \texttt{sift}.
 	\item Menggunakan objek \texttt{sift} untuk melakukan ekstraksi fitur lokal dari masing-masing gambar. Ekstraksi dilakukan dengan fungsi \texttt{sift.detectAndCompute}. \textit{Keypoint} yang dihasilkan dimasukkan ke dalam sebuah \textit{list} bernama \texttt{keypoints} untuk semua gambar. Untuk deskriptor dimasukkan ke dalam sebuah \textit{dataframe} dengan nama \texttt{descriptors}.
 	\item Pada \textit{dataframe} \texttt{descriptor} ditambahkan kolom \texttt{img} yang menyimpan nama gambar asal, \texttt{img\_class} untuk kelas dari gambar asal, dan \texttt{kp\_idx} yang menunjukkan posisi \textit{keypoint} di \textit{list} \texttt{keypoints}.
@@ -181,30 +285,30 @@ Langkah-langkah yang telah dijelaskan pada \ref{subsec:tahapan_analisis_clusteri
 \subsection{Hasil Analisis}
 Setelah dilakukan implementasi sesuai dengan tahapan pada \ref{subsec:tahapan_implementasi_analisis_clustering} didapatkan tabel berisi deskriptor untuk \textit{keypoint} beserta dengan nilai keunikan (\texttt{uniqueness}) dan konsistensinya (\texttt{consistency}). Beberapa contoh potongan dari tabel hasil dapat dilihat pada Tabel~\ref{tab:descriptors_table}
 \begin{table}[H]
-	\centering
-	\begin{tabular}{|c|c|c|c|c|}
+	\begin{tabular}{|l|l|l|l|l|l|}
 		\hline
-		\textbf{\texttt{img}}         & \textbf{\texttt{img\_class}} & \textbf{\texttt{cluster2\_label}} & \textbf{\texttt{uniqueness}} & \textbf{\texttt{consistency}} \\ \hline
-		hnm\_1.jpg  & hnm        & 0               & 0.5        & 0.25        \\ \hline
-		hnm\_1.jpg  & hnm        & 0               & 0.5        & 0.25        \\ \hline
-		asus\_3.jpg & asus       & 0               & 0.5        & 0.25        \\ \hline
-		hnm\_4.jpg  & hnm        & 1               & 0.5        & 0.25        \\ \hline
-		cgv\_2.jpg  & cgv        & 1               & 0.5        & 0.25        \\ \hline
-		cgv\_2.jpg  & cgv        & 1               & 0.5        & 0.25        \\ \hline
-		cgv\_2.jpg  & cgv        & 2               & 0.66       & 0.5         \\ \hline
-		hnm\_2.jpg  & hnm        & 2               & 0.33       & 0.25        \\ \hline
-		cgv\_4.jpg  & cgv        & 2               & 0.66       & 0.5         \\ \hline
-		cgv\_4.jpg  & cgv        & 2               & 0.66       & 0.5         \\ \hline
-		cgv\_2.jpg  & cgv        & 2               & 0.66       & 0.5         \\ \hline
-		cgv\_4.jpg  & cgv        & 3               & 0.5        & 0.25        \\ \hline
-		asus\_4.jpg & asus       & 3               & 0.5        & 0.25        \\ \hline
-		hnm\_2.jpg  & hnm        & 4               & 1          & 0.5         \\ \hline
-		hnm\_3.jpg  & hnm        & 4               & 1          & 0.5         \\ \hline
-		hnm\_2.jpg  & hnm        & 4               & 1          & 0.5         \\ \hline
-		hnm\_2.jpg  & hnm        & 4               & 1          & 0.5         \\ \hline
-		asus\_3.jpg & asus       & 5               & 0.5        & 0.25        \\ \hline
-		hnm\_2.jpg  & hnm        & 5               & 0.5        & 0.25        \\ \hline
-		asus\_3.jpg & asus       & 5               & 0.5        & 0.25        \\ \hline
+		\multicolumn{1}{|c|}{\textbf{img}} & \multicolumn{1}{c|}{\textbf{img\_class}} & \multicolumn{1}{c|}{\textbf{cluster\_label}} & \multicolumn{1}{c|}{\textbf{cluster\_label}} & \multicolumn{1}{c|}{\textbf{uniqueness}} & \multicolumn{1}{c|}{\textbf{consistency}} \\ \hline
+		\multicolumn{1}{|c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} & \multicolumn{1}{c|}{...} \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_7.jpg                       & yogya                                    & 33                                           & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_9.jpg                       & yogya                                    & 238                                          & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_9.jpg                       & yogya                                    & 238                                          & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_9.jpg                       & yogya                                    & 238                                          & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		yogya\_9.jpg                       & yogya                                    & 238                                          & 3639                                         & 0.4                                      & 0.4                                       \\ \hline
+		gembul\_6.jpg                      & gembul                                   & 330                                          & 3640                                         & 0.666667                                 & 0.2                                       \\ \hline
+		gembul\_6.jpg                      & gembul                                   & 330                                          & 3640                                         & 0.666667                                 & 0.2                                       \\ \hline
+		gembul\_6.jpg                      & gembul                                   & 330                                          & 3640                                         & 0.666667                                 & 0.2                                       \\ \hline
+		gembul\_8.jpg                      & gembul                                   & 313                                          & 3640                                         & 0.666667                                 & 0.2                                       \\ \hline
+		gembul\_8.jpg                      & gembul                                   & 313                                          & 3640                                         & 0.666667                                 & 0.2                                       \\ \hline
+		oxy\_10.jpg                        & oxy                                      & 29                                           & 3640                                         & 0.333333                                 & 0.1                                       \\ \hline
+		oxy\_10.jpg                        & oxy                                      & 29                                           & 3640                                         & 0.333333                                 & 0.1                                       \\ \hline
+		oxy\_10.jpg                        & oxy                                      & 29                                           & 3640                                         & 0.333333                                 & 0.1                                       \\ \hline
+		oxy\_10.jpg                        & oxy                                      & 29                                           & 3640                                         & 0.333333                                 & 0.1                                       \\ \hline
 	\end{tabular}
 	\caption{Potongan beberapa contoh dari tabel deskriptor.}
 	\label{tab:descriptors_table}
@@ -216,88 +320,191 @@ Data pada Tabel~\ref{tab:descriptors_table} menunjukkan \textit{keypoint} (fitur
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{other\_uniqueness.png}
+	\includegraphics[width=\textwidth]{poi_uniqueness.png}
 	\caption{Histogram sebaran nilai keunikan.}
 	\label{fig:hist_other_uniqueness}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{other\_consistency.png}
+	\includegraphics[width=\textwidth]{poi_consistency.png}
 	\caption{Histogram sebaran nilai keunikan.}
 	\label{fig:hist_other_consistency}
 \end{figure}
 
-\subsection{Visualisasi Keypoint yang Unik dan Konsisten}
-Pada bagian ini akan dilakukan visualisasi \textit{keypoint} dalam gambar untuk melihat apakah \textit{keypoint} yang unik dan konsisten tersebut benar berasal dari bagian yang permanen dalam POI. Untuk itu \textit{keypoint-keypoint} tersebut akan disaring berdasarkan nilai keunikan dan konsistensinya. 
+\subsection{Visualisasi Nilai Konsistensi dan Keunikan Fitur Lokal}
+Dari tahap sebelumnya telah didapat nilai konsistensi dan keunikan untuk setiap fitur lokal. Tetapi nilai-nilai tersebut belum tentu dengan benar menunjukkan bagian POI yang konsisten dan unik. Perlu dilakukan sebuah tes untuk memeriksa apakah nilai-nilai tersebut benar menunjukkan bagian atau objek dari POI yang sifatnya konsisten dan unik. Selain itu juga akan dilihat bagian POI seperti apa yang akan cenderung memiliki nilai konsistensi dan keunikan tinggi berdasarkan dengan penghitungan nilai konsistensi dan keunikan pada penelitian ini.
 
-Penyaringan fitur lokal berdasarkan nilai keunikan dan konsistensi dilakukan dengan menetapkan suatu batas bawah untuk masing-masing nilai tersebut. Fitur lokal yang diambil untuk visualisasi adalah fitur lokal yang nilai keunikan dan konsistensinya di atas nilai-nilai batas tersebut. Penentuan batas dilakukan dengan melihat nilai persebaran keduanya dan menetukan nilai batas sehingga jumlah fitur lokal yang didapat optimal untuk melakukan visualisasi.
-
-Sebaran untuk nilai keunikan dapat dilihat pada Gambar~\ref{fig:hist_other_uniqueness} dari subbab sebelumnya. Dari histogram pada Gambar~\ref{fig:hist_other_uniqueness} terlihat bahwa sebaran nilai keunikan tidak merata. Mayoritas \textit{keypoint} merupakan \textit{keypoint} yang unik karena memiliki nilai keunikan 1. Untuk itu akan digunakan nilai 0.9 sebagai batas pengambilan untuk visualisasi. \textit{Keypoint} dengan \texttt{uniqueness} di atas 0.9 dinilai unik dan akan diambil untuk visualisasi.
-
-Sedangkan untuk nilai konsistensi sebarannya dapat dilihat pada Gambar~\ref{fig:hist_other_consistency}. Berbeda dengan nilai keunikan sebaran nilai konsistensi mayoritas berada pada nilai yang kecil yaitu pada rentang 0.2 - 0.3. Untuk mendapatkan \textit{keypoint} dengan jumlah yang optimal akan digunakan nilai 0.5 sebagai batas pengambilan. 
-
-Dari hasil penyaringan menggunakan $\mathtt{uniqueness} > 0.9$ dan $\mathtt{consistency} > 0.7$ didapatkan sebanyak 785 \textit{keypoint} dari total yang berjumlah 36940. \textit{Keypoint} yang didapat tersebut lalu divisualisasikan dalam gambar beserta dengan \textit{keypoint-keypoint} yang sifatnya tidak unik dan konsisten (memiliki nilai keunikan dan konsistensi tinggi). Hasilnya dapat dilihat pada Gambar~\ref{fig:other_filtered_keypoints}.
+Untuk melihat nilai konsistensi dan keunikan dari fitur lokal pada bagian-bagian POI maka perlu untuk menampilkan \textit{keypoint} dari fitur lokal pada gambar asalnya. \textit{Keypoint} yang ditampilkan pada gambar asal tersebut perlu untuk memiliki sebuah indikasi untuk menunjukkan nilai konsistensi dan keunikan dari fitur lokalnya. Pada bagian ini \textit{keypoint} yang ditampilkan pada gambar asal akan diberi warna sesuai dengan nilai konsistensi dan keunikannya.  \textit{Keypoint} ditampilkan di gambar asalnya sebanyak dua kali dengan pemberian warna masing-masing untuk nilai konsistensi dan keunikan. Beberapa contoh hasil visualisasi dapat dilihat pada Gambar~\ref{fig:contoh_visualisasi_clustering}. Gambar di sebelah kiri merupakan pemberian warna berdasarkan nilai keunikan dan gambar sebelah kiri berdasarkan nilai konsistensi.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{asus\_1\_kps.jpg}
-	\includegraphics[width=\textwidth]{cgv\_2\_kps.jpg}
-	\caption{Beberapa contoh \textit{keypoint} dengan nilai konsistensi dan keunikan tinggi. Lingkaran hijau merupakan \textit{Keypoint} yang nilai konsistensi dan keunikannya tinggi. Sedangkan lingkaran merah merupakan \textit{Keypoint} yang nilai konsistensi dan keunikannya rendah.}
-	\label{fig:other_filtered_keypoints}
+	\begin{subfigure}{\textwidth}
+		\includegraphics[width=\textwidth]{kp_ping_5.jpg}
+		\caption{}
+		\label{fig:contoh_visualisasi_clustering_1}
+	\end{subfigure}
+	\begin{subfigure}{\textwidth}
+		\includegraphics[width=\textwidth]{kp_gembul_4.jpg}
+		\caption{}
+		\label{fig:contoh_visualisasi_clustering_2}
+	\end{subfigure}
+	\begin{subfigure}{\textwidth}
+		\includegraphics[width=\textwidth]{kp_binus_4.jpg}
+		\caption{}
+		\label{fig:contoh_visualisasi_clustering_3}
+	\end{subfigure}
+	\caption{Beberapa contoh gambar POI beserta \textit{keypoint} yang fitur lokalnya sudah diberi warna sesuai dengan nilai konsistensi dan keunikannya.}
+	\label{fig:contoh_visualisasi_clustering}
 \end{figure}
+Gambar-gambar pada Gambar~\ref{fig:contoh_visualisasi_clustering} menunujukkan nilai konsistensi dan keunikan yang cukup berbeda antar bagian dari POI ditunjukkan dari warna \textit{keypoint} pada bagian-bagian tertentu POI memiliki warna yang cenderung sama. Jika dilihat pada gambar nilai konsistensi dan keunikan (gambar kiri dan kanan), terlihat bahwa bagian yang memiliki nilai keunikan tinggi tidak selalu memiliki nilai konsistensi yang tinggi juga, dan sebaliknya. Seperti contohnya pada Gambar~\ref{fig:contoh_visualisasi_clustering_1}, gambar sebelah kiri menunjukkan bahwa bagian atap dari POI merupakan bagian yang memiliki fitur lokal yang memiliki sifat unik. Tetapi jika dilihat dari gambar sebelah kanan, bagian atap yang sama cenderung memiliki \textit{keypoint} dengan fitur lokal yang memiliki sifat tidak konsisten. \textit{Keypoint} dengan nilai konsistensi tinggi justru mayoritas berasal dari bagian pagar, di mana bagian tersebut memiliki nilai keunikan yang tidak terlalu tinggi jika dilihat dari gambar di sebelah kiri.
 
-Pada gambar pertama (gambar di atas) dari Gambar~\ref{fig:other_filtered_keypoints} terlihat bahwa \textit{keypoint-keypoint} yang didapat banyak yang berasal dari bagian logo atau objek yang permanen. Sebagian besar berasal dari logo di bagian atas, logo di tembok belakang dan logo di meja. Selain itu untuk \textit{keypoint} yang tidak berasal dari logo semua berasal dari bagian POI yang permanen seperti tembok, meja, atau poster. Tidak ada \textit{keypoint} yang berasal dari orang.
 
-Sedangkan pada gambar kedua masih ada beberapa \textit{keypoint} yang berasal dari orang yang lewat. Tetapi sebagian besar \textit{keypoint} berasal dari bagian pilar yang berada di tengah gambar yang merupakan bagian permanen dari POI.
-
-Dari hasil analisis ini didapat bahwa dengan metode \textit{clustering} seperti pada langkah-langkah di atas mampu memberikan \textit{keypoint} yang cukup unik dan konsisten. Metode mendapatkan \textit{keypoint} yang unik dan konsisten ini diharapkan dapat memberikan fitur yang kuat jika digunakan untuk melakukan OIR dengan BSIS.
-%\begin{table}[H]
-%	\centering
-%	\begin{tabular}{|c|c|c|c|c|}
-%		\hline
-%		\textbf{\texttt{img}}         & \textbf{\texttt{img\_class}} & \textbf{\texttt{cluster2\_label}} & \textbf{\texttt{uniqueness}} & \textbf{\texttt{consistency}} \\ \hline
-%		asus\_2.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		cgv\_2.jpg  & cgv        & 0               & 0.25       & 0.25        \\ \hline
-%		asus\_2.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_2.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_2.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_2.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		cgv\_2.jpg  & cgv        & 0               & 0.25       & 0.25        \\ \hline
-%		asus\_3.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_3.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_3.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_1.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_1.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_1.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		cgv\_2.jpg  & cgv        & 0               & 0.25       & 0.25        \\ \hline
-%		cgv\_2.jpg  & cgv        & 0               & 0.25       & 0.25        \\ \hline
-%		asus\_3.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		asus\_3.jpg & asus       & 0               & 0.75       & 0.75        \\ \hline
-%		cgv\_2.jpg  & cgv        & 0               & 0.25       & 0.25        \\ \hline
-%		asus\_3.jpg & asus       & 1               & 0.2        & 0.5         \\ \hline
-%		hnm\_1.jpg  & hnm        & 1               & 0.4        & 1.0         \\ \hline
-%	\end{tabular}
-%	\caption{Potongan beberapa contoh dari tabel deskriptor.}
-%	\label{tab:descriptors_table}
-%\end{table}
+%\subsection{Visualisasi Keypoint yang Unik dan Konsisten}
+%Pada bagian ini akan dilakukan visualisasi \textit{keypoint} dalam gambar untuk melihat apakah \textit{keypoint} yang unik dan konsisten tersebut benar berasal dari bagian yang permanen dalam POI. Untuk itu \textit{keypoint-keypoint} tersebut akan disaring berdasarkan nilai keunikan dan konsistensinya. 
 %
-%Dari Tabel~\ref{tab:descriptors_table} terlihat bahwa di \textit{cluster} dengan  \texttt{cluster2\_label} 0 terdapat 4 gambar yang berbeda. Dari 4 gambar tersebut 3 berasal dari \texttt{img\_class} \textbf{asus} dan 1 berasal dari \texttt{img\_class} \textbf{cgv}, maka \textit{keypoint} dengan \texttt{img\_class} \textbf{asus} pada \textit{cluster} tersebut akan memiliki nilai keunikan (\texttt{uniqueness}) yaitu $0.75$ dan untuk \textit{keypoint} dengan \texttt{img\_class} \textbf{cgv} memiliki nilai keunikan $0.25$. Pada \textit{cluster} tersebut juga untuk \texttt{img\_class} \textbf{asus} terdapat 3 gambar yang berbeda dari total 4 gambar yang digunakan maka nilai konsistensi (\texttt{consistency}) untuk \textit{keypoint} dengan \texttt{img\_class} \textbf{asus} pada \textit{cluster} tersebut adalah $3 / 4 = 0.75$. Sedangkan untuk \texttt{img\_class} \textbf{cgv} hanya terdapat satu gambar maka nilai konsistensinya adalah $1 / 4 = 0.25$.
+%Penyaringan fitur lokal berdasarkan nilai keunikan dan konsistensi dilakukan dengan menetapkan suatu batas bawah untuk masing-masing nilai tersebut. Fitur lokal yang diambil untuk visualisasi adalah fitur lokal yang nilai keunikan dan konsistensinya di atas nilai-nilai batas tersebut. Penentuan batas dilakukan dengan melihat nilai persebaran keduanya dan menetukan nilai batas sehingga jumlah fitur lokal yang didapat optimal untuk melakukan visualisasi.
 %
-%%\textit{Keypoint-keypoint} untuk \texttt{img\_class} \textbf{asus} pada \textit{cluster} dengan \texttt{cluster\_label} 0 tersebut merupakan \textit{keypoint} yang sifatnya unik dan konsisten karena memiliki nilai \texttt{uniqueness} dan \texttt{consistency} yang cukup tinggi. \textit{Keypoint} yang sifatnya konsisten dan unik tersebut akan divisualisasikan dalam gambar asalnya untuk melihat bagian objek dari POI yang menjadi asalnya. Hasil gambarnya dapat dilihat pada Gambar~\ref{fig:asus_keypoints}.
+%Sebaran untuk nilai keunikan dapat dilihat pada Gambar~\ref{fig:hist_other_uniqueness} dari subbab sebelumnya. Dari histogram pada Gambar~\ref{fig:hist_other_uniqueness} terlihat bahwa sebaran nilai keunikan tidak merata. Mayoritas \textit{keypoint} merupakan \textit{keypoint} yang unik karena memiliki nilai keunikan 1. Untuk itu akan digunakan nilai 0.9 sebagai batas pengambilan untuk visualisasi. \textit{Keypoint} dengan \texttt{uniqueness} di atas 0.9 dinilai unik dan akan diambil untuk visualisasi.
 %
-%Hasil pada Tabel~\ref{tab:descriptors_table} menunjukkan bahwa ada beberapa \textit{keypoint} yang memiliki nilai keunikan dan konsistensi yang tinggi dan ada beberapa yang rendah. Dengan menggunakan data tersebut \textit{keypoint} akan disaring berdasarkan nilainya keunikan dan konsistensinya dan dilakukan visualisasi. Akan dianalisis apakah \textit{keypoint} yang unik dan konsisten berasal dari bagian yang merupakan logo atau bagian dari POI yang bukan merupakan objek latar belakang atau objek yang tidak tetap. 
+%Sedangkan untuk nilai konsistensi sebarannya dapat dilihat pada Gambar~\ref{fig:hist_other_consistency}. Berbeda dengan nilai keunikan sebaran nilai konsistensi mayoritas berada pada nilai yang kecil yaitu pada rentang 0.2 - 0.3. Untuk mendapatkan \textit{keypoint} dengan jumlah yang optimal akan digunakan nilai 0.5 sebagai batas pengambilan. 
 %
+%Dari hasil penyaringan menggunakan $\mathtt{uniqueness} > 0.9$ dan $\mathtt{consistency} > 0.7$ didapatkan sebanyak 785 \textit{keypoint} dari total yang berjumlah 36940. \textit{Keypoint} yang didapat tersebut lalu divisualisasikan dalam gambar beserta dengan \textit{keypoint-keypoint} yang sifatnya tidak unik dan konsisten (memiliki nilai keunikan dan konsistensi tinggi). Hasilnya dapat dilihat pada Gambar~\ref{fig:other_filtered_keypoints}.
 %\begin{figure}[H]
 %	\centering
-%	\includegraphics[width=\textwidth]{asus\_2\_kps.jpg}
-%	\includegraphics[width=\textwidth]{asus\_3\_kps.jpg}
-%	\caption{Beberapa contoh \textit{keypoint} dengan nilai konsistensi dan keunikan tinggi. \textit{Keypoint} ditandai dengan lingkaran merah pada gambar.}
-%	\label{fig:asus_keypoints}
+%	\includegraphics[width=\textwidth]{asus\_1\_kps.jpg}
+%	\includegraphics[width=\textwidth]{cgv\_2\_kps.jpg}
+%	\caption{Beberapa contoh \textit{keypoint} dengan nilai konsistensi dan keunikan tinggi. Lingkaran hijau merupakan \textit{Keypoint} yang nilai konsistensi dan keunikannya tinggi. Sedangkan lingkaran merah merupakan \textit{Keypoint} yang nilai konsistensi dan keunikannya rendah.}
+%	\label{fig:other_filtered_keypoints}
 %\end{figure}
-
-%Dari kedua gambar tersebut terlihat bahwa sebagian besar \textit{keypoint} berasal dari bagian yang merupakan logo. Terutama di gambar kedua (gambar yang di bawah) semua \textit{keypoint} yang ditampilkan berasal dari logo POI baik yang berada di bagian atas POI maupun logo yang berada di bagian meja. Sedangkan untuk gambar yang pertama hanya beberapa \textit{keypoint} yang berasal dari logo sisanya berasal dari bagian lain dari POI. Walaupun begitu \textit{keypoint} yang berasal dari objek lain semuanya tidak ada yang berasal dari orang (pengunjung).
 %
-%Tahapan \textit{clustering} yang dilakukan ini dapat digunakan untuk menyaring \textit{fitur lokal} untuk didapatkan yang kuat saja. Pada tahapan selanjutnya akan dianalisis apakah dengan menyaring fitur lokal dan mengambil yang kuat (konsisten dan unik) saja dapat digunakan untuk melakukan OIR dengan BSIS. 
+%Pada gambar pertama (gambar di atas) dari Gambar~\ref{fig:other_filtered_keypoints} terlihat bahwa \textit{keypoint-keypoint} yang didapat banyak yang berasal dari bagian logo atau objek yang permanen. Sebagian besar berasal dari logo di bagian atas, logo di tembok belakang dan logo di meja. Selain itu untuk \textit{keypoint} yang tidak berasal dari logo semua berasal dari bagian POI yang permanen seperti tembok, meja, atau poster. Tidak ada \textit{keypoint} yang berasal dari orang.
+%
+%Sedangkan pada gambar kedua masih ada beberapa \textit{keypoint} yang berasal dari orang yang lewat. Tetapi sebagian besar \textit{keypoint} berasal dari bagian pilar yang berada di tengah gambar yang merupakan bagian permanen dari POI.
+%
+%Dari hasil analisis ini didapat bahwa dengan metode \textit{clustering} seperti pada langkah-langkah di atas mampu memberikan \textit{keypoint} yang cukup unik dan konsisten. Metode mendapatkan \textit{keypoint} yang unik dan konsisten ini diharapkan dapat memberikan fitur yang kuat jika digunakan untuk melakukan OIR dengan BSIS.
+
+\section{Analisis Penentuan Nilai Threshold untuk Konsistensi dan Keunikan}
+Pada analisis-analisis sebelumnya telah didapat dua buah nilai untuk masing-masing fitur lokal. Kedua buah nilai tersebut masing-masing menyatakan tingkat konsistensi dan keunikan fitur lokal terehadap POI-nya. Kedua nilai tersebut memiliki rentang dari 0 sampai 1, di mana semakin tinggi nilainya (semakin mendekati 1) maka semakin konsisten/unik fitur lokal tersebut. 
+
+Nilai-nilai konsistensi dan keunikan pada setiap fitur lokal dapat digunakan untuk menyaring fitur lokal. Dengan memanfaatkan nilai-nilai konsistensi dan keunikan tersebut dapat dipilih hanya fitur lokal yang sifatnya konsisten/unik saja. Permasalahannya adalah sulit untuk menentukan sebuah batas (\textit{threshold}) yang ideal sehingga dapat diperoleh fitur-fitur lokal yang asalnya dari objek dalam POI yang sifatnya memang konsisten dan unik. Objek dalam POI yang sifatnya konsisten dan unik dalam penelitian ini diartikan sebagai objek yang selalu terlihat dalam gambar-gambar POI dan memiliki bentuk atau pola yang tidak terlihat di POI lain. Contoh yang paling mudah dari objek-objek dengan sifat yang konsisten dan unik ini adalah logo dari POI. Gambar~\ref{fig:objek_penting_poi} merupakan beberapa contoh gambar POI, kotak hijau pada gambar POI tersebut menandakan contoh objek dalam POI yang sifatnya konsisten atau unik.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{objek_penting_poi.png}
+	\caption{Contoh objek yang sifatnya konsisten dan unik dalam POI.}
+	\label{fig:objek_penting_poi}
+\end{figure}
+
+Penentuan \textit{threshold} untuk nilai konsistensi dan keunikan akan dilakukan dengan mencoba beberapa nilai \textit{threshold}. Untuk masing-masing nilai \textit{threshold} akan diambil \textit{keypoint} yang nilai konsisten/keunikan fitur lokalnya lebih tinggi dari nilai tersebut. \textit{Keypoint} yang nilainya lebih dari \textit{threshold} tersebut akan ditampilkan pada gambar dan dilihat apakah \textit{keypoint}-\textit{keypoint} tersebut berasal dari objek dalam POI yang memang bersifat konsisten/unik. Proses ini akan dilakukan masing-masing untuk nilai konsistensi dan keunikan.
+
+Nilai konsistensi dan keunikan untuk fitur lokal pada dataset tersebar seperti ditunjukan oleh dua histogram pada Gambar~\ref{fig:poi_consistency_uniqueness}. Jika dilihat dari kedua histogram pada Gambar~\ref{fig:poi_consistency_uniqueness} tersebut baik nilai konsistensi dan keunikan tersebar dengan sebaran yang mirip. Mayoritas dari fitur lokal pada gambar POI memiliki nilai konsistensi dan keunikan yang rendah. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{poi_consistency.png}
+	\includegraphics[width=\textwidth]{poi_uniqueness.png}
+	\caption{Contoh objek yang sifatnya konsisten dan unik dalam POI.}
+	\label{fig:poi_consistency_uniqueness}
+\end{figure}
+Jika dilihat dari contoh pada Gambar~\ref{fig:objek_penting_poi} bagian yang konsisten dan unik dari dari sebuah gambar POI hanya merupakan bagian kecil jika dibandingkan dengan keseluruhan gambar. Karena ingin diambil fitur lokal dari bagian POI yang merupakan bagian kecil dari gambar maka hanya perlu diambil sebagian kecil dari keseluruhan fitur lokal. Oleh karena itu---dengan melihat sebaran dari kedua histogram pada Gambar~\ref{fig:poi_consistency_uniqueness}---fitur lokal dengan nilai konsistensi dan keunikan $<0.6$ akan dibuang terlebih dahulu. Pembuangan fitur lokal ini karena fitur lokal dengan nilai konsistensi dan keunikan tersebut diasumsikan berasal dari bagian POI dengan sifat tidak konsisten dan tidak unik yang merupakan sebagian besar dari sebuah gambar POI. 
+
+\subsection{Ide Dasar dan Tahapan Analisis}
+\label{subsec:ide_tahapan_analisis_threshold}
+Analisis ini dilakukan untuk menentukan sebuah nilai batas bawah (\textit{threshold}) yang paling ideal untuk digunakan dalam memilih fitur lokal yang sifatnya konsisten dan unik. Analisis akan dilakukan dengan menyaring fitur lokal menggunakan nilai \textit{threshold} untuk masing-masing nilai konsistensi dan keunikan. Akan digunakan lima \textit{threshold} yang berbeda: $0.6$, $0.7$, $0.8$, $0.9$, dan $1.0$. Untuk setiap \textit{threshold} yang digunakan maka diambil fitur lokal yang nilai konsistensi/keunikannya lebih dari atau sama dengan nilai \textit{threshold} tersebut. Fitur lokal yang didapat dari hasil penyaringan tersebut lalu ditampilkan \textit{keypoint}-nya pada gambar. Dari gambar dengan \textit{keypoint} tersebut lalu dilihat apakah \textit{keypoint}-\textit{keypoint} yang ditampilkan tepat berada pada bagian objek yang sifatnya memang konsisten dan unik.
+
+Nilai konsistensi dan keunikan pada analisis ini didapat dari hasil proses \textit{clustering} seperti analisis pada \ref{sec:analisis_sifat}. Dataset yang digunakan untuk proses \textit{clustering} berasal dari 10 POI yang berbeda dengan masing-masing POI terdiri dari 10 gambar berbeda dari POI tersebut. Sebanyak total 100 gambar tersebut lalu diproses untuk mendapatkan nilai konsistensi dan keunikan untuk tiap fitur lokalnya. Dari sebanyak 10 kelas gambar (jenis POI) akan diambil sebanyak 3 kelas untuk digunakan sebagai sampel dalam menguji nilai \textit{threshold}.
+
+Tahapan yang dilakukan pada analisis ini adalah seperti dijelaskan pada tahapan di bawah ini. Langkah-langkah tahapan ini dilakukan setelah didapat fitur lokal beserta nilai konsistensi dan keunikannya melalui proses \textit{clustering}:
+\begin{enumerate}
+	\item Memuat dataset berupa fitur lokal beserta keterangan untuk tiap fitur lokal
+	\item Memilih sebuah POI (kelas gambar) sebagai sampel pengujian 
+	\item Mengambil hanya fitur lokal dari kelas gambar yang dipilih
+	\item Melakukan iterasi untuk tiap nilai \textit{threshold}
+	\item Untuk tiap iterasi mengambil fitur lokal yang nilai konsistensi/keunikannya $\geq {threshold}$ dan menampilkan \textit{keypoint}-nya pada gambar.
+\end{enumerate}
+Langkah 4 dan 5 pada tahapan di atas dilakukan untuk masing-masing nilai konsistensi dan keunikan. Tahapan tersebut akan menghasilkan gambar-gambar yang digunakan pada dataset disertai dengan \textit{keypoint}-nya yang telah disaring berdasarkan nilai \textit{threshold}. Hasil gambar tersebut akan diproses untuk dihitung skor ketepatannya. Skor ketepatan akan menunjukkan seberapa bagus hasil penyaringan fitur lokal dengan menggunakan sebuah nilai \textit{threshold}. Metode untuk menghitung skor ketepatan dijelaskan pada subbab di bawah ini.
+
+\subsection{Metode Scoring}
+\label{subsec:scoring_analisis_threshold}
+Pada analisis ini pemberian nilai untuk setiap \textit{threshold} yang digunakan dengan menghitung persentase \textit{keypoint} yang berada di daerah \textit{target}. Daerah \textit{target} adalah daerah yang dari sebuah gambar POI yang sifatnya konsisten dan unik terhadap POI tersebut, jika dinilai secara manusia. Daerah \textit{target} akan berupa logo dari POI atau objek lain dari POI yang konsisten dan unik. Contoh daerah \textit{target} adalah seperti pada Gambar~\ref{fig:objek_penting_poi}.
+
+Implementasi daerah \textit{target} tersebut dilakukan dengan menggunakan aplikasi Labelimg. Aplikasi Labelimg sendiri adalah aplikasi yang dapat digunakan untuk memberi anotasi pada gambar. Tampilan layar Labelimg dapat dilihat pada Gambar~\ref{fig:tampilan_labelimg}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{tampilan_labelimg.jpg}
+	\caption{Contoh tampilan aplikasi Labelimg.}
+	\label{fig:tampilan_labelimg}
+\end{figure}
+
+Dengan menggunakan aplikasi Labelimg kita dapat menandai sebuah daerah pada gambar dan memberikan label pada daerah tersebut. Aplikasi nanti akan menghasilkan sebuah \textit{file} xml yang berisi informasi titik-titik koordinat daerah yang ditandai dan label daerah tersebut. Setiap gambar akan memiliki sebuah \textit{file} xml yang menunjukkan anotasi pada gambar tersebut. Sebuah gambar dapat memiliki lebih dari satu anotasi, di mana beberapa anotasi berbeda itu akan disimpan pada sebuah \textit{file} xml yang sama. 
+
+Pada analisis ini setiap gambar yang digunakan pada dataset akan terlebih dahulu diberi anotasi dengan label \textit{target}. Setiap gambar dapat memiliki lebih dari satu anotasi (ada beberapa objek konsisten dan unik pada POI yang saling terpisah). Setiap \textit{keypoint} yang didapat setelah disaring dengan \textit{threshold} akan ditentukan apakah \textit{keypoint} tersebut berada di dalam atau di luar daerah \textit{target}. Nilai \textit{score} akan ditentukan dari persentase \textit{keypoint} yang berada di dalam daerah \textit{target}.
+
+\subsection{Hasil Analisis}
+Setelah dilakukan tahapan dan juga pemberian nilai sesuai seperti yang telah dijelaskan pada subbab-subbab sebelumnya didapat hasil seperti yang dijabarkan di bawah ini.
+
+\subsubsection{Nilai Konsistensi}
+Untuk tiap \textit{threshold} yang digunakan pada nilai konsistensi didapat rata-rata nilai skor untuk tiap kelas gambar seperti yang ditampilkan pada Tabel~\ref{tab:rata_kelas_konsistensi}. 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|r|r|r|r|r|r|}
+		\hline
+		\textbf{threshold}  & \multirow{2}{*}{\textbf{0.6}} & \multirow{2}{*}{\textbf{0.7}} & \multirow{2}{*}{\textbf{0.8}} & \multirow{2}{*}{\textbf{0.9}} & \multirow{2}{*}{\textbf{1.0}} \\ \cline{1-1}
+		\textbf{img\_class}  &       &       &       &       &          \\ \hline
+		alfamart & 0.149268 & 0.144771 & 0.158488 & 0.089263 & 0.112664 \\ \hline
+		binus    & 0.507728 & 0.476035 & 0.294314 & 0.010000 & 0.000000 \\ \hline
+		gembul   & 0.287119 & 0.291524 & 0.311475 & 0.264435 & 0.186858 \\ \hline
+		harris   & 0.186551 & 0.182550 & 0.185563 & 0.233336 & 0.000000 \\ \hline
+		oxy      & 0.083837 & 0.071717 & 0.061667 & 0.061667 & 0.000000 \\ \hline
+		ping     & 0.715547 & 0.673606 & 0.660579 & 0.569977 & 0.177269 \\ \hline
+		porcafe  & 0.272689 & 0.300066 & 0.318216 & 0.000000 & 0.000000 \\ \hline
+		starbuck & 0.235460 & 0.221705 & 0.270528 & 0.413136 & 0.294983 \\ \hline
+		toyota   & 0.119899 & 0.078839 & 0.081004 & 0.061839 & 0.000000 \\ \hline
+		yogya    & 0.218260 & 0.224289 & 0.330336 & 0.299550 & 0.299550 \\ \hline
+	\end{tabular}
+	\caption{Rata-rata skor ketepatan tiap kelas untuk tiap \textit{threshold} pada nilai konsistensi.}
+	\label{tab:rata_kelas_konsistensi}
+\end{table}
+Jika dilihat dari Tabel~\ref{tab:rata_kelas_konsistensi} skor ketepatan cenderung berada pada angka yang kecil. Skor ketepatan juga nilainya sangat berbeda tiap kelas gambar. Contohnya seperti kelas \textit{ping} nilainya bisa mencapai \~0.7 pada \textit{threshold} 0.6, dibandingkan dengan skor untuk kelas \textit{oxy} yang nilai tertingginya hanya pada pada \~0.08 saja. Nilai skor yang sangat berbeda tersebut menunjukkan bahwa ada kelas-kelas POI yang cenderung mudah dikenali dan ada yang lebih sulit untuk dikenali. POI yang mudah dikenali mungkin adalah POI yang memiliki objek dengan sebuah pola yang kuat dan mudah terdeteksi oleh algoritma pencarian fitur lokal.
+
+Untuk memilih \textit{threshold} mana yang paling baik digunakan untuk pemotongan pada nilai konsistensi maka akan dihitung rata-rata nilai skor seluruh kelas untuk tiap \textit{threshold}. Hasilnya dapat dilihat pada grafik di Gambar~\ref{fig:skor_consistency}. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{skor_consistency.png}
+	\caption{Skor ketepatan untuk tiap \textit{threshold} pada nilai konsistensi.}
+	\label{fig:skor_consistency}
+\end{figure}
+Dari grafik pada Gambar~\ref{fig:skor_consistency} terlihat bahwa nilai skor ketepatan tertinggi ada pada \textit{threshold} 0.6. Nilai skor tidak berubah banyak sampai \textit{threshold} 0.8, dan setelah itu ada penurunan yang cukup tajam pada \textit{threshold} 0.9 dan 1.0. Dari hasil ini maka akan digunakan 0.6 sebagai \textit{threshold} yang digunakan untuk memotong nilai konsistensi. Walaupun jika dilihat dari sebaran tiap kelasnya terlihat sebaran yang tidak merata sehingga nilai \textit{threshold} yang ditentukan mungkin tidak akan baik untuk semua kelas.
+
+\subsubsection{Nilai Keunikan}
+Untuk tiap \textit{threshold} yang digunakan pada nilai keunikan didapat rata-rata nilai skor untuk tiap kelas gambar seperti yang ditampilkan pada Tabel~\ref{tab:rata_kelas_keunikan}.
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|r|r|r|r|r|r|}
+		\hline
+		\textbf{threshold}  & \multirow{2}{*}{\textbf{0.6}} & \multirow{2}{*}{\textbf{0.7}} & \multirow{2}{*}{\textbf{0.8}} & \multirow{2}{*}{\textbf{0.9}} & \multirow{2}{*}{\textbf{1.0}} \\ \cline{1-1}
+		\textbf{img\_class} &                               &                               &                               &                               &                               \\ \hline
+		alfamart            & 0.515710                      & 0.366667                      & 0.383333                      & 0.100000                      & 0.100000                      \\ \hline
+		binus               & 0.677219                      & 0.680215                      & 0.676765                      & 0.591431                      & 0.591431                      \\ \hline
+		gembul              & 0.635185                      & 0.660688                      & 0.679726                      & 0.680655                      & 0.680655                      \\ \hline
+		harris              & 0.208597                      & 0.158760                      & 0.059408                      & 0.154762                      & 0.154762                      \\ \hline
+		oxy                 & 0.161507                      & 0.053333                      & 0.055098                      & 0.000000                      & 0.000000                      \\ \hline
+		ping                & 0.952552                      & 0.972462                      & 0.959630                      & 0.985047                      & 0.985047                      \\ \hline
+		porcafe             & 0.166364                      & 0.250000                      & 0.250000                      & 0.200000                      & 0.200000                      \\ \hline
+		starbucks           & 0.375029                      & 0.439195                      & 0.516766                      & 0.589057                      & 0.589057                      \\ \hline
+		toyota              & 0.191150                      & 0.406667                      & 0.250000                      & 0.250000                      & 0.250000                      \\ \hline
+		yogya               & 0.363011                      & 0.396667                      & 0.333333                      & 0.333333                      & 0.333333                      \\ \hline
+	\end{tabular}
+	\caption{Rata-rata skor ketepatan tiap kelas untuk tiap \textit{threshold} pada nilai keunikan.}
+	\label{tab:rata_kelas_keunikan}
+\end{table}
+Nilai-nilai pada Tabel~\ref{tab:rata_kelas_keunikan} menunjukkan nilai dengan kisaran yang mirip dengan saat digunakan nilai konsistensi (Tabel~\ref{tab:rata_kelas_konsistensi}). Pada penggunaan nilai keunikan ini juga kelas \textit{ping} memiliki nilai rata-rata skor yang lebih tinggi jika dibandingkan dengan kelas-kelas lainnya. Kelas \textit{oxy} juga memiliki nilai skor yang kisarannya paling rendah diantara semua kelas lainnya. Sedangkan untuk rata-rata skor seluruh kelas untuk tiap \textit{threshold} pada nilai konsistensi dapat dilihat pada Gambar~\ref{fig:skor_uniqueness}.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{skor_uniqueness.png}
+	\caption{Skor ketepatan untuk tiap \textit{threshold} pada nilai keunikan.}
+	\label{fig:skor_uniqueness}
+\end{figure}
 
 \section{Analisis Penggunaan Clustering untuk OIR dengan BSIS}
 \label{sec:analisis_bsis}
@@ -804,3 +1011,92 @@ Setelah dilakukan seluruh tahapan di atas didapatkan hasil sebagai seperti pada 
 Dari tabel tersebut terlihat bahwa penggunaan nilai batas yang tinggi memberikan jumlah fitur lokal yang semakin sedikit. Fitur lokal yang sedikit membuat pemrosesan waktu menjadi lebih cepat tetapi juga berdampak pada akurasi. Penggunaan jumlah fitur lokal yang terlalu sedikit menyebabkan nilai akurasi menjadi sangat rendah seperti ditunjukkan pada penggunaan nilai batas 0.4 dan 0.6.
 
 Berdasarkan data Tabel~\ref{tab:nilai_keunikan} dapat disimpulkan bahwa perlu untuk memilih batas nilai yang tepat untuk mendapatkan hasil deteksi yang cepat dan dengan akurasi yang tinggi. Seperti penggunaan nilai keunikan 0.2, fitur lokal yang didapat cukup berbeda jumlahnya dengan jika digunakan semua fitur lokal dan waktu pemrosesan juga lebih singkat secara signifikan (penggunaan semua fitur lokal memiliki waktu pemrosesan selama 82.15), tetapi nilai akurasinya masih termasuk tinggi.
+
+
+
+%\subsection{Hasil Analisis}
+%Dari tahapan yang telah dilakukan sebelumnya didapatkan gambar POI yang digunakan pada dataset beserta \textit{keypoint} yang telah disaring berdasarkan \textit{threshold} pada nilai konsistensi atau keunikannya. Hasil-hasil gambar tersebut akan dinilai untuk ditentukan \textit{threshold} yang paling ideal digunakan untuk masing-masing nilai konsistensi dan keunikan. Nilai \textit{threshold} ditentukan sedemikian rupa sehingga hasil \textit{keypoint} yang didapat merupakan \textit{keypoint} yang berasal dari daerah penting. 
+%
+%Proses penilaian akan dilakukan dengan melihat hasil gambar secara langsung dan memberikan nilai ketepatan untuk tiap gambar. Nilai ketepatan akan memiliki rentang 1 sampai 10. Nilai 1 berarti hasil \textit{keypoint} yang didapat masih menyebar dan sangat sedikit yang berasal dari bagian konsisten atau unik, sedangkan nilai 10 berarti hasil \textit{keypoint} yang didapat seluruhnya atau sebagian besar berasal dari bagian POI yang konsisten dan unik. Dari seluruh poin yang didapat tersebut lalu dihitung totalnya untuk tiap nilai \textit{threshold} dan ditentukan \textit{threshold} dengan total nilai paling tinggi sebagai nilai yang paling baik. Hasilnya akan ditampilkan dalam dua tabel terpisah, untuk nilai konsistensi dan keunikan. Tabel hasil untuk nilai konsistensi dapat dilihat pada Tabel~\ref{tab:nilai_ketepatan_konsistensi}.
+%
+%\begin{table}[H]
+%	\centering
+%	\begin{tabularx}{\linewidth}{|l|l|C|C|C|C|C|}
+%		\hline
+%		&              & \multicolumn{5}{c|}{Nilai Ketepatan untuk \textit{threshold}} \\ \hline
+%		Nama Gambar     & Kelas Gambar & 0.6 & 0.7 & 0.8 & 0.9 & 1.0 \\ \hline
+%		binus\_1.jpg    & binus        & 4   & 4   & 1   & 1  & -  \\ \hline
+%		binus\_2.jpg    & binus        & 4   & 4   & 2   & 1  & -  \\ \hline
+%		binus\_3.jpg    & binus        & 5   & 5   & 4   & 1  & -  \\ \hline
+%		binus\_4.jpg    & binus        & 7   & 7   & 5   & 1  & -  \\ \hline
+%		binus\_5.jpg    & binus        & 7   & 8   & 7   & 1  & -  \\ \hline
+%		binus\_6.jpg    & binus        & 6   & 5   & 5   & 1  & -  \\ \hline
+%		binus\_7.jpg    & binus        & 4   & 4   & 3   & 1  & -  \\ \hline
+%		binus\_8.jpg    & binus        & 4   & 4   & 1   & 1  & -  \\ \hline
+%		binus\_9.jpg    & binus        & 5   & 6   & 2   & 1  & -  \\ \hline
+%		binus\_10.jpg   & binus        & 4   & 4   & 3   & -  & -  \\ \hline
+%		gembul\_1.jpg   & gembul       & 3   & 4   & 4   & 5  & 2  \\ \hline
+%		gembul\_2.jpg   & gembul       & 4   & 5   & 5   & 5  & 2  \\ \hline
+%		gembul\_3.jpg   & gembul       & 3   & 5   & 5   & 5  & 4  \\ \hline
+%		gembul\_4.jpg   & gembul       & 3   & 3   & 3   & 4  & 3  \\ \hline
+%		gembul\_5.jpg   & gembul       & 2   & 2   & 2   & 1  & 1  \\ \hline
+%		gembul\_6.jpg   & gembul       & 5   & 5   & 5   & 5  & 2  \\ \hline
+%		gembul\_7.jpg   & gembul       & 4   & 4   & 5   & 5  & 1  \\ \hline
+%		gembul\_8.jpg   & gembul       & 5   & 5   & 5   & 6  & 3  \\ \hline
+%		gembul\_9.jpg   & gembul       & 5   & 5   & 6   & 7  & 3  \\ \hline
+%		gembul\_10.jpg  & gembul       & 4   & 5   & 5   & 6  & 1  \\ \hline
+%		ping\_1.jpg     & ping         & 8   & 8   & 8   & 7  & 3  \\ \hline
+%		ping\_2.jpg     & ping         & 6   & 6   & 7   & 5  & 2  \\ \hline
+%		ping\_3.jpg     & ping         & 6   & 6   & 6   & 5  & 2  \\ \hline
+%		ping\_4.jpg     & ping         & 7   & 7   & 8   & 7  & 1  \\ \hline
+%		ping\_5.jpg     & ping         & 7   & 7   & 7   & 6  & 1  \\ \hline
+%		ping\_6.jpg     & ping         & 6   & 6   & 5   & 5  & 1  \\ \hline
+%		ping\_7.jpg     & ping         & 5   & 5   & 5   & 4  & 2  \\ \hline
+%		ping\_8.jpg     & ping         & 7   & 7   & 6   & 6  & 1  \\ \hline
+%		ping\_9.jpg     & ping         & 5   & 5   & 4   & 4  & 1  \\ \hline
+%		ping\_10.jpg    & ping         & 6   & 6   & 6   & 5  & 1  \\ \hline
+%	\end{tabularx}
+%	\caption{Tabel hasil nilai ketepatan untuk setiap \textit{threshold} pada nilai konsistensi.}
+%	\label{tab:nilai_ketepatan_konsistensi}
+%\end{table}
+%Tabel hasil untuk nilai keunikan dapat dilihat pada Tabel~\ref{tab:nilai_ketepatan_keunikan}.
+%\begin{table}[H]
+%	\centering
+%	\begin{tabularx}{\linewidth}{|l|l|C|C|C|C|C|}
+%		\hline
+%		&              & \multicolumn{5}{c|}{Nilai Ketepatan untuk \textit{threshold}} \\ \hline
+%		Nama Gambar     & Kelas Gambar & 0.6 & 0.7 & 0.8 & 0.9 & 1.0 \\ \hline
+%		binus\_1.jpg    & binus        & 3   & 2   & 0  & -  & -  \\ \hline
+%		binus\_2.jpg    & binus        & 5   & 5   & 4  & 0  & 0  \\ \hline
+%		binus\_3.jpg    & binus        & 7   & 7   & 7  & 7  & 8  \\ \hline
+%		binus\_4.jpg    & binus        & 7   & 8   & 7  & 6  & 6  \\ \hline
+%		binus\_5.jpg    & binus        & 7   & 7   & 7  & 7  & 7  \\ \hline
+%		binus\_6.jpg    & binus        & 7   & 8   & 8  & 8  & 8  \\ \hline
+%		binus\_7.jpg    & binus        & 4   & 4   & 3  & 3  & 3  \\ \hline
+%		binus\_8.jpg    & binus        & 5   & 6   & 5  & 4  & 4  \\ \hline
+%		binus\_9.jpg    & binus        & 5   & 5   & 7  & 6  & 6  \\ \hline
+%		binus\_10.jpg   & binus        & 6   & 7   & 6  & -  & -  \\ \hline
+%		gembul\_1.jpg   & gembul       & 7   & 6   & 6  & 6  & 7  \\ \hline
+%		gembul\_2.jpg   & gembul       & 7   & 7   & 7  & 8  & 8  \\ \hline
+%		gembul\_3.jpg   & gembul       & 8   & 7   & 8  & 8  & 8  \\ \hline
+%		gembul\_4.jpg   & gembul       & 7   & 7   & 7  & 8  & 7  \\ \hline
+%		gembul\_5.jpg   & gembul       & 1   & -   & -  & -  & -  \\ \hline
+%		gembul\_6.jpg   & gembul       & 7   & 8   & 8  & 8  & 8  \\ \hline
+%		gembul\_7.jpg   & gembul       & 8   & 8   & 8  & 9  & 9  \\ \hline
+%		gembul\_8.jpg   & gembul       & 7   & 8   & 8  & 8  & 8  \\ \hline
+%		gembul\_9.jpg   & gembul       & 7   & 7   & 7  & 7  & 7  \\ \hline
+%		gembul\_10.jpg  & gembul       & 8   & 7   & 7  & 7  & 7  \\ \hline
+%		ping\_1.jpg     & ping         & 9   & 9   & 9  & 9  & 9  \\ \hline
+%		ping\_2.jpg     & ping         & 7   & 8   & 8  & 9  & 9  \\ \hline
+%		ping\_3.jpg     & ping         & 7   & 8   & 8  & 8  & 9  \\ \hline
+%		ping\_4.jpg     & ping         & 7   & 8   & 9  & 9  & 9  \\ \hline
+%		ping\_5.jpg     & ping         & 7   & 8   & 8  & 9  & 9  \\ \hline
+%		ping\_6.jpg     & ping         & 6   & 8   & 8  & 9  & 9  \\ \hline
+%		ping\_7.jpg     & ping         & 7   & 7   & 7  & 8  & 9  \\ \hline
+%		ping\_8.jpg     & ping         & 7   & 8   & 8  & 10 & 10  \\ \hline
+%		ping\_9.jpg     & ping         & 5   & 6   & 5  & 4  & 4  \\ \hline
+%		ping\_10.jpg    & ping         & 3   & 6   & 4  & 4  & 4  \\ \hline
+%	\end{tabularx}
+%	\caption{Tabel hasil nilai ketepatan untuk setiap \textit{threshold} pada nilai keunikan.}
+%	\label{tab:nilai_ketepatan_keunikan}
+%\end{table}

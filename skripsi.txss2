@@ -13,17 +13,17 @@
                 "Col": 0,
                 "EditorGroup": 0,
                 "FileName": "skripsi.tex",
-                "FirstLine": 42,
+                "FirstLine": 24,
                 "FoldedLines": "",
                 "Line": 62
             },
             {
-                "Col": 47,
+                "Col": 23,
                 "EditorGroup": 0,
                 "FileName": "data.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 32
+                "Line": 39
             },
             {
                 "Col": 188,
@@ -42,22 +42,30 @@
                 "Line": 0
             },
             {
-                "Col": 0,
+                "Col": 36,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab3.tex",
                 "FirstLine": 0,
-                "FoldedLines": "",
-                "Line": 0
+                "FoldedLines": "3,361,1016",
+                "Line": 544
             },
             {
-                "Col": 0,
+                "Col": 341,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab4.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 11
+                "Line": 3
+            },
+            {
+                "Col": 45,
+                "EditorGroup": 0,
+                "FileName": "Bab/bab5.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 5
             }
         ],
-        "MasterFile": ""
+        "MasterFile": "skripsi.tex"
     }
 }
