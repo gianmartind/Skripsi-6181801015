@@ -10,20 +10,20 @@
         "FileVersion": 1,
         "Files": [
             {
-                "Col": 0,
+                "Col": 40,
                 "EditorGroup": 0,
                 "FileName": "skripsi.tex",
-                "FirstLine": 24,
+                "FirstLine": 206,
                 "FoldedLines": "",
-                "Line": 62
+                "Line": 238
             },
             {
-                "Col": 23,
+                "Col": 16,
                 "EditorGroup": 0,
                 "FileName": "data.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 39
+                "Line": 60
             },
             {
                 "Col": 188,
@@ -34,38 +34,47 @@
                 "Line": 7
             },
             {
-                "Col": 0,
+                "Col": 43,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab2.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 0
+                "Line": 18
             },
             {
-                "Col": 36,
+                "Col": 23,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab3.tex",
                 "FirstLine": 0,
-                "FoldedLines": "3,361,1016",
-                "Line": 544
+                "FoldedLines": "802,856,973,1027,1192,1225",
+                "Line": 1144
             },
             {
-                "Col": 341,
+                "Col": 47,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab4.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 3
+                "Line": 121
             },
             {
-                "Col": 45,
+                "Col": 555,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab5.tex",
                 "FirstLine": 0,
+                "FoldedLines": "231",
+                "Line": 229
+            },
+            {
+                "Col": 20,
+                "EditorGroup": 0,
+                "FileName": "Bab/bab6.tex",
+                "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 5
+                "Line": 0
             }
         ],
-        "MasterFile": "skripsi.tex"
+        "MasterFile": "skripsi.tex",
+        "VerticalSplit": true
     }
 }
