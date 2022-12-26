@@ -85,12 +85,12 @@ Sedangkan untuk penghitungan nilai konsistensi mengikuti proses pada Pseudocode~
 		\RETURN \textit{\textbf{consistency}}
 	\end{algorithmic}
 \end{algorithm}
-Proses yang dilakukan pada Gambar~\ref{fig:dfd_clustering} akan menghasilkan sebuah \textit{dataframe} dengan ketentuan kolom seperti pada Tabel~\ref{tab:df_clustering}. \textit{Dataframe} tersebut disimpan ke dalam \textit{file} \texttt{pickle} dengan menggunakan \textit{library} Pickle di Python.
+Proses yang dilakukan pada Gambar~\ref{fig:dfd_clustering} akan menghasilkan sebuah \textit{dataframe} dengan rincian kolom seperti pada Tabel~\ref{tab:df_clustering} untuk metode SIFT, untuk metode ORB ada perbedaan pada kelompok kolom \textit{Descriptor}. 
 \begin{table}[H]
 	\begin{tabular}{|p{0.25\textwidth}|p{0.25\textwidth}|p{0.45\textwidth}|}
 		\hline
-		Nama Kolom      & Kelompok Kolom                            & Deskripsi                                                                                                   \\ \hline
-		0               & \multirow{5}{0.45\textwidth}{Deskriptor}               & \multirow{5}{0.45\textwidth}{Berjumlah 128 kolom yang masing-masing merupakan satu elemen dalam vektor deskriptor SIFT.} \\ \cline{1-1}
+		\textbf{Nama Kolom}      & \textbf{Kelompok Kolom}                            & \textbf{Deskripsi}                                                                                                   \\ \hline
+		0               & \multirow{5}{0.45\textwidth}{\textit{Descriptor}}               & \multirow{5}{0.45\textwidth}{Berjumlah 128 kolom yang masing-masing merupakan satu elemen dalam vektor deskriptor SIFT.} \\ \cline{1-1}
 		1               &                                           &                                                                                                             \\ \cline{1-1}
 		...             &                                           &                                                                                                             \\ \cline{1-1}
 		126             &                                           &                                                                                                             \\ \cline{1-1}
@@ -109,7 +109,7 @@ Proses yang dilakukan pada Gambar~\ref{fig:dfd_clustering} akan menghasilkan seb
 		octave          &                                           & Oktaf di mana \textit{keypoint} tersebut didapat                                                                     \\ \cline{1-1} \cline{3-3} 
 		class\_id       &                                           & Kelas objek yang menyatakan kelompok dari \textit{keypoint} jika dikelompokkan                                       \\ \hline
 	\end{tabular}
-	\caption{Rincian kolom dari \textit{dataframe} yang dihasilkan modul proses \textit{clustering}.}
+	\caption{Rincian kolom dari \textit{dataframe} yang dihasilkan modul proses \textit{clustering} SIFT.}
 	\label{tab:df_clustering}
 \end{table}
 Rancangan proses \textit{clustering} ini dibuat ke dalam dua buah \textit{script} Python dengan nama \texttt{clustering\_sift.py} dan \texttt{clustering\_orb.py}. Kedua \textit{script} tersebut berguna untuk melakukan proses \textit{clustering} sesuai dengan metode ekstraksi fitur lokalnya SIFT atau ORB. Baik \texttt{clustering\_sift.py} dan \texttt{clustering\_orb.py} dapat dijalankan dengan menerima dua argumen berikut:
@@ -184,6 +184,8 @@ Beberapa fungsi penting dari kelas \texttt{Util} adalah sebagai berikut:
 	Fungsi untuk memuat semua \textit{file} gambar dengan fungsi \texttt{get\_image} dari \textit{file} yang tersusun sesuai struktur \textit{folder} seperti yang dijelaskan pada \ref{subsec:struktur_folder_clustering}. Fungsi ini digunakan untuk mendapatkan gambar masukkan pada \ref{subsec:rancangan_proses_clustering}.
 	\item \texttt{agglo\_cluster} \\
 	Fungsi untuk melakukan \textit{Agglomerative Clustering} pada \textit{dataset}. Fungsi akan mengembalikan sebuah \textit{array} yang berisi label \textit{cluster}. Fungsi ini digunakan untuk melakukan \textit{clustering} per gambar dan \textit{clustering} \textit{centroid} pada analisis yang dilakukan di \ref{sec:analisis_sifat} dengan mengikuti rancangan pada \ref{subsec:rancangan_proses_clustering}.
+	\item \texttt{combination\_distance} \\
+	Fungsi untuk menghitung jarak rata-rata antar baris baris dalam sebuah \textit{array}. Fungsi ini digunakan untuk mendapatkan nilai \textit{threshold} pada saat dilakukan \textit{clustering} di \ref{sec:rancangan_clustering}.
 	\item \texttt{show\_keypoints} \\
 	Fungsi untuk menampilkan \textit{keypoint} pada gambar. Fungsi digunakan untuk melakukan visualisasi \textit{keypoint} di gambar yang dilakukan pada \ref{sec:analisis_sifat}.
 	\item \texttt{show\_matches} \\
@@ -193,26 +195,57 @@ Beberapa fungsi penting dari kelas \texttt{Util} adalah sebagai berikut:
 
 \section{Rancangan Kelas-kelas Implementasi BSIS}
 \label{sec:rancangan_bsis}
-Implementasi BSIS dibuat dalam sebuah \textit{package} yang didalamnya berisi beberapa kelas yang saling berhubungan. Kelas-kelas beserta fungsi dalam kelas yang ada di \textit{package} BSIS dapat dilihat pada Gambar~\ref{fig:bsis_package}. Kelas-kelas pada \textit{package} ini digunakan untuk melakukan BSIS pada \ref{sec:analisis_bsis} dengan memanggil kelas \texttt{BSIS}.
+Implementasi BSIS dibuat dalam sebuah \textit{package} yang didalamnya berisi beberapa kelas yang saling berhubungan. Kelas-kelas beserta fungsi dalam kelas yang ada di \textit{package} BSIS dapat dilihat pada Gambar~\ref{fig:bsis_package}. Kelas-kelas pada \textit{package} ini digunakan untuk melakukan BSIS pada \ref{sec:analisis_bsis}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{bsis\_package.png}
 	\caption{Diagram \textit{Package} \texttt{bsis}.}
 	\label{fig:bsis_package}
 \end{figure}
-Untuk melakukan BSIS terhadap sebuah gambar pertama perlu dibuat sebuah objek kelas \texttt{BSIS}. Pembuatan objek BSIS menerima satu masukan yaitu sebuah \textit{dictionary} yang berisi \textit{list} \textit{keypoint} dan \textit{array} deskriptor. Setelah itu isi \texttt{train\_set} dengan memanggil fungsi \texttt{set\_train\_data}. Fungsi \texttt{set\_train\_data} menerima \textit{list} yang dihasilkan oleh fungsi \texttt{get\_local\_features} dari kelas \texttt{ClusterModel}. Setelah objek BSIS telah mendapatkan gambar masukan dan \textit{dataset} \textit{train} panggil fungsi \texttt{run} untuk menjalankan proses identifikasi. Setelah proses identifikasi selesai objek BSIS tersebut akan menyimpan hasil dari identifikasi.
-
-Fungsi-fungsi lain dalam \textit{package} tersebut dipanggil oleh kelas \texttt{BSIS} saat pemrosesan, kegunaan masing-masing kelas adalah sebagai berikut:
+Kelas \texttt{BSIS} merupakan \textit{entry point} dari \textit{package} ini. Untuk melakukan identifikasi gambar dengan BSIS perlu dibuat sebuah objek BSIS. Objek BSIS akan memanggil kelas-kelas lainnya saat dijalankan. Fungsi dari tiap-tiap kelas dalam \textit{package} BSIS adalah sebagai berikut:
 \begin{enumerate}
 	\item \texttt{TrainSet} \\
-	Kelas untuk mengatur \textit{dataset} yang digunakan pada kelas \texttt{BSIS}.
+	Kelas \texttt{TrainSet} berguna untuk menyimpan data \textit{train} sebuah objek BSIS. Kelas ini menyimpan \textit{list} \textit{keypoint} dan \textit{list} \textit{descriptor} dalam atribut \texttt{train\_kp} dan \texttt{train\_desc}. Atribut \texttt{index\_mapper} merupakan sebuah \textit{dictionary} yang menyimpan nama gambar asal untuk tiap \textit{keypoint}.
 	\item \texttt{Pair} \\
-	Kelas untuk menyimpan pasangan fitur lokal. Fungsi \texttt{make\_pairs\_kdtree} dari \texttt{BSIS} mengembalikan sebuah \textit{list} yang berisi objek \texttt{Pair}.
-	\item \texttt{BPair} \\
-	\makebox[\linewidth][s]{Kelas untuk menyimpan sebuah \textit{sequence} \texttt{Pair}. Digunakan pada tahap verifikasi} \newline (\texttt{find\_best\_subsequence}) di \texttt{BSIS\_Verify}. \textit{Sequence} \texttt{Pair} diimplementasikan dalam bentuk objek \texttt{BPair} dalam objek \texttt{BPair}. Atribut \texttt{prev} dalam \texttt{BPair} akan diisi dengan objek \texttt{BPair} lain yang juga dapat memiliki objek \texttt{BPair} di atribut \texttt{prev}-nya. 
+	Kelas \textit{Pair} berfungsi untuk menyimpan objek pasangan \textit{keypoint} gambar \textit{query} dan \textit{keypoint} gambar \textit{train} di BSIS. Kelas ini menyimpan nomor indeks (\texttt{query\_idx} dan \texttt{train\_idx}) serta objek \textit{keypoint} dari \textit{keypoint} gambar \textit{query} (\texttt{query\_kp}) dan \textit{train} (\texttt{train\_kp}). Kelas juga menyimpan nilai jarak dari vektor \textit{descriptor} kedua \textit{keypoint} (\texttt{distance}) dan nilai bobot pasangan (\texttt{weight}).
 	\item \texttt{BSIS\_Verify} \\
-	Kelas untuk melakukan verifikasi geometris dari pasangan fitur lokal yang dihasilkan oleh fungsi \texttt{make\_pairs\_kdtree} dari BSIS. Pada kelas ini pertama dilakukan pembuatan \textit{list} 2 dimensi yang mengurutkan pasangan berdasarkan \textit{order} x (urutan kemunculan \textit{keypoint} di sumbu x) dari \textit{keypoint} di gambar \textit{train} yang dilakukan oleh fungsi \texttt{get\_pair\_list\_ordered}. \textit{List} yang dihasilkan oleh fungsi \texttt{get\_pair\_list\_ordered} memiliki elemen yang merupakan \textit{list} juga dengan panjang yang dapat berbeda-beda dan isinya merupakan objek \texttt{BPair} yang menyimpan informasi \textit{Pair} dan atribut \texttt{prev}-nya kosong (berisi \texttt{None}). Setelah itu dilakukan verifikasi pada \textit{list} tersebut dengan menggunakan fungsi \texttt{find\_best\_subsequence}. Proses verifikasi pada \texttt{find\_best\_subsequence} didefinisikan pada Pseudocode~\ref{alg:find_best_subsequence}. \\
+	Kelas \texttt{BSIS\_Verify} berguna untuk melakukan tahap verifikasi geometris pada BSIS. Kelas menerima parameter berupa \textit{list} berisi objek \texttt{Pair}. Kelas \texttt{BSIS\_Verify} ini akan membuat sebuah \textit{jagged array} berisi objek \texttt{BPair} yang diimplementasikan sebagai \textit{list} di dalam \textit{list} melalui fungsi \texttt{get\_pair\_list\_ordered}. Dari \textit{jagged array} yang dihasilkan tersebut akan dicari sebuah \textit{sequence} yang konsisten secara geometris dan total bobotnya paling tinggi menggunakan fungsi \texttt{find\_best\_subsequence}. Proses yang dilakukan dalam fungsi \texttt{find\_best\_subsequence} dapat dilihat pada Pseudocode~\ref{alg:find_best_subsequence}.
+	\item \texttt{BPair} \\
+	Kelas dengan struktur \textit{Linked List} yang berguna untuk menyimpan sebuah \textit{sequence} objek \textit{Pair}.
 \end{enumerate}
+ 
+Langkah-langkah untuk melakukan identifikasi gambar menggunakan BSIS setelah dibuat model \textit{ClusterModel} dan dilakukan ekstraksi fitur lokal pada gambar \textit{query} adalah sebagai berikut:
+\begin{enumerate}
+	\item Buat objek \texttt{BSIS} dengan memasukkan \textit{dictionary} berisi \textit{list} \textit{keypoint} dan \textit{list} \textit{descriptor} dari gambar \textit{query} sebagai parameter.
+	\item Panggil fungsi \texttt{set\_train\_data} pada objek \texttt{BSIS} untuk mengisi data \textit{train}. Isi fungsi tersebut dengan \textit{list} yang diperoleh dari fungsi \texttt{get\_local\_features} milik \texttt{ClusterModel}.
+	\item Panggil fungsi \texttt{run} pada objek \texttt{BSIS} dengan memasukkan parameter berikut:
+	\begin{itemize}
+		\item \texttt{num\_rotation}: jumlah rotasi gambar \textit{query}.
+		\item \texttt{algorithm}: algoritma yang digunakan untuk mencari pasangan-pasangan terdekat.
+		\item \texttt{k}: jumlah maksimum pasangan terdekat yang ingin dicari untuk tiap \textit{keypoint} di gambar \textit{query}.
+		\item \texttt{t}: menentukan kelipatan standar deviasi yang digunakan untuk menghitung \textit{threshold} dalam tahap \textit{pairing} BSIS.
+	\end{itemize}
+\end{enumerate} 
+Fungsi \texttt{run} pada objek \texttt{BSIS} akan mengembalikan nama gambar yang memiliki nilai total bobot paling tinggi setelah melalui semua tahapan BSIS. Selain hasil berupa nama gambar, objek \texttt{BSIS} yang telah dipanggil fungsi \texttt{run}-nya akan memiliki sebuah atribut bernama \texttt{result}. Atribut \texttt{result} merupakan sebuah \textit{dictionary} yang memiliki nama gambar sebagai \textit{key}, dan \textit{value}-nya merupakan sebuah \textit{dictionary} dengan \textit{key} serta \textit{value}-nya sebagai berikut:
+\begin{itemize}
+	\item \texttt{query\_kp}: \textit{list} berisi \textit{keypoint} pada gambar \textit{query}.
+	\item \texttt{train\_kp}: \textit{list} berisi \textit{keypoint} pada gambar \textit{train}.
+	\item \texttt{total\_weight}: nilai total bobot pasangan gambar.
+\end{itemize}  
+
+%Untuk melakukan BSIS terhadap sebuah gambar pertama perlu dibuat sebuah objek kelas \texttt{BSIS}. Pembuatan objek BSIS menerima satu masukkan yaitu sebuah \textit{dictionary} yang berisi \textit{list} \textit{keypoint} dan \textit{array} deskriptor. Setelah itu isi variabel \texttt{train\_set} dengan memanggil fungsi \texttt{set\_train\_data}. Fungsi \texttt{set\_train\_data} menerima \textit{list} yang dihasilkan oleh fungsi \texttt{get\_local\_features} dari kelas \texttt{ClusterModel}. Setelah objek BSIS telah mendapatkan gambar masukan dan \textit{dataset} \textit{train} panggil fungsi \texttt{run} untuk menjalankan proses identifikasi. Setelah proses identifikasi selesai objek BSIS tersebut akan menyimpan hasil dari identifikasi.
+%
+%Fungsi-fungsi lain dalam \textit{package} tersebut dipanggil oleh kelas \texttt{BSIS} saat pemrosesan, kegunaan masing-masing kelas adalah sebagai berikut:
+%\begin{enumerate}
+%	\item \texttt{TrainSet} \\
+%	Kelas untuk mengatur \textit{dataset} yang digunakan pada kelas \texttt{BSIS}.
+%	\item \texttt{Pair} \\
+%	Kelas untuk menyimpan pasangan fitur lokal. Fungsi \texttt{make\_pairs\_kdtree} dari \texttt{BSIS} mengembalikan sebuah \textit{list} yang berisi objek \texttt{Pair}.
+%	\item \texttt{BPair} \\
+%	\makebox[\linewidth][s]{Kelas untuk menyimpan sebuah \textit{sequence} \texttt{Pair}. Digunakan pada tahap verifikasi} \newline (\texttt{find\_best\_subsequence}) di \texttt{BSIS\_Verify}. \textit{Sequence} \texttt{Pair} diimplementasikan dalam bentuk objek \texttt{BPair}. Atribut \texttt{prev} dalam \texttt{BPair} akan diisi dengan objek \texttt{BPair} lain yang juga dapat memiliki objek \texttt{BPair} di atribut \texttt{prev}-nya. 
+%	\item \texttt{BSIS\_Verify} \\
+%	Kelas untuk melakukan verifikasi geometris dari pasangan fitur lokal yang dihasilkan oleh fungsi \texttt{make\_pairs} dari BSIS. Pada kelas ini pertama dilakukan pembuatan \textit{list} 2 dimensi yang mengurutkan pasangan berdasarkan \texttt{order} (urutan kemunculan \textit{keypoint} di sumbu x) dari \textit{keypoint} di gambar \textit{train} yang dilakukan oleh fungsi \texttt{get\_pair\_list\_ordered}. \textit{List} yang dihasilkan oleh fungsi \texttt{get\_pair\_list\_ordered} memiliki elemen yang merupakan \textit{list} juga dengan panjang yang dapat berbeda-beda dan isinya merupakan objek \texttt{BPair} yang menyimpan informasi \textit{Pair} dan atribut \texttt{prev}-nya kosong (berisi \texttt{None}). Setelah itu dilakukan verifikasi pada \textit{list} tersebut dengan menggunakan fungsi \texttt{find\_best\_subsequence}. Proses verifikasi pada \texttt{find\_best\_subsequence} didefinisikan pada Pseudocode~\ref{alg:find_best_subsequence}. \\
+%\end{enumerate}
 \begin{algorithm}[H]
 	\caption{FIND\_BEST\_SUBSEQUENCE}
 	\label{alg:find_best_subsequence}
@@ -221,35 +254,58 @@ Fungsi-fungsi lain dalam \textit{package} tersebut dipanggil oleh kelas \texttt{
 	\end{itemize}}
 	\KwOut{\textit{sequence} \texttt{BPair} yang merupakan pasangan yang konsisten secara geometris dan nilai total bobotnya paling tinggi}
 	\begin{algorithmic}[1]
-		\STATE buat objek \texttt{BPair} \textit{\textbf{best\_subsequence}}.
-		\STATE buat \textit{dictionary} \textit{\textbf{best\_per\_order}}.
+		\STATE buat objek \texttt{BPair} \textit{\textbf{best\_subsequence}}
 		\FOR{\textit{\textbf{i}}=1 hingga LENGTH(\textit{D})}
 			\FOR{\textit{\textbf{j}}=1 hingga LENGTH(\text{D[\textit{\textbf{i}}]})}
-				\IF{ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) tidak ada di \textit{\textbf{best\_per\_order}}}
-					\STATE isi \textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])] dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
-				\ELSIF{BTS(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) lebih besar dari BTS(\textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])])}
-					\STATE isi \textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])] dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
-				\ENDIF
-				\STATE objek \texttt{BPair} \textit{\textbf{dBestPrev}}
-				\FOR{\textit{\textbf{ord}}=1 hingga ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])}
-					\IF{\textit{\textbf{ord}} ada di \textit{\textbf{best\_per\_order}}}
-						\IF{BTS(\textit{\textbf{best\_per\_order}}) lebih besar dari BTS(\textit{\textbf{dBestPrev}})}
-							\STATE isi \textit{\textbf{dBestPrev}} dengan \textit{\textbf{best\_per\_order}}[\textit{\textbf{ord}}]
+				\STATE buat objek \texttt{BPair} \textit{\textbf{dBestPrev}}
+				\FOR{\textit{\textbf{k}}=1 hingga i}
+					\FOR{\textit{\textbf{l}}=1 hingga LENGTH(D[\textit{\textbf{k}}])}
+						\IF{ORDER(D[\textit{\textbf{k}}][\textit{\textbf{l}}]) < ORDER(D[\textit{\textbf{i}}][\textit{\textbf{j}}]) dan BTS(D[\textit{\textbf{k}}][\textit{\textbf{l}}]) > BTS(\textit{\textbf{dBestPrev}})}
+							\STATE isi \textit{\textbf{dBestPrev}} dengan 
+							\STATE D[\textit{\textbf{k}}][\textit{\textbf{l}}]
 						\ENDIF
-					\ENDIF
+					\ENDFOR
 				\ENDFOR
-				\STATE isi BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan WEIGHT(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) + BTS(\textit{\textbf{dBestPrev}})
+				\STATE isi BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan WEIGHT(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) + BTS(\textit{\textbf{dBestPrev}}) 
 				\STATE isi PREV(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan \textit{\textbf{dBestPrev}}
 				\IF{BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) + WEIGHT(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) > BTS(\textit{\textbf{best\_subsequence}}) + WEIGHT(\textit{\textbf{best\_subsequence}})}
-					\STATE isi \textit{\textbf{best\_subsequence}} dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+				\STATE isi \textit{\textbf{best\_subsequence}} dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
 				\ENDIF
 			\ENDFOR
 		\ENDFOR
 		\RETURN \textit{\textbf{best\_subsequence}}
 	\end{algorithmic}
+%	\begin{algorithmic}[1]
+%		\STATE buat objek \texttt{BPair} \textit{\textbf{best\_subsequence}}.
+%		\STATE buat \textit{dictionary} \textit{\textbf{best\_per\_order}}.
+%		\FOR{\textit{\textbf{i}}=1 hingga LENGTH(\textit{D})}
+%			\FOR{\textit{\textbf{j}}=1 hingga LENGTH(\text{D[\textit{\textbf{i}}]})}
+%				\IF{ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) tidak ada di \textit{\textbf{best\_per\_order}}}
+%					\STATE isi \textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])] dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+%				\ELSIF{BTS(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) lebih besar dari BTS(\textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])])}
+%					\STATE isi \textit{\textbf{best\_per\_order}}[ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])] dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+%				\ENDIF
+%				\STATE objek \texttt{BPair} \textit{\textbf{dBestPrev}}
+%				\FOR{\textit{\textbf{ord}}=1 hingga ORDER(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}])}
+%					\IF{\textit{\textbf{ord}} ada di \textit{\textbf{best\_per\_order}}}
+%						\IF{BTS(\textit{\textbf{best\_per\_order}}) lebih besar dari BTS(\textit{\textbf{dBestPrev}})}
+%							\STATE isi \textit{\textbf{dBestPrev}} dengan \textit{\textbf{best\_per\_order}}[\textit{\textbf{ord}}]
+%						\ENDIF
+%					\ENDIF
+%				\ENDFOR
+%				\STATE isi BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan WEIGHT(\textit{D}[\textit{\textbf{i}}][\textit{\textbf{j}}]) + BTS(\textit{\textbf{dBestPrev}})
+%				\STATE isi PREV(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) dengan \textit{\textbf{dBestPrev}}
+%				\IF{BTS(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) + WEIGHT(\textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}) > BTS(\textit{\textbf{best\_subsequence}}) + WEIGHT(\textit{\textbf{best\_subsequence}})}
+%					\STATE isi \textit{\textbf{best\_subsequence}} dengan \textit{D[\textit{\textbf{i}}][\textit{\textbf{j}}]}
+%				\ENDIF
+%			\ENDFOR
+%		\ENDFOR
+%		\RETURN \textit{\textbf{best\_subsequence}}
+%	\end{algorithmic}
 \end{algorithm}
 
 \section{Rancangan Perangkat Lunak BSIS}
+\label{sec:rancangan_perangkat_lunak_bsis}
 Untuk lebih mudah melakukan BSIS pada sebuah gambar masukkan, dibuat sebuah perangkat lunak dengan GUI yang dapat melakukan identifikasi gambar masukkan dengan BSIS. Perangkat lunak yang dibuat memiliki fitur sebagai berikut:
 \begin{itemize}
 	\item Memilih model yang ingin digunakan untuk identifikasi gambar masukkan.

@@ -1,1 +1,17 @@
-\chapter{Kesimpulan}
+\chapter{Kesimpulan \& Saran}
+\label{chap:kesimpulan_saran}
+
+\section{Kesimpulan}
+Kesimpulan yang diperoleh setelah mengerjakan skripsi ini sebagai berikut:
+\begin{enumerate}
+	\item Model pengenalan POI dapat dibuat dengan membuat model berupa vektor \textit{descriptor} dari fitur lokal serta nilai konsistensi dan nilai keunikan dari fitur lokal tersebut. Nilai konsistensi dan nilai keunikan tersebut dapat digunakan untuk menyaring fitur lokal sehingga diperoleh fitur lokal yang konsisten atau unik saja. Berdasarkan pada analisis dan pengujian yang dilakukan, penyaringan fitur lokal dengan menggunakan nilai konsistensi dan nilai keunikan dapat membuang sebagian besar fitur lokal pada saat diuji dengan menggunakan \textit{dataset} GSV. Pada pengujian dengan menggunakan metode SIFT dan menggunakan nilai \textit{threshold} 0.3 untuk nilai konsistensi dan 0.3 untuk nilai keunikan, didapat fitur lokal sebanyak 15365 dari keseluruhan yang sebanyak 115685 fitur lokal untuk \textit{dataset} GSV 400. Untuk \textit{dataset} GSV 600 jumlah fitur lokal yang didapat setelah penyaringan dengan menggunakan \textit{threshold} konsistensi dan keunikan yang sama dengan GSV 400 sebanyak 33735 dari keseluruhan sebanyak 231463 fitur lokal.
+	\item Telah dibuat perangkat lunak yang dapat melakukan identifikasi POI dari sebuah gambar dengan memanfaatkan model yang telah dihasilkan. Perangkat lunak melakukan pengenalan POI dengan menggunakan metode BSIS. Model yang telah dihasilkan sebelumnya dapat digunakan untuk memilih fitur lokal yang penting saja dan dapat mempercepat waktu proses BSIS. Pada pengujian menggunakan metode SIFT \textit{dataset} GSV, penyaringan fitur lokal berdasarkan sebaran nilai konsistensi dan nilai keunikan dapat mempercepat total waktu proses sebanyak 66.69 detik (73.2\%) dengan penurunan nilai akurasi sebanyak 10\% saat diuji pada \textit{dataset} berukuran maksimum 400 \textit{pixel}. Pada saat pengujian dengan ukuran gambar yang lebih besar, yaitu ukuran gambar maksimum 600 \textit{pixel} terjadi penurunan total waktu proses sebanyak 140.06 detik (74.6\%) dengan penurunan akurasi sebanyak 10\%.
+	\item Penggunaan metode ekstraksi fitur lokal ORB dibandingkan dengan SIFT cukup mempercepat proses ekstraksi fitur lokal, walaupun dengan akurasi yang menurun juga. Pada pengujian di \textit{dataset} GSV, metode ORB secara rata-rata lebih cepat 80\% dari metode SIFT pada ukuran gambar maksimum 400 \textit{pixel}, dengan penurunan akurasi sebanyak 18\% tanpa dilakukan penyaringan. Pada \textit{dataset} berukukan 600 \textit{pixel} rata-rata penurunan waktu ekstraksi fitur adalah 88\%, dengan penurunan nilai akurasi sebanyak 22\% pada saat tidak dilakukan penyaringan.
+\end{enumerate}
+
+\section{Saran}
+Berdasarkan hasil yang telah diperoleh dan kesimpulan yang telah ditarik, terdapat beberapa saran yang mungkin dapat digunakan untuk penelitian lebih lanjut sebagai berikut:
+\begin{enumerate}
+	\item Metode \textit{clustering} dapat dilakukan dengan menggunakan metode selain Agglomerative Clustering. Contoh metode \textit{clustering} lain yang dapat digunakan seperti DBSCAN.
+	\item Nilai akurasi dan nilai keunikan selain digunakan untuk menyaring fitur lokal dapat dicoba untuk digunakan sebagai bobot tambahan pada fitur lokal saat dilakukan BSIS. Cara ini akan menyebabkan fitur lokal yang sifatnya konsisten atau unik menjadi lebih berpengaruh terhadap penghitungan bobot antar pasangan gambar. 
+\end{enumerate}

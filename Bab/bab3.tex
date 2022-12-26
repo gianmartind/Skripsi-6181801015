@@ -96,10 +96,10 @@ Bagian POI yang merupakan logo dan objek yang konsisten tersebut tidak selalu da
 Fitur lokal yang memiliki sifat konsisten dan unik tersebut dapat dicari dengan menggunakan teknik \textit{clustering}. Fitur lokal yang didapat dari gambar-gambar yang berbeda tersebut dibagi menjadi beberapa kelompok yang disebut \textit{cluster}. Dari \textit{cluster} yang terbentuk tersebut dicari kelompok mana saja yang sifatnya konsisten dan unik terhadap sebuah POI. 
 
 \section{Dataset yang Digunakan}
-Pada analisis ini ada dua \textit{dataset} berbeda yang digunakan, yaitu \textit{Dataset} GSV dan \textit{Dataset} SMVS. Masing-masing \textit{dataset} tersebut akan dijelaskan pada subbab-subbab di bawah ini.
+Pada analisis ini ada dua \textit{dataset} berbeda yang digunakan, yaitu \textit{dataset} GSV dan \textit{dataset} SMVS. Masing-masing \textit{dataset} tersebut akan dijelaskan pada subbab-subbab di bawah ini.
 \subsection{Dataset SMVS}
 \label{subsec:dataset_smvs}
-\textit{Dataset} SMVS atau Stanford Mobile Visual Search merupakan \textit{dataset} yang dapat diakses melalui \textit{website} Stanford Libraries (\url{https://exhibits.stanford.edu/data/catalog/rb470rw0983}). \textit{Dataset} memiliki beberapa kumpulan data yang masing-masing merupakan kumpulan gambar dari benda-benda dengan jenis yang sama. Daftar kelompok data yang ada pada SMVS adalah sebagai berikut:
+\textit{Dataset} SMVS [\ref{sec:dataset_smvs}] memiliki beberapa kumpulan data yang masing-masing merupakan kumpulan gambar dari benda-benda dengan jenis yang sama. Daftar kelompok data yang ada pada SMVS adalah sebagai berikut:
 \begin{itemize}
 	\item \texttt{book\_covers}: berisi gambar-gambar \textit{cover} buku.
 	\item \texttt{bussines\_cards}: berisi gambar-gambar kartu nama.
@@ -110,9 +110,9 @@ Pada analisis ini ada dua \textit{dataset} berbeda yang digunakan, yaitu \textit
 	\item \texttt{print}: berisi gambar-gambar hasil foto dari dokumen hasil \textit{print}.
 	\item \texttt{video\_frames}: berisi gambar-gambar yang merupakan foto dari layar yang sedang memutar video.
 \end{itemize}
-Pada penelitian ini \textit{dataset} dari SMVS yang digunakan adalah \textit{dataset} \texttt{book\_covers}. \textit{Dataset} tersebut digunakan karena gambar-gambar pada \textit{dataset} ini cenderung mudah untuk diproses. Data dari kelompok \texttt{book\_covers} juga terbagi dengan format sesuai dengan yang dibutuhkan pada penelitian, di mana terdapat beberapa kelas gambar dan untuk setiap kelas terdapat beberapa foto dari benda yang sama diambil dari sudut pengambilan yang berbeda. 
+Pada penelitian ini \textit{dataset} dari SMVS yang digunakan adalah \textit{dataset} \texttt{book\_covers}. \textit{Dataset} tersebut digunakan karena gambar-gambar pada \textit{dataset} ini cenderung mudah untuk diproses. Data dari kelompok \texttt{book\_covers} juga terbagi dengan sifat sesuai dengan yang dibutuhkan pada penelitian, di mana terdapat beberapa kelas gambar dan untuk setiap kelas terdapat beberapa foto dari benda yang sama diambil dari sudut pengambilan yang berbeda. 
 
-Pada \textit{dataset} SMVS ini terdapat kelompok gambar \texttt{landmark} yang berisi gambar bangunan-bangunan di sebuah lokasi tertentu yang menyerupai POI. Objek yang digunakan pada kelompok data tersebut sesuai dengan objek yang diteliti pada penelitian ini. Kelompok gambar \texttt{landmark} tersebut walaupun berisi objek yang sesuai, tetapi format data tidak sesuai dengan yang diperlukan pada penelitian ini. Gambar-gambar dalam kelompok gambar \texttt{landmark} tidak terbagi menjadi kelas-kelas sesuai lokasi atau POI pada gambarnya.
+Pada \textit{dataset} SMVS ini terdapat kelompok gambar \texttt{landmark} yang berisi gambar bangunan-bangunan di sebuah lokasi tertentu yang menyerupai POI. Objek yang digunakan pada kelompok data tersebut sesuai dengan objek yang diteliti pada penelitian ini. Kelompok gambar \texttt{landmark} tersebut walaupun berisi objek yang sesuai, tetapi sifat data tidak sesuai dengan yang diperlukan oleh penelitian ini. Gambar-gambar dalam kelompok gambar \texttt{landmark} tidak terbagi menjadi kelas-kelas sesuai lokasi atau POI pada gambarnya.
 
 \subsection{Dataset GSV}
 \label{subsec:dataset_gsv}
@@ -120,54 +120,54 @@ Pada \textit{dataset} SMVS ini terdapat kelompok gambar \texttt{landmark} yang b
 
 Dalam \textit{dataset} GSV terdapat beberapa kelas, di mana setiap kelas merupakan sebuah POI tertentu. Setiap kelas terdiri dari gambar-gambar sebuah POI yang diambil dari sudut waktu pengambilan yang berbeda. Pengambilan dari sudut dan waktu yang berbeda ditujukan agar dalam gambar-gambar di sebuah kelas ada bagian dari POI yang selalu muncul dan ada yang hanya muncul di satu atau beberapa gambar saja. 
 
-Data-data gambar dalam \textit{dataset} GSV ini diperoleh dari dua sumber yang berbeda. Sumber yang pertama merupakan Google Street View (\url{https://www.google.com/streetview/}). Google Street View merupakan sebuah aplikasi yang dapat digunakan untuk melihat tampilan 3D dari titik-titik di jalan raya. Dengan menggunakan Google Street View diambil gambar-gambar POI yang dapat dilihat dari titik di jalan raya sebagai data. Sumber yang kedua adalah dengan mengambil gambar secara langsung dengan menggunakan kamera. Gambar-gambar yang dihasilkan baik dari Google Street View dan dengan menggunakan kamera memiliki ciri yang sama sehingga keduanya dapat digabungkan ke dalam satu \textit{dataset}.
+Data-data gambar dalam \textit{dataset} GSV ini diperoleh dari dua sumber yang berbeda. Sumber yang pertama merupakan Google Street View (\url{https://www.google.com/streetview/}). Google Street View merupakan sebuah \textit{website} yang dapat digunakan untuk melihat tampilan $360\deg$ dari titik-titik di jalan raya. Dengan menggunakan Google Street View diambil gambar-gambar POI yang dapat dilihat dari titik di jalan raya sebagai data. Sumber yang kedua adalah dengan mengambil gambar secara langsung dengan menggunakan kamera. Gambar-gambar yang dihasilkan baik dari Google Street View dan yang diambil menggunakan kamera memiliki ciri yang sama sehingga keduanya dapat digabungkan ke dalam satu \textit{dataset}.
 
-Keseluruhan \textit{dataset} terdiri dari sebanyak 150 gambar. Gambar-gambar tersebut terbagi menjadi 10 kelas, di mana setiap kelas memiliki 15 gambar berbeda. Contoh gambar untuk tiap kelas dalam \textit{dataset} ini dapat dilihat pada Tabel~\ref{tab:contoh_dataset_gsv}.
+Keseluruhan \textit{dataset} GSV terdiri dari sebanyak 150 gambar. Gambar-gambar tersebut terbagi menjadi 10 kelas, di mana setiap kelas memiliki 15 gambar berbeda. Contoh gambar untuk tiap kelas dalam \textit{dataset} ini dapat dilihat pada Tabel~\ref{tab:contoh_dataset_gsv}.
 \newpage
 
 \begin{longtable}{|p{.2\textwidth}|p{.3\textwidth}|p{.4\textwidth}|}
-	\caption{Daftar kelas gambar dalam \textit{Dataset} GSV beserta lokasi dan contoh gambarnya.}
+	\caption{Daftar kelas gambar dalam \textit{dataset} GSV beserta lokasi dan contoh gambarnya.}
 	\label{tab:contoh_dataset_gsv} \\
 	\hline
-	\textbf{Nama Kelas} & \textbf{Lokasi POI} & \textbf{Contoh Gambar} \\
+	\textbf{Nama Kelas} & \textbf{Lokasi POI (Koordinat)} & \textbf{Contoh Gambar} \\
 	\hline
-	alfamart & Jl. Ciumbuleuit No. 42A, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-688121, 107.60377) & \begin{minipage}{.4\textwidth}
+	\texttt{alfamart} & Jl. Ciumbuleuit No. 42A, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-688121, 107.60377) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{alfamart_1.jpg}
 	\end{minipage} \\
 	\hline
 	binus & Jl. Ciumbuleuit No. 163, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87392, 107.60456) & \begin{minipage}{.4\textwidth}
-		\vspace{5pt} \includegraphics[width=\textwidth, angle=90]{binus_1.jpg}
+		\vspace{5pt} \includegraphics[width=\textwidth, angle=270]{binus_1.jpg}
 	\end{minipage} \\
 	\hline
-	gembul & Jl. Ciumbuleuit No. 106, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87375, 107.60486) & \begin{minipage}{.4\textwidth}
+	\texttt{gembul} & Jl. Ciumbuleuit No. 106, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87375, 107.60486) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{gembul_1.jpg}
 	\end{minipage} \\
 	\hline
-	harris & Jl. Ciumbuleuit No. 50-58, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.88054, 107.60475) & \begin{minipage}{.4\textwidth}
+	\texttt{harris} & Jl. Ciumbuleuit No. 50-58, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.88054, 107.60475) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{harris_1.jpg}
 	\end{minipage} \\
 	\hline
-	oxy & Jl. Ciumbuleuit No. 163, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87389, 107.60448) & \begin{minipage}{.4\textwidth}
-		\vspace{5pt} \includegraphics[width=\textwidth, angle=90]{oxy_1.jpg}
+	\texttt{oxy} & Jl. Ciumbuleuit No. 163, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87389, 107.60448) & \begin{minipage}{.4\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth, angle=270]{oxy_1.jpg}
 	\end{minipage} \\
 	\hline
-	ping & Jl. Bukit Indah I No. 6, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87406, 107.60375) & \begin{minipage}{.4\textwidth}
-		\vspace{5pt} \includegraphics[width=\textwidth, angle=90]{ping_1.jpg}
+	\texttt{ping} & Jl. Bukit Indah I No. 6, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87406, 107.60375) & \begin{minipage}{.4\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth, angle=270]{ping_1.jpg}
 	\end{minipage} \\
 	\hline
-	porcafe & Jl. Ciumbuleuit No. 86, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87738, 107.60426) & \begin{minipage}{.4\textwidth}
+	\texttt{porcafe} & Jl. Ciumbuleuit No. 86, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87738, 107.60426) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{porcafe_1.jpg}
 	\end{minipage} \\
 	\hline
-	starbucks & Jl. Ciumbuleuit No. 115, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87317, 107.60557) & \begin{minipage}{.4\textwidth}
+	\texttt{starbucks} & Jl. Ciumbuleuit No. 115, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87317, 107.60557) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{starbucks_1.jpg}
 	\end{minipage} \\
 	\hline
-	toyota & Jl. Ir. H. Juanda No. 131, Lb. Siliwangi, Coblong, Kota Bandung, Jawa Barat 40132 (-6.89078, 107.61305) & \begin{minipage}{.4\textwidth}
+	\texttt{toyota} & Jl. Ir. H. Juanda No. 131, Lb. Siliwangi, Coblong, Kota Bandung, Jawa Barat 40132 (-6.89078, 107.61305) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{toyota_1.jpg}
 	\end{minipage} \\
 	\hline
-	yogya & Jl. Ciumbuleuit No. 147, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87573, 107.60439) & \begin{minipage}{.4\textwidth}
+	\texttt{yogya} & Jl. Ciumbuleuit No. 147, Hegarmanah, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87573, 107.60439) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth]{yogya_1.jpg}
 	\end{minipage} \\
 	\hline
@@ -244,7 +244,7 @@ Beberapa contoh \textit{keypoint} yang fitur lokalnya memiliki sifat konsisten b
 Fitur lokal yang didapat dari hasil ekstraksi pada gambar POI juga memiliki sifat yang unik terhadap sebuah POI. Pada penelitian ini sebuah fitur lokal dikatakan unik terhadap sebuah POI jika fitur lokal tersebut memiliki sifat yang hanya muncul di POI tersebut saja. Sebuah sifat fitur lokal tidak perlu benar-benar hanya muncul pada satu POI saja untuk dikatakan unik, jika sebuah sifat muncul pada beberapa gambar berbeda dan mayoritas dari gambar berbeda tersebut merupakan gambar dari POI yang sama maka sifat fitur lokal tersebut juga bisa dikatakan unik. Analisis kali ini mirip dengan analisis sebelumnya yaitu dilakukan dengan melakukan \textit{clustering} pada vektor \textit{descriptor} dari fitur lokal yang dihasilkan dengan metode SIFT.
 
 \subsection{Ide Dasar dan Tahapan Analisis}
-Analisis dilakukan untuk melihat apakah ada fitur lokal yang sifatnya unik terhadap sebuah POI atau tidak. Analisis akan dilakukan dengan menggunakan gambar-gambar dari beberapa POI yang berbeda, di mana setiap POI akan memiliki lebih dari satu gambar. Pada analisis ini digunakan sebanyak 5 kelas dari \textit{Dataset} GSV, yaitu \texttt{alfamart}, \texttt{binus}, \texttt{gembul}, \texttt{harris}, dan \texttt{oxy}. Dari setiap kelas gambar hanya diambil sebanyak 4 gambar saja. Contoh gambar-gambar yang digunakan pada analisis ini dapat dilihat pada Gambar~\ref{fig:analisis_uniqueness}. 
+Analisis dilakukan untuk melihat apakah ada fitur lokal yang sifatnya unik terhadap sebuah POI atau tidak. Analisis akan dilakukan dengan menggunakan gambar-gambar dari beberapa POI yang berbeda, di mana setiap POI akan memiliki lebih dari satu gambar. Pada analisis ini digunakan sebanyak 5 kelas dari \textit{dataset} GSV, yaitu \texttt{alfamart}, \texttt{binus}, \texttt{gembul}, \texttt{harris}, dan \texttt{oxy}. Dari setiap kelas gambar hanya diambil sebanyak 4 gambar saja. Contoh gambar-gambar yang digunakan pada analisis ini dapat dilihat pada Gambar~\ref{fig:analisis_uniqueness}. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.9\textwidth]{contoh_gambar_uniq.png}	
@@ -304,19 +304,19 @@ Beberapa contoh \textit{keypoint} yang fitur lokalnya memiliki sifat unik berdas
 
 \section{Analisis Tingkat Keunikan dan Kekonsistenan Fitur Lokal pada Gambar POI}
 \label{sec:analisis_sifat}
-Berdasarkan hasil yang didapat dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan} didapati bahwa ada fitur lokal yang sifatnya konsisten serta unik dan ada yang tidak. Tetapi dari kedua analisis tersebut belum didapat didapat sebuah nilai yang dapat menentukan tingkat kekonsistenan atau keunikan suatu fitur lokal. Analisis pada bagian ini bertujuan untuk membuat sebuah metode yang dapat memberikan nilai konsistensi dan keunikan pada suatu fitur lokal. Nilai konsistensi dan keunikan ini nantinya akan berguna untuk menyaring fitur lokal, sehingga dapat dengan mudah diambil fitur lokal yang sifatnya unik dan konsisten saja.
+Berdasarkan hasil yang didapat dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan} didapati bahwa ada fitur lokal yang sifatnya konsisten, unik, dan ada yang tidak. Tetapi dari kedua analisis tersebut belum didapat didapat nilai yang dapat digunakan untuk mengukur tingkat kekonsistenan dan nilai yang dapat digunakan untuk mengukur tingkat keunikan fitur lokal. Analisis pada bagian ini bertujuan untuk membuat sebuah metode yang dapat memberikan nilai konsistensi dan nilai keunikan pada suatu fitur lokal. Nilai konsistensi dan nilai keunikan ini nantinya akan berguna untuk menyaring fitur lokal, sehingga dapat dengan mudah diambil fitur lokal yang sifatnya unik dan sifatnya konsisten saja.
 
-Analisis yang dilakukan merupakan penggabungan dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan}, serta dengan beberapa modifikasi untuk mengatasi masalah yang ditemui. Nilai konsistensi dan keunikan akan dihitung dari hasil \textit{clustering} yang sama. Berbeda dengan sebelumnya di mana proses \textit{clustering} untuk melihat konsistensi dan keunikan dilakukan dengan format \textit{dataset} yang berbeda. 
+Analisis yang dilakukan merupakan penggabungan dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan},  dengan beberapa modifikasi untuk mengatasi masalah yang ditemui. Nilai konsistensi dan nilai keunikan akan dihitung dari hasil \textit{clustering} yang sama. Berbeda dengan sebelumnya di mana proses \textit{clustering} untuk melihat konsistensi dan keunikan dilakukan dengan format \textit{dataset} yang berbeda. 
 
 \subsection{Ide Dasar Analisis}
 \label{subsec:ide_analisis_clustering}
-Analisis dilakukan dengan menggunakan gambar-gambar dari \textit{Dataset} GSV (\ref{subsec:dataset_gsv}). Gambar-gambar dalam \textit{dataset} tersebut diekstrak fitur lokalnya, dan setiap fitur lokal dicatat asal gambarnya dan kelas dari gambar asalnya. 
+Analisis dilakukan dengan menggunakan gambar-gambar dari \textit{Dataset} GSV (\ref{subsec:dataset_gsv}). Gambar-gambar dalam \textit{dataset} tersebut diekstrak fitur lokalnya, dan setiap fitur lokal dicatat asal gambarnya serta kelas dari gambar asalnya. Fitur-fitur lokal dari gambar tersebut lalu dibagi menjadi kelompok-kelompok dengan menggunakan teknik \textit{clustering}.
 
-Fitur-fitur lokal dari gambar tersebut lalu dibagi menjadi kelompok-kelompok dengan menggunakan teknik \textit{clustering}. Terdapat masalah jika ada pola tertentu pada POI yang berulang, pola berulang tersebut akan menghasilkan banyak fitur lokal dengan ciri-ciri yang mirip. Banyaknya fitur lokal dengan ciri yang sama tersebut diatasi dengan terlebih dahulu melakukan \textit{clustering} pada masing-masing gambar. \textit{Clustering} yang dilakukan pada masing-masing gambar akan menghasilkan \textit{centroid} dari masing-masing \textit{cluster}. \textit{Centroid-centroid} ini nantinya digabungkan dengan \textit{centroid-centroid} dari gambar lain untuk dilakukan \textit{clustering} tahap kedua. \textit{Cluster-cluster} yang terbentuk dari \textit{clustering} tahap kedua ini digunakan untuk menentukan nilai konsistensi dan keunikan fitur lokal. 
+ Terdapat masalah jika ada pola tertentu pada POI yang berulang, pola berulang tersebut akan menghasilkan banyak fitur lokal dengan ciri yang mirip. Banyaknya fitur lokal dengan ciri yang sama tersebut diatasi dengan terlebih dahulu melakukan \textit{clustering} pada masing-masing gambar. Tahap \textit{clustering} yang dilakukan akan dibagi menjadi 2 bagian, tahap pertama merupakan \textit{clustering} per gambar dan tahap kedua merupakan \textit{clustering} keseluruhan gambar. \textit{Clustering} yang dilakukan pada masing-masing gambar akan menghasilkan \textit{centroid} dari masing-masing \textit{cluster}. \textit{Centroid-centroid} ini nantinya digabungkan dengan \textit{centroid-centroid} dari gambar lain untuk dilakukan \textit{clustering} tahap kedua. \textit{Cluster-cluster} yang terbentuk dari \textit{clustering} tahap kedua ini digunakan untuk menentukan nilai konsistensi dan keunikan fitur lokal. 
 
-Fitur lokal yang konsisten adalah fitur lokal yang muncul di semua gambar dari sebuah kelas. Kekonsistenan ini dihitung dengan melihat fitur-fitur lokal dalam sebuah \textit{cluster} jika dalam \textit{cluster} tersebut terdapat fitur lokal dari kelas A dan terdapat beberapa fitur lokal lain dari kelas yang sama tetapi dari gambar yang berbeda maka fitur lokal dengan kelas A di \textit{cluster} tersebut merupakan fitur lokal yang konsisten. Kekonsistenan ini akan ditunjukkan oleh sebuah nilai yang didapat dari menghitung jumlah gambar yang berbeda dari kelas POI yang sama dalam sebuah \textit{cluster} dan membaginya dengan jumlah gambar POI tersebut dalam \textit{dataset}.
+Seperti yang telah dijelaskan sebelumnya pada \ref{sec:analisis_konsistensi} fitur lokal bersifat konsisten terhadap sebuah POI jika fitur lokal tersebut muncul di mayoritas gambar-gambar POI tersebut. Sebuah fitur lokal akan bersifat semakin konsisten dengan semakin banyaknya gambar di mana ia muncul. Kekonsistenan ini dihitung dengan melihat fitur-fitur lokal dalam sebuah \textit{cluster} jika dalam \textit{cluster} tersebut terdapat fitur lokal dari kelas A dan terdapat beberapa fitur lokal lain dari kelas yang sama tetapi dari gambar yang berbeda maka fitur lokal dengan kelas A di \textit{cluster} tersebut merupakan fitur lokal yang konsisten. Tingkat kekonsistenan sebuah fitur lokal akan ditunjukkan oleh sebuah nilai yang didapat dari menghitung jumlah gambar yang berbeda dari kelas POI yang sama dalam sebuah \textit{cluster} dan membaginya dengan jumlah gambar POI tersebut dalam \textit{dataset}. Semakin tinggi nilai tersebut maka semakin konsisten sifat fitur lokalnya.
 
-Fitur lokal unik adalah fitur lokal yang hanya muncul di satu kelas POI dan tidak muncul di POI lain. Dapat dihitung dengan fitur-fitur lokal dalam sebuah \textit{cluster}. Jika sebagian besar fitur lokal berasal dari kelas gambar A maka fitur lokal dengan kelas gambar A di \textit{cluster} tersebut merupakan fitur lokal yang unik.  Nilai keunikan didapat dari terlebih dahulu menghapus fitur lokal yang gambarnya memiliki duplikat dan lalu untuk tiap kelas gambar dihitung jumlahnya dan dibagi dengan jumlah anggota \textit{clsuter} tersebut (setelah dihapus yang duplikat).
+Seperti telah dijelaskan pada \ref{sec:analisis_keunikan} fitur lokal bersifat unik jika fitur lokal tersebut hanya muncul di satu atau sedikit POI saja. Semakin sedikit POI di mana fitur lokal dengan sifat tersebut muncul maka semakin unik sifat fitur lokalnya. Tingkat keunikan sebuah fitur lokal dihitung dengan melihat ada berapa kelas gambar berbeda dalam \textit{cluster} yang sama dengan fitur lokal tersebut. Jika sebagian besar fitur lokal berasal dari kelas gambar A maka fitur lokal dengan kelas gambar A di \textit{cluster} tersebut merupakan fitur lokal yang unik.  Nilai keunikan didapat dari terlebih dahulu menghapus fitur lokal yang gambarnya memiliki duplikat dan lalu untuk tiap kelas gambar dihitung jumlahnya dan dibagi dengan jumlah anggota \textit{clsuter} tersebut (setelah dihapus yang duplikat). Semakin tinggi nilai keunikan ini maka semakin unik fitur lokal tersebut.
 
 \subsection{Tahapan Analisis}
 \label{subsec:tahapan_analisis_clustering}
@@ -356,7 +356,7 @@ Langkah-langkah pada \textit{flowchart} di Gambar~\ref{fig:tahapan_analisis_clus
 \label{subsec:tahapan_implementasi_analisis_clustering}
 Langkah-langkah yang telah dijelaskan pada \ref{subsec:tahapan_analisis_clustering} dijalankan dengan membuat implementasi menggunakan Python. Versi Python yang digunakan adalah Python versi 3.7.5 dari distribusi Anaconda. Pemrosesan gambar serta ekstraksi fitur lokal dilakukan dengan menggunakan \textit{library} OpenCV versi 4.5.5.64. Untuk \textit{clustering} digunakan metode \textit{Agglomerative Clustering} dari \textit{library} Scikit-learn versi 1.0.2. Serta digunakan juga \textit{library} Pandas versi 1.3.5 untuk pemrosesan data. Langkah-langkah implementasi yang dilakukan adalah sebagai berikut:
 \begin{enumerate}
-	\item \textit{Import library} OpenCV (\texttt{cv2}), Scikit-learn (\texttt{sklearn}), dan Pandas (\texttt{pandas}).
+	\item Melakukan \textit{import library} OpenCV (\texttt{cv2}), Scikit-learn (\texttt{sklearn}), dan Pandas (\texttt{pandas}).
 	\item Memuat semua gambar yang digunakan dengan fungsi \texttt{cv2.imread}. Gambar yang dimuat terlebih dahulu diubah ukurannya agar menjadi tidak ada sisi yang panjangnya lebih dari 600 \textit{pixel}. \textit{Array} gambar disimpan dalam sebuah \textit{dictionary} dengan nama gambar sebagai \textit{key}.
 	\item Membuat objek SIFT dengan fungsi \texttt{cv2.SIFT\_create} masukkan ke dalam objek dengan nama \texttt{sift}.
 	\item Menggunakan objek \texttt{sift} untuk melakukan ekstraksi fitur lokal dari masing-masing gambar. Ekstraksi dilakukan dengan fungsi \texttt{sift.detectAndCompute}. \textit{Keypoint} yang dihasilkan dimasukkan ke dalam sebuah \textit{list} bernama \texttt{keypoints} untuk semua gambar. Untuk \textit{descriptor} dimasukkan ke dalam sebuah \textit{dataframe} dengan nama \texttt{descriptors}.
@@ -371,7 +371,7 @@ Langkah-langkah yang telah dijelaskan pada \ref{subsec:tahapan_analisis_clusteri
 	\item Memasukkan \textit{list} \texttt{uniqueness} sebagai kolom pada \texttt{df\_centroid}.
 	\item Mengelompokkan \texttt{df\_centroid} berdasarkan \texttt{cluster2\_label} dan \texttt{img\_class} dengan menggunakan fungsi \texttt{groupby}. Untuk setiap kelompok dihitung jumlah gambar yang berbeda. Hasil pengelompokan dimasukkan ke dalam variabel bernama \texttt{cluster2\_img\_class\_group}.
 	\item Membuat sebuah \textit{list} dengan nama \texttt{img\_count}. \textit{List} ini akan berisi nilai konsistensi untuk tiap \textit{centroid} di \texttt{df\_centroid}.
-	\item Melakukan iterasi pada kolom \texttt{cluster2\_label} dan \texttt{img\_class} dari \texttt{df\_centroid}. Untuk setiap iterasi ambil nilai yang bersesuaian dari \texttt{cluster2\_img\_class\_group}. Nilai tersebut dibagi dengan 4 (jumlah gambar tiap kelas) dan dimasukkan ke dalam \textit{list} \texttt{img\_count}.
+	\item Melakukan iterasi pada kolom \texttt{cluster2\_label} dan \texttt{img\_class} dari \texttt{df\_centroid}. Untuk setiap iterasi ambil nilai yang bersesuaian dari \texttt{cluster2\_img\_class\_group}. Nilai tersebut dibagi dengan 10 (jumlah gambar tiap kelas) dan dimasukkan ke dalam \textit{list} \texttt{img\_count}.
 	\item Masukkan \texttt{img\_count} ke sebagai kolom di \texttt{df\_centroid} dengan nama \texttt{consistency}.
 	\item Mengambil kolom \texttt{cluster\_label}, \texttt{cluster2\_label}, \texttt{uniqueness}, dan \texttt{consistency} dari \texttt{df\_centroid}. Lakukan \texttt{merge} pada kolom-kolom tersebut dengan \textit{dataframe} \texttt{descriptors} dengan bertumpu pada kolom \texttt{cluster\_label}.
 \end{enumerate}
@@ -659,13 +659,15 @@ Nilai-nilai pada Tabel~\ref{tab:rata_kelas_keunikan} menunjukkan nilai dengan ki
 
 Grafik pada Gambar~\ref{fig:skor_uniqueness} menunjukkan bahwa skor tertinggi ada pada saat digunakan nilai \textit{threshold} 0.7. Dari nilai pada grafik tersebut maka akan digunakan nilai \textit{threshold} 0.7 sebagai batas untuk memotong nilai keunikan. Sama seperti pada nilai konsistensi, sebaran skor antar kelas pada nilai keunikan tidak merata sehingga nilai \textit{threshold} yang ditentukan mungkin tidak akan baik untuk semua kelas.
 
-\section{Analisis Penggunaan Clustering untuk OIR dengan BSIS}
+\section{Analisis Penggunaan Nilai Konsistensi dan Nilai Keunikan untuk OIR dengan BSIS}
 \label{sec:analisis_bsis}
 Pada analisis sebelumnya telah diterapkan metode \textit{clustering} untuk mencari fitur lokal yang unik dan konsisten. Fitur lokal yang unik dan konsisten tersebut diharapkan dapat menjadi fitur yang kuat untuk melakukan identifikasi sebuah gambar. 
 
-Penelitian ini tidak dilakukan dengan menggunakan \textit{Dataset} GSV (\ref{subsec:dataset_gsv}). Pada tahap ini penelitian dilakukan dengan menggunakan \textit{dataset} \texttt{book\_covers} dari SMVS (\ref{subsec:dataset_smvs}).
+Penelitian ini tidak dilakukan dengan menggunakan \textit{dataset} GSV (\ref{subsec:dataset_gsv}). Pada tahap ini penelitian dilakukan dengan menggunakan \textit{dataset} \texttt{book\_covers} dari SMVS (\ref{subsec:dataset_smvs}).
 
-Analisis dilakukan dengan melakukan identifikasi sejumlah gambar tes terhadap \textit{dataset} yang menggunakan semua fitur lokal dan \textit{dataset} yang menggunakan fitur lokal yang telah tersaring berdasarkan nilai konsistensi dan keunikannya. Hasil tes keduanya lalu dibandingkan tingkat akurasi dan waktu pemrosesannya. Proses identifikasi dilakukan dengan menggunakan metode BSIS~\ref{sec:bsis}.
+Analisis dilakukan dengan melakukan identifikasi sejumlah gambar tes terhadap \textit{dataset} yang menggunakan semua fitur lokal dan \textit{dataset} yang menggunakan fitur lokal yang telah tersaring berdasarkan nilai konsistensi dan keunikannya. Penyaringan fitur lokal pada analisis ini tidak dilakukan dengan menggunakan pengujian \textit{threshold} seperti pada \ref{sec:analisis_threshold}. Penentuan batas untuk menyaring fitur lokal ditentukan dengan melihat sebaran nilai konsistensi dan nilai fitur lokalnya.
+
+Analisis bertujuan untuk membandingkan hasil tes \textit{dataset} secara keseluruhan dan \textit{dataset} yang telah disaring. Ingin dilihat bagaimana perbedaan tingkat akurasi dan waktu pemrosesan yang diperlukan. 
 
 \subsection{Data Train dan Test}
 \subsubsection{Data Train}
@@ -673,7 +675,7 @@ Data \textit{train} yang digunakan berjumlah total sebanyak 200 gambar yang terb
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{013-Combined.png}
-	\caption{Contoh gambar pada \textit{dataset} Book Covers. Keempat gambar tersebut berada dalam satu kelas yang sama.}
+	\caption{Contoh gambar pada \textit{dataset} \texttt{book\_covers}. Keempat gambar tersebut berada dalam satu kelas yang sama.}
 	\label{fig:contoh_book_covers}
 \end{figure}
 
@@ -682,13 +684,13 @@ Data \textit{train} yang sama digunakan dua kali dengan ukuran yang berbeda. Uku
 Gambar-gambar tersebut diekstrak fitur lokalnya dan untuk setiap fitur lokal dihitung nilai konsistensi dan keunikan menggunakan metode seperti pada \ref{sec:analisis_sifat}. Fitur-fitur lokal dari gambar ini lah yang akan digunakan untuk melakukan identifikasi gambar tersebut.
 
 \subsubsection{Data Test}
-Data \textit{test} yang digunakan diambil dari gambar referensi \textit{dataset} Book Covers. Gambar referensi merupakan gambar buku yang menjadi objek utama dalam setiap kelas dengan kondisi yang ideal. Contoh gambar referensi dapat dilihat pada Gambar~\ref{fig:referensi_book_covers}.
+Data \textit{test} yang digunakan diambil dari gambar referensi \textit{dataset} \texttt{book\_covers}. Gambar referensi merupakan gambar buku yang menjadi objek utama dalam setiap kelas dengan kondisi yang ideal. Contoh gambar referensi dapat dilihat pada Gambar~\ref{fig:referensi_book_covers}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.3\textwidth]{004.jpg}
 	\includegraphics[width=0.3\textwidth]{013.jpg}
-	\caption{Contoh gambar referensi dari \textit{dataset} Book Covers.}
+	\caption{Contoh gambar referensi dari \textit{dataset} \texttt{book\_covers}.}
 	\label{fig:referensi_book_covers}
 \end{figure}
 
@@ -700,7 +702,7 @@ Data \textit{test} yang berjumlah 100 tersebut memiliki ukuran lebar yang berkis
 	\centering
 	\includegraphics[width=0.3\textwidth]{004-test1.jpg}
 	\includegraphics[width=0.3\textwidth]{013-test1.jpg}
-	\caption{Contoh gambar referensi dari \textit{dataset} Book Covers.}
+	\caption{Contoh gambar referensi dari \textit{dataset} \texttt{book\_covers} yang telah ditransformasi.}
 	\label{fig:transformasi_book_covers}
 \end{figure}
 
@@ -726,7 +728,7 @@ Terdapat tahap \textit{clustering} yang dilakukan terhadap \textit{dataset} \tex
 
 
 \subsection{Tahapan Analisis}
-Analisis dilakukan dengan tahapan pada dua \textit{dataset} yang berbeda dengan tahapan yang sama. Dataset pertama akan disebut Dataset 400 yang menggunakan gambar dengan ukuran sisi terbesarnya tidak lebih dari 400 \textit{pixel}. Dataset kedua disebut Dataset 600 yang ukuran sisi terbesarnya tidak lebih dari 600 \textit{pixel}. Tahapan analisis yang dilakukan dapat dilihat pada \textit{flowchart} di Gambar~\ref{fig:tahapan_analisis_bsis}.
+Analisis dilakukan dengan tahapan pada dua \textit{dataset} yang berbeda dengan tahapan yang sama. \textit{Dataset} pertama akan disebut Book Covers 400 yang menggunakan gambar dengan ukuran sisi terbesarnya tidak lebih dari 400 \textit{pixel}. \textit{Dataset} kedua disebut Book Covers 600 yang ukuran sisi terbesarnya tidak lebih dari 600 \textit{pixel}. Tahapan analisis yang dilakukan dapat dilihat pada \textit{flowchart} di Gambar~\ref{fig:tahapan_analisis_bsis}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{tahapan_analisis_bsis.png}
@@ -744,7 +746,7 @@ Secara rinci tahapan yang dilakukan adalah sebagai berikut:
 	\item Penghitungan Akurasi dan Total Waktu \\
 	Hitung total waktu yang digunakan untuk menyelesaikan seluruh gambar dan berapa gambar yang mendapat hasil benar.
 \end{enumerate}
-Tahapan tersebut dilakukan sebanyak 2 kali untuk masing-masing Dataset 400 dan Dataset 600. Setelah didapat hasil akurasi dan total waktu untuk Dataset 400 dan Dataset 600 bandingkan keduanya dan lakukan analisis.
+Tahapan tersebut dilakukan sebanyak 2 kali untuk masing-masing Book Covers 400 dan Book Covers 600. Setelah didapat hasil akurasi dan total waktu untuk Book Covers 400 dan Book Covers 600 bandingkan keduanya dan lakukan analisis.
 
 \subsection{Tahapan Implementasi}
 \label{subsec:analisis_oir_tahapan_implementasi}
@@ -756,7 +758,7 @@ Implementasi dilakukan dengan membuat program Python. Digunakan Python versi 3.7
 	\item Menentukan parameter batas nilai \texttt{uniqueness} dan \texttt{consistency} untuk menyaring \textit{dataset}. 
 	\item Membuat objek SIFT dengan fungsi \texttt{cv2.SIFT\_create}.
 	\item Melakukan identifikasi gambar dengan BSIS. Tahap \textit{pairing} dalam BSIS dilakukan dengan menggunakan metode KD-Tree.
-	\item Menyimpan 10 nilai berikut dari hasil BSIS. Nilai-nilai ini disimpan dalam sebuah \textit{list} untuk tiap nilai:
+	\item Menyimpan 10 nilai dari hasil BSIS masing-masing dalam sebuah \textit{list}. Nilai-nilai yang disimpan adalah sebagai berikut:
 	\begin{itemize}
 		\item \texttt{q\_name}: nama dari gambar \textit{test}.
 		\item \texttt{q\_class}: kelas gambar dari gambar \textit{test}.
@@ -765,7 +767,7 @@ Implementasi dilakukan dengan membuat program Python. Digunakan Python versi 3.7
 		\item \texttt{total\_weight}: total bobot gambar paling mirip dari hasil BSIS.
 		\item \texttt{same\_class\_idx}: posisi gambar dengan kelas yang sama yang bobotnya paling tinggi. Jika hasil identifikasi benar maka nilainya akan 0.
 		\item \texttt{same\_class\_weight}: total bobot gambar dengan kelas yang sama yang bobotnya paling tinggi. Jika hasil identifikasi benar maka nilainya akan sama dengan nilai pada \texttt{total\_weight}.
-		\item \texttt{extract\_time}: waktu yang diperlukan untuk melakukan ekstraksi fitur lokal gambar \textit{test}.
+		\item \texttt{extract\_time}: waktu yang diperlukan untuk ekstraksi fitur lokal gambar \textit{test}.
 		\item \texttt{pairing\_time}: waktu yang diperlukan untuk menyelesaikan tahap \textit{pairing} dalam BSIS.
 		\item \texttt{total\_bsis\_time}: waktu total yang diperlukan untuk menyelesaikan seluruh tahapan BSIS hingga didapat hasil.
 	\end{itemize}
@@ -773,21 +775,21 @@ Implementasi dilakukan dengan membuat program Python. Digunakan Python versi 3.7
 	\item Untuk setiap baris di \textit{dataframe} memeriksa apakah hasilnya benar. Hasil adalah benar jika nilai pada \texttt{q\_class} sama dengan \texttt{most\_similar\_class}. 
 	\item Melakukan lagi langkah 6-8 dengan \textit{dataset} yang telah tersaring berdasarkan nilai batas \texttt{consistency} dan \texttt{uniqueness} yang telah ditentukan sebelumnya.
 \end{enumerate}
-Langkah-langkah tersebut dilakukan untuk Dataset 400 dan Dataset 600. Hasil dari kedua \textit{dataset} tersebut lalu dibandingkan.
+Langkah-langkah tersebut dilakukan untuk Book Covers 400 dan Book Covers 600. Hasil dari kedua \textit{dataset} tersebut lalu dibandingkan.
 
 \subsection{Hasil Analisis}
-\subsubsection{Dataset 400}
-Dataset 400 memiliki total fitur lokal yang dihasilkan dari seluruh gambar sebanyak 121909 fitur lokal. Setelah dilakukan \textit{clustering} menghitung nilai keunikan dan konsistensi didapat hasil sebaran nilai keunikan dan konsistensi seperti pada Gambar~\ref{fig:half_400_consistency} dan Gambar~\ref{fig:half_400_uniqueness}.
+\subsubsection{Book Covers 400}
+Book Covers 400 memiliki total fitur lokal yang dihasilkan dari seluruh gambar sebanyak 121909 fitur lokal. Setelah dilakukan \textit{clustering} menghitung nilai keunikan dan konsistensi didapat hasil sebaran nilai keunikan dan konsistensi seperti pada Gambar~\ref{fig:half_400_consistency} dan Gambar~\ref{fig:half_400_uniqueness}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.8\textwidth]{half\_400\_consistency.png}
-	\caption{Sebaran nilai keunikan (\texttt{consistency}) untuk Dataset 400.}
+	\caption{Sebaran nilai konsistensi (\texttt{consistency}) untuk Book Covers 400.}
 	\label{fig:half_400_consistency}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.8\textwidth]{half\_400\_uniqueness.png}
-	\caption{Sebaran nilai keunikan (\texttt{uniqueness}) untuk Dataset 400.}
+	\caption{Sebaran nilai keunikan (\texttt{uniqueness}) untuk Book Covers 400.}
 	\label{fig:half_400_uniqueness}
 \end{figure}
 Berdasarkan sebaran nilai konsistensi dan keunikan pada Gambar~\ref{fig:half_400_consistency} dan Gambar~\ref{fig:half_400_uniqueness} ditentukan bahwa fitur lokal yang digunakan untuk data yang telah tersaring adalah fitur lokal dengan ciri sebagai berikut:
@@ -847,7 +849,7 @@ Nilai yang digunakan sebagai batas pengambilan fitur lokal tersebut pada saat pe
 %		99  & 050-test1.jpg & 044-Droid.jpg  & 0.796        & 0.930       & 33.449        & 0         \\
 %		\hline
 %	\end{tabular}
-%	\caption{Beberapa contoh hasil BSIS pada keseluruhan Dataset 400.}
+%	\caption{Beberapa contoh hasil BSIS pada keseluruhan Book Covers 400.}
 %	\label{tab:result_full_400}
 %\end{table}
 %
@@ -901,7 +903,7 @@ Nilai yang digunakan sebagai batas pengambilan fitur lokal tersebut pada saat pe
 %		99  & 050-test1.jpg    & 002-iPhone.jpg   & 0.299                 & 0.409                & 16.458                 & 0                  \\
 %		\hline
 %	\end{tabular}
-%	\caption{Beberapa contoh hasil BSIS pada Dataset 400 yang telah tersaring berdasarkan \texttt{uniqueness} dan \texttt{consistency}.}
+%	\caption{Beberapa contoh hasil BSIS pada Book Covers 400 yang telah tersaring berdasarkan \texttt{uniqueness} dan \texttt{consistency}.}
 %	\label{tab:result_filtered_400}
 %\end{table}
 
@@ -909,8 +911,8 @@ Keseluruhan \textit{dataset} dan \textit{dataset} yang telah tersaring digunakan
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.8\textwidth]{perbandingan_dataset400.png}
-	\caption{Perbandingan sebaran waktu Dataset 400.}
+	\includegraphics[width=\textwidth]{perbandingan_dataset400.png}
+	\caption{Perbandingan sebaran waktu Book Covers 400.}
 	\label{fig:perbandingan_dataset400}
 \end{figure}
 
@@ -920,15 +922,15 @@ Detail untuk kedua \textit{boxplot} pada Gambar~\ref{fig:perbandingan_dataset400
 	\begin{tabular}{|l|l|l|}
 		\hline
 		& \textbf{Tersaring} & \textbf{Keseluruhan} \\ \hline
-		\textit{min}         & 0.31442            & 1.56648              \\ \hline
-		\textit{lower fence} & 0.31442            & 1.56648              \\ \hline
-		q1                   & 0.38489            & 1.68716              \\ \hline
-		q2 (median)          & 0.45294            & 1.79097              \\ \hline
-		q3                   & 0.56089            & 1.90613              \\ \hline
-		\textit{upper fence} & 0.77044            & 2.19699              \\ \hline
-		\textit{max}         & 1.21295            & 2.95327              \\ \hline
+		\textit{min}         & 0.3360            & 1.5756              \\ \hline
+		\textit{lower fence} & 0.3360            & 1.5756              \\ \hline
+		q1                   & 0.4154            & 1.7064              \\ \hline
+		q2 (median)          & 0.4824            & 1.8094              \\ \hline
+		q3                   & 0.5760            & 1.9782              \\ \hline
+		\textit{upper fence} & 0.8069            & 2.3480              \\ \hline
+		\textit{max}         & 1.6659            & 3.6549              \\ \hline
 	\end{tabular}
-	\caption{Nilai-nilai perbandingan waktu Dataset 400.}
+	\caption{Nilai-nilai perbandingan waktu Book Covers 400.}
 	\label{tab:perbandingan_dataset400}
 \end{table}
 
@@ -937,37 +939,37 @@ Dapat dilihat dari Gambar~\ref{fig:perbandingan_dataset400} serta dengan melihat
 Selain memengaruhi waktu yang diperlukan untuk mengidentifikasi gambar, penyaringan \textit{dataset} dengan nilai konsistensi dan keunikan juga memengaruhi tingkat akurasi dari proses identifikasi. Perbandingan nilai akurasi serta total waktu BSIS antara data yang tersaring dan data keseluruhan dapat dilihat pada Tabel~\ref{tab:waktu_akurasi_dataset400}.
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|l|l|l|}
+	\begin{tabular}{|l|l|l|l|}
 		\hline
-		& \textbf{Total Waktu (s)} & \textbf{Akurasi (\%)} \\ \hline
-		Keseluruhan & 183.79                   & 99                    \\ \hline
-		Tersaring   & 49.25                    & 98                    \\ \hline
+		& \textbf{Jumlah Fitur Lokal} & \textbf{Total Waktu (s)} & \textbf{Akurasi (\%)} \\ \hline
+		Keseluruhan & 121909 & 190.85                   & 99                    \\ \hline
+		Tersaring   & 24040 & 52.66                    & 92                    \\ \hline
 	\end{tabular}
-	\caption{Perbandingan total waktu dengan akurasi BSIS pada Dataset 400.}
+	\caption{Perbandingan total waktu dengan akurasi BSIS pada Book Covers 400.}
 	\label{tab:waktu_akurasi_dataset400}
 \end{table}
 Dari data pada Tabel~\ref{tab:waktu_akurasi_dataset400} didapat beberapa poin berikut:
 \begin{itemize}
-	\item Ada penurunan sebanyak 73.15\% pada total waktu dari \textit{dataset} keseluruhan dan tersaring.
-	\item Akurasi menurun sebanyak 1\% dari \textit{dataset} keseluruhan dan tersaring.
+	\item Ada penurunan sebanyak 72.40\% pada total waktu dari \textit{dataset} keseluruhan dan tersaring.
+	\item Akurasi menurun sebanyak 7\% dari \textit{dataset} keseluruhan dan tersaring.
 \end{itemize}
 Terlihat bahwa pada pengujian dengan \textit{dataset} ini penyaringan fitur lokal dengan menggunakan nilai konsistensi dan keunikan memberikan hasil yang cukup baik. Dengan menggunakan hanya sebagian dari \textit{dataset} dapat meningkatkan waktu proses secara signifikan dengan tetap mendapat hasil akurasi yang tinggi.
 
-\subsubsection{Dataset 600}
-Dataset 600 memiliki total fitur lokal yang dihasilkan dari seluruh gambar sebanyak 195558 fitur lokal. Setelah dilakukan \textit{clustering} menghitung nilai konsistensi dan keunikan didapat hasil sebaran nilai konsistensi dan keunikan seperti pada Gambar~\ref{fig:half_600_uniqueness} dan Gambar~\ref{fig:half_600_consistency}.
+\subsubsection{Book Covers 600}
+Book Covers 600 memiliki total fitur lokal yang dihasilkan dari seluruh gambar sebanyak 195558 fitur lokal. Setelah dilakukan \textit{clustering} menghitung nilai konsistensi dan keunikan didapat hasil sebaran nilai konsistensi dan keunikan seperti pada Gambar~\ref{fig:half_600_uniqueness} dan Gambar~\ref{fig:half_600_consistency}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.8\textwidth]{half_600_uniqueness.png}
-	\caption{Sebaran nilai keunikan (\texttt{uniqueness}) untuk Dataset 600.}
+	\caption{Sebaran nilai keunikan (\texttt{uniqueness}) untuk Book Covers 600.}
 	\label{fig:half_600_uniqueness}
 \end{figure}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=.8\textwidth]{half_600_consistency.png}
-	\caption{Sebaran nilai keunikan (\texttt{consistency}) untuk Dataset 600.}
+	\caption{Sebaran nilai konsistensi (\texttt{consistency}) untuk Book Covers 600.}
 	\label{fig:half_600_consistency}
 \end{figure}
-Sebaran nilai konsistensi dan keunikan untuk Dataset 600 memiliki ciri yang sama dengan sebaran untuk Dataset 400. Pada Dataset 600 ini akan digunakan nilai batas yang sama dengan Dataset 400 untuk menyaring nilai konsistensi dan keunikan. Nilai-nilai batas yang digunakan adalah 0.5 untuk konsistensi dan 0.2 untuk keunikan. Setelah dilakukan penyaringan dengan menggunakan batas-batas tersebut didapat sebanyak 43056 data. \textit{Dataset} keseluruhan dan yang sudah tersaring tadi digunakan untuk melakukan identifikasi gambar-gambar di \textit{dataset} \textit{test}.
+Sebaran nilai konsistensi dan keunikan untuk Book Covers 600 memiliki ciri yang sama dengan sebaran untuk Book Covers 400. Pada Book Covers 600 ini akan digunakan nilai batas yang sama dengan Book Covers 400 untuk menyaring nilai konsistensi dan keunikan. Nilai-nilai batas yang digunakan adalah 0.5 untuk konsistensi dan 0.2 untuk keunikan. Setelah dilakukan penyaringan dengan menggunakan batas-batas tersebut didapat sebanyak 43056 data. \textit{Dataset} keseluruhan dan yang sudah tersaring tadi digunakan untuk melakukan identifikasi gambar-gambar di \textit{dataset} \textit{test}.
 %Hasil pengenalan gambar \textit{test} pada \textit{dataset} keseluruhan dapat dilihat potongannya pada Tabel~\ref{tab:result_full_600}.
 %\begin{table}[H]
 %	\centering
@@ -1018,7 +1020,7 @@ Sebaran nilai konsistensi dan keunikan untuk Dataset 600 memiliki ciri yang sama
 %		99  & 050-test1.jpg    & 004-iPhone.jpg   & 0.802                 & 0.915                & 43.560                 & 0                  \\
 %		\hline
 %	\end{tabular}	
-%	\caption{Beberapa contoh hasil BSIS pada keseluruhan Dataset 600.}
+%	\caption{Beberapa contoh hasil BSIS pada keseluruhan Book Covers 600.}
 %	\label{tab:result_full_600}
 %\end{table}
 
@@ -1072,15 +1074,15 @@ Sebaran nilai konsistensi dan keunikan untuk Dataset 600 memiliki ciri yang sama
 %		99  & 050-test1.jpg    & 027-Droid.jpg    & 0.303                 & 0.420                & 20.752                 & 0                  \\
 %		\hline
 %	\end{tabular}
-%	\caption{Beberapa contoh hasil BSIS pada Dataset 600 yang telah tersaring berdasarkan \texttt{uniqueness} dan \texttt{consistency}.}
+%	\caption{Beberapa contoh hasil BSIS pada Book Covers 600 yang telah tersaring berdasarkan \texttt{uniqueness} dan \texttt{consistency}.}
 %	\label{tab:result_filtered_600}
 %\end{table}
 Perbedaan sebaran waktu yang digunakan untuk tiap gambar pada saat digunakan \textit{dataset} secara keseluruhan dan yang telah tersaring dapat dilihat pada Gambar~\ref{fig:perbandingan_dataset600}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.8\textwidth]{perbandingan_dataset600.png}
-	\caption{Perbandingan sebaran waktu Dataset 600.}
+	\includegraphics[width=\textwidth]{perbandingan_dataset600.png}
+	\caption{Perbandingan sebaran waktu Book Covers 600.}
 	\label{fig:perbandingan_dataset600}
 \end{figure}
 
@@ -1090,56 +1092,58 @@ Detail untuk kedua \textit{boxplot} pada Gambar~\ref{fig:perbandingan_dataset600
 	\begin{tabular}{|l|l|l|}
 		\hline
 		& \textbf{Tersaring} & \textbf{Keseluruhan} \\ \hline
-		\textit{min}         & 0.54459            & 2.60656              \\ \hline
-		\textit{lower fence} & 0.54459            & 2.60656              \\ \hline
-		q1                   & 0.63408            & 2.73240              \\ \hline
-		q2 (median)          & 0.71225            & 2.89405              \\ \hline
-		q3                   & 0.80423            & 3.02188              \\ \hline
-		\textit{upper fence} & 1.01644            & 3.41406              \\ \hline
-		\textit{max}         & 3.22431            & 6.03207              \\ \hline
+		\textit{min}         & 0.5527            & 2.5186              \\ \hline
+		\textit{lower fence} & 0.5527            & 2.5186              \\ \hline
+		q1                   & 0.6511            & 2.6836              \\ \hline
+		q2 (median)          & 0.7413            & 2.8522              \\ \hline
+		q3                   & 0.8514            & 3.0799              \\ \hline
+		\textit{upper fence} & 1.0632            & 3.6103              \\ \hline
+		\textit{max}         & 6.0301            & 9.2698              \\ \hline
 	\end{tabular}
-	\caption{Nilai-nilai perbandingan waktu Dataset 600.}
+	\caption{Nilai-nilai perbandingan waktu Book Covers 600.}
 	\label{tab:perbandingan_dataset600}
 \end{table}
-Dapat dilihat dari Gambar~\ref{fig:perbandingan_dataset600} serta nilainya pada Tabel~\ref{tab:perbandingan_dataset600} bahwa ada perbedaan sebaran nilai yang cukup besar antara \textit{dataset} keseluruhan dan yang telah tersaring. Perbedaan ini sama dengan yang ada pada saat digunakan Dataset 400. Untuk pengaruh penyaringan nilai pada akurasi BSIS dapat dilihat pada Tabel~\ref{tab:waktu_akurasi_dataset600}
+Dapat dilihat dari Gambar~\ref{fig:perbandingan_dataset600} serta nilainya pada Tabel~\ref{tab:perbandingan_dataset600} bahwa ada perbedaan sebaran nilai yang cukup besar antara \textit{dataset} keseluruhan dan yang telah tersaring. Perbedaan ini sama dengan yang ada pada saat digunakan Book Covers 400. Untuk pengaruh penyaringan nilai pada akurasi BSIS dapat dilihat pada Tabel~\ref{tab:waktu_akurasi_dataset600}
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|l|l|l|}
+	\begin{tabular}{|l|l|l|l|}
 		\hline
-		& \textbf{Total Waktu (s)} & \textbf{Akurasi (\%)} \\ \hline
-		Keseluruhan & 299.23                   & 99                    \\ \hline
-		Tersaring   & 78.64                    & 93                    \\ \hline
+		& \textbf{Jumlah Fitur Lokal} & \textbf{Total Waktu (s)} & \textbf{Akurasi (\%)} \\ \hline
+		Keseluruhan & 195558 & 307.43                   & 99                    \\ \hline
+		Tersaring   & 43056 & 87.37                    & 93                    \\ \hline
 	\end{tabular}
-	\caption{Perbandingan total waktu dengan akurasi BSIS pada Dataset 600.}
+	\caption{Perbandingan total waktu dengan akurasi BSIS pada Book Covers 600.}
 	\label{tab:waktu_akurasi_dataset600}
 \end{table}
 Dari data pada Tabel~\ref{tab:waktu_akurasi_dataset600} didapat beberapa poin berikut:
 \begin{itemize}
-	\item Ada penurunan sebanyak 73.71\% pada total waktu dari \textit{dataset} keseluruhan dan tersaring.
+	\item Ada penurunan sebanyak 71.58\% pada total waktu dari \textit{dataset} keseluruhan dan tersaring.
 	\item Akurasi menurun sebanyak 6\% dari \textit{dataset} keseluruhan dan tersaring.
 \end{itemize}
-Sama seperti pengujian pada Dataset 400, pada pengujian ini penyaringan \textit{dataset} meningkatkan kecepatan waktu proses dengan cukup signifikan. Sedikit berbeda dengan Dataset 400, pada penggunaan Dataset 600 ini penurunan nilai akurasi lebih banyak. Nilai akurasi menurun sebanyak 6\% dibandingkan pada Dataset 400 yang hanya menurun 1\%. 
+Sama seperti pengujian pada Book Covers 400, pada pengujian ini penyaringan \textit{dataset} meningkatkan kecepatan waktu proses dengan cukup signifikan. Sedikit berbeda dengan Book Covers 400, pada penggunaan Book Covers 600 ini penurunan nilai akurasi lebih banyak. Nilai akurasi menurun sebanyak 6\% dibandingkan pada Book Covers 400 yang hanya menurun 1\%. 
 
-\subsubsection{Perbandingan Dataset 400 dan Dataset 600}
-Percobaan yang dilakukan dengan menggunakan Dataset 400 dan Dataset 600 memiliki perbedaan yang cukup terlihat dari sisi akurasi yang dihasilkan dan waktu proses yang diperlukan. Perbandingan tersebut dapat dilihat pada tabel berikut:
+\subsubsection{Perbandingan Book Covers 400 dan Book Covers 600}
+Percobaan yang dilakukan dengan menggunakan Book Covers 400 dan Book Covers 600 memiliki perbedaan yang cukup terlihat dari sisi akurasi yang dihasilkan dan waktu proses yang diperlukan. Perbandingan tersebut dapat dilihat pada Tabel~\ref{tab:perbandingan_analisis_bsis}.
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|c|c|c|c|c|} 
+	\begin{tabular}{|p{0.2\textwidth}|p{0.1\textwidth}p{0.1\textwidth}p{0.1\textwidth}|p{0.1\textwidth}p{0.1\textwidth}p{0.1\textwidth}|}
 		\hline
-		& \multicolumn{2}{c|}{\textbf{Keseluruhan}}   & \multicolumn{2}{c|}{\textbf{Tersaring}}       \\ 
-		\hline
-		& Total Waktu (s) & Akurasi (\%) & Total Waktu (s) & Akurasi (\%)  \\ 
-		\hline
-		\textbf{Dataset 400} & 183.79               & 99           & 49.25               & 98            \\ 
-		\hline
-		\textbf{Dataset 600} & 299.23               & 99           & 78.64               & 93            \\
-		\hline
+		& \multicolumn{3}{p{0.1\textwidth}|}{\textbf{Keseluruhan}}                                                                                                     & \multicolumn{3}{p{0.1\textwidth}|}{\textbf{Tersaring}}                                                                                                       \\ \hline
+		& \multicolumn{1}{p{0.1\textwidth}|}{\textbf{Jumlah Fitur Lokal}} & \multicolumn{1}{p{0.1\textwidth}|}{\textbf{Total Waktu (s)}} & \multicolumn{1}{p{0.1\textwidth}|}{\textbf{Akurasi (\%)}} & \multicolumn{1}{p{0.1\textwidth}|}{\textbf{Jumlah Fitur Lokal}} & \multicolumn{1}{p{0.1\textwidth}|}{\textbf{Total Waktu (s)}} & \multicolumn{1}{p{0.1\textwidth}|}{\textbf{Akurasi (\%)}} \\ \hline
+		\textbf{Book Covers 400} & \multicolumn{1}{l|}{121909}                      & \multicolumn{1}{l|}{190.85}                   & 99                                         & \multicolumn{1}{l|}{24040}                       & \multicolumn{1}{l|}{52.66}                    & 92                                         \\ \hline
+		\textbf{Book Covers 600} & \multicolumn{1}{l|}{195558}                      & \multicolumn{1}{l|}{307.43}                   & 99                                         & \multicolumn{1}{l|}{43056}                       & \multicolumn{1}{l|}{87.37}                    & 93                                         \\ \hline
 	\end{tabular}
+	\caption{Perbandingan Book Covers 400 dan Book Covers 600 pada analisis ini.}
+	\label{tab:perbandingan_analisis_bsis}
 \end{table}
 
-Tabel di atas menunjukkan bahwa penggunaan Dataset 400 memerlukan waktu proses yang lebih cepat dibanding dengan Dataset 600. Perbedaan waktu proses yang diperlukan ini disebabkan karena Dataset 600 memiliki jumlah total data (fitur lokal) yang lebih banyak dibanding Dataset 400. Tetapi jika dilihat dari akurasi, Dataset 400 memiliki hasil yang lebih baik dibandingkan dengan Dataset 600 pada \textit{dataset} yang telah tersaring. Padahal seharusnya ukuran gambar yang lebih besar memberikan hasil yang lebih baik karena terdapat lebih banyak titik yang dapat menjadi \textit{keypoint}. 
+Tabel di atas menunjukkan bahwa penggunaan Book Covers 400 memerlukan waktu proses yang lebih cepat dibanding dengan Book Covers 600. Perbedaan waktu proses yang diperlukan ini disebabkan karena Book Covers 600 memiliki jumlah total data (fitur lokal) yang lebih banyak dibanding Book Covers 400.  
 
-Pada saat ini belum diketahui kenapa Dataset 400 memiliki hasil akurasi yang lebih baik dibanding Dataset 600. Perkiraan sementara adalah karena gambar-gambar yang terdapat di \textit{dataset} \textit{test} memiliki ukuran yang kecil. Gambar-gambar \textit{test} tersebut memiliki ukuran yang lebih mirip ke Dataset 400 sehingga fitur-fitur lokal yang dimiliki oleh data \textit{test} lebih mendekati fitur-fitur lokal dari Dataset 400.
+Dari hasil akurasi tidak ada perbedaan yang cukup signifikan antara Book Covers 400 dan Book Covers 600. Pada penggunaan data keseluruhan Book Covers 400 dan Book Covers 600 memiliki nilai akurasi yang sama. Pada penggunaan data yang telah tersaring nilai akurasi Book Covers 400 hanya lebih kecil sebanyak 1\% dibandingkan dengan nilai akurasi Book Covers 600. Jika dibandingkan maka Book Covers 400 lebih baik karena memiliki waktu proses yang lebih cepat dengan tingkat akurasi yang hampir sama.
+
+%Tetapi jika dilihat dari akurasi, Book Covers 400 memiliki hasil yang lebih baik dibandingkan dengan Book Covers 600 pada \textit{dataset} yang telah tersaring. Padahal seharusnya ukuran gambar yang lebih besar memberikan hasil yang lebih baik karena terdapat lebih banyak titik yang dapat menjadi \textit{keypoint}. 
+%
+%Pada saat ini belum diketahui kenapa Book Covers 400 memiliki hasil akurasi yang lebih baik dibanding Book Covers 600. Perkiraan sementara adalah karena gambar-gambar yang terdapat di \textit{dataset} \textit{test} memiliki ukuran yang kecil. Gambar-gambar \textit{test} tersebut memiliki ukuran yang lebih mirip ke Book Covers 400 sehingga fitur-fitur lokal yang dimiliki oleh data \textit{test} lebih mendekati fitur-fitur lokal dari Book Covers 400.
 
 \section{Analisis Metode Ekstraksi Fitur Lokal ORB}
 \label{sec:analisis_orb}
@@ -1151,44 +1155,46 @@ Pada analisis ini akan diuji bagaimana performa metode ORB jika dibandingkan den
 	\item Tahap \textit{pairing} pada BSIS dilakukan dengan menggunakan struktur data LSH. 
 	\item Pengujian dilakukan hanya pada \textit{dataset} keseluruhan, tidak pada \textit{dataset} yang telah tersaring seperti pada \ref{sec:analisis_bsis}.
 \end{itemize}
-\textit{Dataset} \textit{train} yang digunakan pada analisis ini juga sama dengan analisis di \ref{sec:analisis_bsis}. Ada dua variasi \textit{dataset} train yang digunakan Dataset 400 dan Dataset 600. \textit{Dataset} \textit{test} yang digunakan juga sama seperti pada analisis sebelumnya.
+\textit{Dataset} \textit{train} yang digunakan pada analisis ini juga sama dengan analisis di \ref{sec:analisis_bsis}. Ada dua variasi \textit{dataset} train yang digunakan Book Covers 400 dan Book Covers 600. \textit{Dataset} \textit{test} yang digunakan juga sama seperti pada analisis sebelumnya.
 
 \subsection{Hasil Pengujian}
-Setelah dilakukan identifikasi dengan BSIS menggunakan fitur lokal ORB dihitung total waktu ekstraksi fitur dari seluruh gambar \textit{test} dan akurasinya. Nilai total waktu dan akurasi tersebut kemudian dibandingkan dengan pada saat digunakan fitur lokal SIFT, yang merupakan hasil dari analisis pada \ref{sec:analisis_bsis}. Hasilnya untuk masing-masing Dataset 400 dan Dataset 600 dapat dilihat pada Tabel~\ref{tab:hasil_orb_dataset400} dan Tabel~\ref{tab:hasil_orb_dataset600}.
+Setelah dilakukan identifikasi dengan BSIS menggunakan fitur lokal ORB dihitung total waktu ekstraksi fitur dari seluruh gambar \textit{test} dan akurasinya. Nilai total waktu dan akurasi tersebut kemudian dibandingkan dengan pada saat digunakan fitur lokal SIFT, yang merupakan hasil dari analisis pada \ref{sec:analisis_bsis}. Hasilnya untuk masing-masing Book Covers 400 dan Book Covers 600 dapat dilihat pada Tabel~\ref{tab:hasil_orb_dataset400} dan Tabel~\ref{tab:hasil_orb_dataset600}.
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|l|l|l|l|}
+	\begin{tabular}{|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|}
 		\hline
-		& \textbf{Total Waktu Ekstrak (s)} & \textbf{Total Waktu BSIS (s)} & \textbf{Akurasi (\%)} \\ \hline
-		ORB  & 0.26                             & 151.69                        & 86                    \\ \hline
-		SIFT & 1.75                             & 183.79                        & 99                    \\ \hline
+		& \textbf{Jumlah Fitur Lokal} & \textbf{Total Waktu Ekstrak (s)} & \textbf{Total Waktu BSIS (s)} & \textbf{Akurasi (\%)} \\ \hline
+		ORB  & 94281 & 0.24                             & 135.63                        & 86                    \\ \hline
+		SIFT & 121909 & 1.78                             & 190.85                        & 99                    \\ \hline
 	\end{tabular}
-	\caption{Perbandingan Waktu Proses dengan Akurasi Metode ORB dan SIFT pada Dataset 400}
+	\caption{Perbandingan Waktu Proses dengan Akurasi Metode ORB dan SIFT pada Book Covers 400}
 	\label{tab:hasil_orb_dataset400}
 \end{table}
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|l|l|l|l|}
+	\begin{tabular}{|p{0.1\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|p{0.15\textwidth}|}
 		\hline
-		& \textbf{Total Waktu Ekstrak (s)} & \textbf{Total Waktu BSIS (s)} & \textbf{Akurasi (\%)} \\ \hline
-		ORB  & 0.33                             & 169.25                        & 90                    \\ \hline
-		SIFT & 2.54                             & 299.23                        & 99                    \\ \hline
+		& \textbf{Jumlah Fitur Lokal} & \textbf{Total Waktu Ekstrak (s)} & \textbf{Total Waktu BSIS (s)} & \textbf{Akurasi (\%)} \\ \hline
+		ORB  & 99658 & 0.30                             & 144.16                        & 88                    \\ \hline
+		SIFT & 195558 & 2.44                             & 307.43                        & 99                    \\ \hline
 	\end{tabular}
-	\caption{Perbandingan Waktu Proses dengan Akurasi Metode ORB dan SIFT pada Dataset 600}
+	\caption{Perbandingan Waktu Proses dengan Akurasi Metode ORB dan SIFT pada Book Covers 600}
 	\label{tab:hasil_orb_dataset600}
 \end{table}
 Terlihat dari kedua tabel di atas bahwa metode ORB memiliki total waktu ekstrak dan total waktu BSIS secara keseluruhan yang lebih kecil. Walaupun begitu akurasi hasil identifikasi juga menurun. Dari nilai-nilai pada kedua tabel didapat beberapa poin berikut.
-\subsubsection{Dataset 400}
+
+\noindent\textbf{Book Covers 400} 
 \begin{itemize}
-	\item Dari penggunaan metode SIFT ke ORB terdapat penurunan total waktu ekstrak sebesar 85.14\%, dan penurunan total waktu BSIS sebesar 17.46\%.
+	\item Dari penggunaan metode SIFT ke ORB terdapat penurunan total waktu ekstrak sebesar 86.51\%, dan penurunan total waktu BSIS sebesar 28.93\%.
 	\item Metode ORB memiliki nilai akurasi yang lebih rendah sebesar 13\% dari metode SIFT.
-\end{itemize}
-\subsubsection{Dataset 600}
-\begin{itemize}
-	\item Dari penggunaan metode SIFT ke ORB terdapat penurunan total waktu ekstrak sebesar 87\%, dan penurunan total waktu BSIS sebesar 43.43\%.
-	\item Metode ORB memiliki nilai akurasi yang lebih rendah sebesar 9\% dari metode SIFT.
 \end{itemize} 
-Penurunan yang lebih signifikan terjadi pada waktu yang diperlukan untuk melakukan ekstraksi fitur. Setelah telah didapat fitur lokal waktu proses yang diperlukan untuk BSIS dengan metode ORB lebih cepat dari SIFT tetapi perbedaannya tidak sebanyak perbedaan waktu ekstraksi. 
+\noindent\textbf{Book Covers 600} 
+\begin{itemize}
+	\item Dari penggunaan metode SIFT ke ORB terdapat penurunan total waktu ekstrak sebesar 87.77\%, dan penurunan total waktu BSIS sebesar 53.10\%.
+	\item Metode ORB memiliki nilai akurasi yang lebih rendah sebesar 11\% dari metode SIFT.
+\end{itemize} 
+
+Setelah didapat fitur lokal waktu proses yang diperlukan untuk BSIS dengan metode ORB lebih cepat dari SIFT tetapi perbedaannya tidak sebanyak perbedaan waktu ekstraksi. Perbedaan waktu ekstraksi pada Book Covers 400 dan Book Covers 600 lebih disebabkan oleh  Perbedaan yang ada pada waktu BSIS lebih disebabkan oleh perbedaan jumlah fitur lokal yang diproses pada metode SIFT dan ORB. Metode SIFT menghasilkan lebih banyak fitur lokal dibanding dengan ORB sehingga waktu BSIS metode SIFT lebih lambat.
 
 %\section{Analisis Pengaruh Parameter Agglomerative Clustering terhadap Sebaran Nilai Keunikan dan Konsistensi}
 %\label{sec:analisis_parameter_clustering}
@@ -1196,7 +1202,7 @@ Penurunan yang lebih signifikan terjadi pada waktu yang diperlukan untuk melakuk
 %
 %Analisis yang dilakukan pada \ref{sec:analisis_bsis} menggunakan nilai keunikan dan konsistensi yang didapat dengan menggunakan metode \textit{Agglomerative Clustering} sesuai dengan yang dilakukan pada \ref{sec:analisis_sifat}. Metode \textit{Agglomerative Clustering} yang dilakukan pada \ref{sec:analisis_sifat} membagi \textit{cluster} berdasarkan pada parameter \texttt{distance\_threshold} yang di mana pada analisis tersebut didapat dari setengah nilai rata-rata jarak antar data sampel. Pada analisis ini akan diuji apakah dengan mengubah nilai \texttt{distance\_threshold} dapat mengubah sebaran nilai keunikan dan konsistensi sehingga jumlah fitur lokal yang digunakan dapat lebih mudah diubah dengan mengatur nilai batas konsistensi dan keunikan.
 %
-%Dataset yang digunakan pada analisis ini sama seperti analisis sebelumnya yaitu menggunakan \textit{dataset} Book Covers tetapi hanya menggunakan satu ukuran yaitu Dataset 400. Dataset 400 digunakan pada penelitian ini karena dari hasil sebelumnya didapat bahwa Dataset ini memberikan hasil yang terbaik.
+%Dataset yang digunakan pada analisis ini sama seperti analisis sebelumnya yaitu menggunakan \textit{dataset} Book Covers tetapi hanya menggunakan satu ukuran yaitu Book Covers 400. Book Covers 400 digunakan pada penelitian ini karena dari hasil sebelumnya didapat bahwa Dataset ini memberikan hasil yang terbaik.
 %
 %\subsection{Ide Analisis dan Tahapan}
 %Analisis dilakukan dengan mengubah nilai parameter \texttt{distance\_threshold} di \textit{Agglomerative Clustering} menjadi nilai rata-rata jarak antar data sampel. Nilai \texttt{distance\_threshold} yang lebih tinggi akan membuat lebih mudah untuk data menjadi tergabung dalam satu \textit{cluster}. \textit{Cluster-cluster} yang dihasilkan akan lebih sedikit dan dengan jumlah data di tiap \textit{cluster}-nya lebih banyak.
@@ -1210,13 +1216,13 @@ Penurunan yang lebih signifikan terjadi pada waktu yang diperlukan untuk melakuk
 %\begin{figure}[H]
 %	\centering
 %	\includegraphics[width=\textwidth]{half_400_uniqueness_1.png}
-%	\caption{Sebaran nilai keunikan (\texttt{uniqueness}) untuk Dataset 400 saat menggunakan parameter \textit{Agglomerative Clustering} yang berbeda.}
+%	\caption{Sebaran nilai keunikan (\texttt{uniqueness}) untuk Book Covers 400 saat menggunakan parameter \textit{Agglomerative Clustering} yang berbeda.}
 %	\label{fig:half_400_uniqueness_1}
 %\end{figure}
 %\begin{figure}[H]
 %	\centering
 %	\includegraphics[width=\textwidth]{half_400_consistency_1.png}
-%	\caption{Sebaran nilai keunikan (\texttt{consistency}) untuk Dataset 400 saat menggunakan parameter \textit{Agglomerative Clustering} yang berbeda.}
+%	\caption{Sebaran nilai keunikan (\texttt{consistency}) untuk Book Covers 400 saat menggunakan parameter \textit{Agglomerative Clustering} yang berbeda.}
 %	\label{fig:half_400_consistency_1}
 %\end{figure}
 %Sebaran nilai konsistensi seperti yang terlihat pada Gambar~\ref{fig:half_400_consistency_1} memiliki pola yang sama seperti sebaran pada saat menggunakan setengah rata-rata jarak sebagai \texttt{distance\_threshold}. Sedangkan untuk nilai keunikan sebaran datanya memiliki pola yang berbeda dari analisis sebelumnya saat menggunakan setengah rata-rata jarak. Pada analisis sebelumnya tingkat fitur lokal dengan tingkat keunikan 1 mendominasi \textit{dataset}, tetapi pada analisis ini tingkat keunikan fitur lokal justru mayoritas berada di kisaran yang rendah (0.05 - 0.2). 
@@ -1232,14 +1238,14 @@ Penurunan yang lebih signifikan terjadi pada waktu yang diperlukan untuk melakuk
 %\subsection{Ide Analisis dan Tahapan}
 %Penelitian akan dilakukan dengan melakukan tahapan yang sama seperti pada penelitian di \ref{sec:analisis_bsis}. Tetapi pada penelitian ini yang dibandingkan adalah nilai akurasi dan total waktu dari beberapa hasil penyaringan \textit{dataset} dengan menggunakan batas nilai keunikan yang berbeda. Untuk setiap batas nilai keunikan yang digunakan akan dihitung berapa fitur lokal yang tersisa dan nilai akurasi serta total waktu pemrosesan.
 %
-%Pada penelitian ini akan digunakan 3 batas nilai keunikan yang berbeda yaitu: 0.2, 0.4, dan 0.6 sedangkan untuk batas nilai konsistensi hanya akan digunakan 0.49 untuk setiap batas nilai keunikan. Dataset untuk data \textit{train} yang digunakan adalah \textit{dataset} yang sama dengan Dataset 400 pada \ref{sec:analisis_bsis}. Sedangkan untuk data \textit{test} digunakan data yang sama dengan \textit{dataset} \textit{test} pada \ref{sec:analisis_bsis}.
+%Pada penelitian ini akan digunakan 3 batas nilai keunikan yang berbeda yaitu: 0.2, 0.4, dan 0.6 sedangkan untuk batas nilai konsistensi hanya akan digunakan 0.49 untuk setiap batas nilai keunikan. Dataset untuk data \textit{train} yang digunakan adalah \textit{dataset} yang sama dengan Book Covers 400 pada \ref{sec:analisis_bsis}. Sedangkan untuk data \textit{test} digunakan data yang sama dengan \textit{dataset} \textit{test} pada \ref{sec:analisis_bsis}.
 %
 %Tahapan analisis yang dilakukan adalah sebagai berikut:
 %\begin{enumerate}
 %	\item \textit{Load} Gambar \\
 %	Memuat semua gambar \textit{test} yang digunakan.
 %	\item \textit{Load} Dataset \\
-%	Memuat \textit{dataset} yang digunakan (Dataset 400) dan saring data tersebut berdasarkan batas nilai keunikan serta konsistensi yang digunakan pada tahap ini. Dihitung juga jumlah data yang tersaring.
+%	Memuat \textit{dataset} yang digunakan (Book Covers 400) dan saring data tersebut berdasarkan batas nilai keunikan serta konsistensi yang digunakan pada tahap ini. Dihitung juga jumlah data yang tersaring.
 %	\item Identifikasi dengan BSIS \\
 %	Lakukan identifikasi BSIS pada gambar \textit{test} dengan menggunakan \textit{dataset} yang telah tersaring.
 %	\item Penghitungan Akurasi Serta \\

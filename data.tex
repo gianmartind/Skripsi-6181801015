@@ -55,10 +55,14 @@
 \SetAlgorithmName{Pseudocode}{pseudocode}{List of Pseudocode}
 \usepackage{algorithmic}
 \usepackage{amsmath}
+\usepackage{pdflscape}
 \usepackage{multirow}
 \usepackage{tabularx}
+\usepackage{array}
 \newcolumntype{C}{>{\centering\arraybackslash}X} %centered X column for tabularx
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}} 
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+ 
 %\overfullrule=3mm % memperlihatkan overfull 
 %=============================================================================
 
@@ -90,7 +94,7 @@
 %\mode{sidangakhir} 	% untuk sidang 2 / sidang pada Skripsi 2(IF)
 %\mode{final} 			% untuk mencetak buku skripsi 
 %=============================================================================
-\mode{final}
+\mode{sidangakhir}
 
 %_____________________________________________________________________________
 %=============================================================================
@@ -244,7 +248,15 @@
 % - hilangkan tanda << & >>, dan isi sesuai dengan data anda
 % - langsung mulai setelah '{' awal, jangan mulai menulis di baris bawahnya
 %=============================================================================
-\abstrakINA{<<Tuliskan abstrak anda di sini, dalam bahasa Indonesia>>}
+\abstrakINA{
+\textit{Point of Interest} (POI) merupakan sebuah lokasi geografis yang memiliki fungsi tertentu dan dikenali orang. Beberapa POI memiliki bagian penting yang unik terhadap POI tersebut. Bagian penting tersebut biasanya berupa logo atau bagian lainnya yang mudah terlihat dan berbeda dari bagian-bagian dari POI lain. Bagian penting dari POI tersebut dapat digunakan untuk mengenali sebuah POI dengan mudah, seseorang dapat mengenali sebuah POI hanya dengan melihat bagian tersebut saja.
+
+Komputer dapat mengenali POI dari sebuah gambar dengan menggunakan fitur lokal dalam gambar. Salah satu teknik yang dapat digunakan untuk mengenali gambar adalah OIR. Teknik OIR mengenali gambar dengan memasangkan fitur lokal dari gambar masukkan dan gambar-gambar di \textit{dataset}. Sebuah gambar dapat mengandung sangat banyak fitur lokal, sehingga proses pemasangan dapat memakan waktu yang sangat lama. Proses dapat dipercepat dengan menggunakan hanya fitur lokal dari bagian POI yang penting saja.
+
+Penelitian ini bertujuan untuk menyaring fitur lokal dan mengambil yang hanya berasal dari bagian penting POI saja. Penyaringan fitur lokal berdasarkan pada anggapan bahwa bagian penting dari POI adalah bagian yang sifatnya konsisten dan unik terhadap POI tersebut. Bagian penting tersebut bersifat konsisten dan unik maka akan menghasilkan fitur lokal yang sifatnya konsisten dan unik juga. Fitur lokal yang konsisten dan unik dapat ditentukan dengan menggunakan metode \textit{clustering}.
+
+Metode \textit{clustering} digunakan untuk membagi fitur-fitur lokal menjadi kelompok-kelompok. Kelompok-kelompok tersebut akan digunakan untuk menentukan tingkat kekonsistenan dan keunikan fitur-fitur lokal anggotanya. 
+}
 \abstrakENG{<<Tuliskan abstrak anda di sini, dalam bahasa Inggris>>} 
 %=============================================================================
 
@@ -257,7 +269,7 @@
 % - kunciENG: keywords in english
 % Petunjuk: hilangkan tanda << & >>, dan isi sesuai dengan data anda.
 %=============================================================================
-\kunciINA{<<Tuliskan di sini kata-kata kunci yang anda gunakan, dalam bahasa Indonesia>>}
+\kunciINA{\textit{Point of interest}, fitur lokal, OIR, \textit{clustering}, konsistensi, keunikan}
 \kunciENG{<<Tuliskan di sini kata-kata kunci yang anda gunakan, dalam bahasa Inggris>>}
 %=============================================================================
 

@@ -7,11 +7,12 @@ from enum import Enum
 
 class ClusterModel:    
     class Meta:
-        def __init__(self, n: int, desc_type, class_names, image_per_class):
+        def __init__(self, n: int, maxsize, desc_type, class_names, images_per_class):
             self.n = n
+            self.maxsize = maxsize
             self.desc_type = desc_type
             self.class_names = class_names
-            self.image_per_class = image_per_class
+            self.images_per_class = images_per_class
 
     class Descriptor(Enum):
         ORB = 'ORB'
@@ -26,12 +27,13 @@ class ClusterModel:
             self.consistency = consistency
             self.uniqueness = uniqueness
 
-    def __init__(self, n, desc_type, class_names, images_per_class):
+    def __init__(self, **kwargs):
         self.meta = self.Meta(
-            n=n,
-            desc_type=desc_type,
-            class_names=class_names,
-            image_per_class=images_per_class
+            n=kwargs.get('n'),
+            maxsize=kwargs.get('maxsize'),
+            desc_type=kwargs.get('desc_type'),
+            class_names=kwargs.get('class_names'),
+            images_per_class=kwargs.get('images_per_class')
         )
     
     def set_data(self, **kwargs):

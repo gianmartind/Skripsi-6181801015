@@ -10,23 +10,23 @@
         "FileVersion": 1,
         "Files": [
             {
-                "Col": 40,
+                "Col": 0,
                 "EditorGroup": 0,
                 "FileName": "skripsi.tex",
-                "FirstLine": 206,
+                "FirstLine": 438,
                 "FoldedLines": "",
-                "Line": 238
+                "Line": 471
             },
             {
-                "Col": 16,
+                "Col": 98,
                 "EditorGroup": 0,
                 "FileName": "data.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 60
+                "Line": 271
             },
             {
-                "Col": 188,
+                "Col": 220,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab1.tex",
                 "FirstLine": 0,
@@ -34,47 +34,63 @@
                 "Line": 7
             },
             {
-                "Col": 43,
+                "Col": 790,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab2.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 18
+                "Line": 552
             },
             {
-                "Col": 23,
+                "Col": 0,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab3.tex",
                 "FirstLine": 0,
-                "FoldedLines": "802,856,973,1027,1192,1225",
-                "Line": 1144
+                "FoldedLines": "804,858,975,1029,1198,1231",
+                "Line": 1195
             },
             {
-                "Col": 47,
+                "Col": 469,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab4.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 121
+                "Line": 10
             },
             {
-                "Col": 555,
+                "Col": 23,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab5.tex",
                 "FirstLine": 0,
-                "FoldedLines": "231",
-                "Line": 229
+                "FoldedLines": "",
+                "Line": 327
             },
             {
-                "Col": 20,
+                "Col": 59,
                 "EditorGroup": 0,
                 "FileName": "Bab/bab6.tex",
                 "FirstLine": 0,
                 "FoldedLines": "",
-                "Line": 0
+                "Line": 8
+            },
+            {
+                "Col": 88,
+                "EditorGroup": 0,
+                "FileName": "Lampiran/lampA.tex",
+                "FirstLine": 0,
+                "FoldedLines": "",
+                "Line": 62
+            },
+            {
+                "Col": 0,
+                "EditorGroup": 0,
+                "FileName": "Lampiran/lampB.tex",
+                "FirstLine": 0,
+                "FoldedLines": "12,221,329,437,545,653,761,819,877,935,993,1051,1109,1167,1225,1283",
+                "Line": 10
             }
         ],
         "MasterFile": "skripsi.tex",
-        "VerticalSplit": true
+        "VerticalSplit": false
     }
 }

@@ -140,14 +140,14 @@ def agglo_cluster(dataset, n_clusters=None, distance_threshold=None, affinity='e
             agglo_model = AgglomerativeClustering(
                 n_clusters=n_clusters, 
                 distance_threshold=distance_threshold,
-                affinity=hamming_affinity,
+                affinity=hamming_bin_affinity,
                 linkage='complete'
             ).fit(array_dataset)
-        elif affinity == 'hamming2':
+        elif affinity == 'hamming_int':
             agglo_model = AgglomerativeClustering(
                 n_clusters=n_clusters, 
                 distance_threshold=distance_threshold,
-                affinity=hamming_affinity2,
+                affinity=hamming_int_affinity,
                 linkage='complete'
             ).fit(array_dataset)
         else:
@@ -200,13 +200,6 @@ def countSetBits(n):
 def hamming_dist(i):
     return countSetBits(np.bitwise_xor(int(i[0]), int(i[1])))
 
-def hamming_int2(point1, point2):
-    total = 0
-    for i, j in zip(point1, point2):
-        total += countSetBits(np.bitwise_xor(int(i), int(j)))
-    
-    return total
-
 def hamming_int(point1, point2):
     arr = np.array([point1, point2])
     return np.sum(np.apply_along_axis(hamming_dist, 0, arr))
@@ -214,37 +207,20 @@ def hamming_int(point1, point2):
 def hamming_bin(point1, point2):
     return hamming(point1, point2) * len(point1)
 
-def hamming_affinity(X):
+def hamming_bin_affinity(X):
     return pairwise_distances(X, metric=hamming_bin)
 
-def hamming_affinity2(X):
-    return pairwise_distances(X, metric=hamming_int2)
+def hamming_int_affinity(X):
+    return pairwise_distances(X, metric=hamming_int)
 
-def average_distance(dataset, metric, sample=None):
+def combination_distance(dataset, metric, sample=None):
     """
-    Fungsi untuk menghitung jarak euclidean rata-rata dari tiap elemen di dataset
+    Fungsi untuk menghitung jarak rata-rata dari tiap elemen di dataset
 
     Parameter:
         dataset : data yang akan dihitung rata-rata jaraknya
         sample  : jumlah sampel yang akan digunakan untuk menghitung rata-rata. Jika 'None' maka semua data digunakan
     """
-    sample_df = dataset
-    if sample != None: 
-        sample_df = dataset.sample(sample)               
-
-    dist = 0
-    m = 0
-    while m < len(sample_df.index) - 1:
-        n = m + 1
-        while n < len(sample_df.index):
-            d = metric(sample_df.iloc[m], sample_df.iloc[n])
-            dist = dist + d
-            n = n + 1
-        m = m + 1
-    combination = len(list(combinations(sample_df.index, 2)))
-    return dist / combination
-
-def combination_distance(dataset, metric, sample=None):
     sample_df = dataset
     if sample != None: 
         sample_df = dataset.sample(sample).values  
@@ -259,7 +235,7 @@ def chunks(lst, n):
 
 def int_to_binary(desc):
     """
-    Fungsi untuk mengubah descriptor orb yang dihasilkan opencv (32bit integer) menjadi 
+    Fungsi untuk mengubah descriptor ORB yang dihasilkan opencv (32bit integer) menjadi 
     format 256 bit binary
     
     Parameter:
@@ -279,6 +255,12 @@ def int_to_binary(desc):
     return binary_desc
 
 def binary_to_int(desc):
+    """
+    Fungsi untuk mengubah descriptor ORB vektor 256 bit binary menjadi 32 bit integer
+    
+    Parameter:
+        desc : array berukuran i x 256 berisi data binary
+    """
     int_desc = list()
     for row in desc:
         int_row = list()

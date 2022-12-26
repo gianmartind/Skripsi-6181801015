@@ -11,10 +11,11 @@ import os
 from glob import glob
 from . import util
 from scipy.spatial import KDTree
+from enum import Enum
 
 #%%
 class BSIS:
-    class FLANN_INDEX:
+    class FLANN_INDEX():
         LINEAR = 0
         KDTREE = 1
         KMEANS = 2
@@ -111,60 +112,6 @@ class BSIS:
                     pair_idx += 1
         
         return pairs
-
-    def make_pairs_scipy(self, t=4, k=100):   
-        start_time = time.time()
-        tree = KDTree(self.train_set.train_desc)
-        distance, index = tree.query(self.query_desc, k=k, workers=-1)
-        self.pairing_time = time.time() - start_time
-        print('make_pairs ---', self.pairing_time)
-        
-        pairs = dict()
-        pair_idx = 0
-        
-        for queryIdx, (dist, idx) in enumerate(zip(distance, index)):
-            st_dev = np.std(dist)
-            mean = np.mean(dist)
-            thres = mean - (t * st_dev)
-            self.thres_ = thres
-
-            for d, trainIdx in zip(dist, idx):
-                if d < thres:
-                    weight = ((d - mean) / st_dev) ** 2
-                    if self.train_set.index_mapper[trainIdx] not in pairs.keys():
-                        pairs[self.train_set.index_mapper[trainIdx]] = list()
-
-                    pairs[self.train_set.index_mapper[trainIdx]].append(
-                        Pair(
-                            pair_idx,
-                            queryIdx,
-                            trainIdx,
-                            self.query_kp[queryIdx],
-                            self.train_set.train_kp[trainIdx],
-                            d,
-                            weight
-                        )
-                    )
-                    pair_idx += 1
-                
-        return pairs
-
-    def run_scipy(self, num_rotation=1, t=4, k=100):
-        start_time = time.time()
-        self.pairs = self.make_pairs_scipy(t=t, k=k)
-        self.result = dict()
-        
-        maximum = ('', 0)
-        for k, v in self.pairs.items():
-            bsis = BSIS_Verify(v)
-            bsis.run(num_rotation=num_rotation)
-            self.result[k] = {'query_kp': bsis.selected_query_kp, 'train_kp': bsis.selected_train_kp, 'total_weight': bsis.total_weight}
-            if bsis.total_weight > maximum[1]:
-                maximum = (k, bsis.total_weight)
-
-        self.total_time = time.time() - start_time
-        print('total time ---', self.total_time)
-        return maximum[0]
 
     def run(self, algorithm: int, num_rotation=1, t=4, k=100):
         start_time = time.time()
@@ -284,6 +231,25 @@ class BSIS_Verify:
         return ordered_list
 
     def find_best_subsequence(self, D):
+        best_subsequence = BPair(0, 0, 0, 0, None)
+        for i in range(1, len(D)):
+            for j in range(0, len(D[i])):
+                # start_time2 = time.time()
+                dBestPrev = BPair(0, 0, 0, 0, None)
+                for k in range(0, i):
+                    for l in range(0, len(D[k])):
+                        if D[k][l].order < D[i][j].order and D[k][l].bts > dBestPrev.bts:
+                            dBestPrev = D[k][l]
+                # print('find dBestPrev {} - {}'.format(i, j), time.time() - start_time2)
+                D[i][j].bts = D[i][j].weight + dBestPrev.bts
+                D[i][j].prev = dBestPrev
+                
+                if D[i][j].bts + D[i][j].weight > best_subsequence.bts + best_subsequence.weight:
+                    best_subsequence = D[i][j]
+
+        return best_subsequence
+
+    def find_best_subsequence_(self, D):
         best_subsequence = BPair(0, 0, 0, 0, None)
         #dictionary menyimpan BPair dengan bts terbaik untuk tiap order
         best_per_order = dict()

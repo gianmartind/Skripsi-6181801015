@@ -13,7 +13,7 @@
 	\label{fig:poi}
 \end{figure}
 
-Beberapa POI tertentu dapat memiliki logo yang sifatnya unik. POI tersebut dapat dikenali dengan hanya melihat logonya saja. Contoh bisa dilihat pada Gambar~\ref{fig:poi_logo}. POI dengan logo unik ini dapat dikenali oleh komputer salah satunya dengan menggunakan teknik \textit{Object Instance Recognition} (OIR). 
+Beberapa POI tertentu dapat memiliki logo yang sifatnya unik, contohnya seperti pada POI-POI di Gambar~\ref{fig:poi_logo}. POI dengan logo unik tersebut dapat dikenali dengan hanya melihat logonya saja. POI dengan logo unik ini dapat dikenali oleh komputer salah satunya dengan menggunakan teknik \textit{Object Instance Recognition} (OIR). 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.35\linewidth]{kfc_circled.png}
@@ -409,6 +409,17 @@ Proses penghitungan nilai total sebuah daerah menggunakan \textit{Integral Image
 
 \textit{Binary test} pada ORB dilakukan sebanyak 256 kali untuk menghasilkan 256 elemen untuk vektor. ORB menggunakan 256 pasangan \textit{binary test} yang sudah ditentukan sebelumnya. Pasangan-pasangan tersebut didapat dari eksperimen yang dilakukan pada~\cite{rublee2011orb}.
 
+ORB menghasilkan vektor bilangan biner sebagai \textit{descriptor} untuk tiap fitur lokal. Karena vektor \textit{descriptor} ORB berbentuk vektor biner maka penghitungan jarak antar vektor harus dilakukan dengan menggunakan metrik jarak Hamming. Metrik jarak Hamming merupakan menghitung jarak antar dua vektor dengan menghitung berapa banyak elemen pada lokasi sama yang nilainya berbeda. Contoh penghitungan jarak Hamming antar dua vektor biner dapat dilihat pada Gambar~\ref{fig:jarak_hamming}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.4\textwidth]{jarak_hamming.png}
+	\caption{Ilustrasi penghitungan jarak Hamming antara dua vektor.}
+	\label{fig:jarak_hamming}
+\end{figure}
+
+Gambar~\ref{fig:jarak_hamming} menunjukkan ilustrasi penghitungan jarak Hamming antar dua vektor biner A dan B. Vektor A dan B memiliki jarak Hamming 3 karena terdapat 3 elemen di posisi sama yang nilainya berbeda. Elemen-elemen berbeda tersebut ditunjukkan dengan warna merah pada gambar.
+
 \subsection{ORB di OpenCV}
 \textit{Library} OpenCV di Python memiliki implementasi untuk metode ORB. Implementasi ORB ini memiliki kegunaan dan cara penggunaan yang mirip dengan implementasi SIFT. Untuk melakukan deteksi fitur lokal perlu untuk terlebih dahulu dibuat objek ORB dengan fungsi \texttt{ORB\_create}. Beberapa parameter fungsi \texttt{ORB\_create} yang relevan terhadap skripsi ini adalah:
 \begin{itemize}
@@ -521,19 +532,43 @@ Setelah terbentuk pohon dari semua vektor pada \textit{dataset}, pohon tersebut 
 	\item Untuk semua \textit{node} bukan \textit{leaf} yang dilewati hitung jarak elemen ke-$n$ dari $Q$ ke elemen ke-$n$ \textit{node} tersebut. Jika jaraknya lebih kecil dari $closest$ maka jelajahi \textit{child} dari \textit{node} tersebut yang sebelumnya tidak dipilih.
 \end{enumerate}
 
-\section{Locality Sensitive Hashing}
-\textit{Locality Sensitive Hashing} (LSH) adalah sebuah teknik yang dapat digunakan untuk mencari tetangga terdekat dari sebuah vektor. LSH dapat mencari tetangga terdekat dengan menggunakan teknik \textit{hashing}. Teknik \textit{Hashing} sendiri merupakan teknik untuk mengubah sebuah nilai awal menjadi sebuah nilai \textit{hash} yang memiliki format tertentu dengan menggunakan sebuah fungsi. Pada teknik \textit{Hashing} nilai awal yang berbeda akan menghasilkan nilai hasil \textit{hash} yang berbeda juga. Teknik \textit{Hashing} ini biasa digunakan untuk memberi indeks dari kumpulan data, sehingga dapat mempermudah pencarian suatu data tertentu.
+\section{Locality-Sensitive Hashing}
+\textit{Locality Sensitive Hashing} (LSH) adalah sebuah teknik yang dapat digunakan untuk mencari tetangga terdekat dari sebuah vektor biner. LSH dapat mencari tetangga terdekat dengan menggunakan teknik \textit{hashing}. Teknik \textit{Hashing} sendiri merupakan teknik untuk mengubah sebuah nilai awal menjadi sebuah nilai \textit{hash} yang memiliki format tertentu dengan menggunakan sebuah fungsi. Pada teknik \textit{Hashing} nilai awal yang berbeda akan menghasilkan nilai hasil \textit{hash} yang berbeda juga. Teknik \textit{Hashing} ini biasa digunakan untuk memberi indeks dari kumpulan data, sehingga dapat mempermudah pencarian suatu data tertentu.
 
 Teknik \textit{Hashing} pada umumnya hanya mementingkan bahwa nilai awal yang berbeda menghasilkan nilai \textit{hash} yang berbeda. Nilai yang awalnya mirip atau berdekatan belum tentu akan menghasilkan nilai \textit{hash} yang mirip juga. Teknik LSH melakukan \textit{hashing} dengan cara yang berbeda dengan teknik \textit{hashing} pada umumnya. Pada LSH nilai awal yang mirip akan menghasilkan nilai hasil \textit{hash} yang mirip juga. Sifat ini membuat nilai hasil \textit{hash} yang memiliki dimensi lebih kecil dapat digunakan untuk mencari pasangan yang mirip dengan lebih efektif.
 
-\section{Clustering}
+LSH dapat digunakan pada data berbentuk vektor biner (\textit{bitstring}) yang menggunakan metrik jarak Hamming dengan teknik \textit{banding}. Teknik \textit{banding} akan membagi \textit{bitstring} menjadi beberapa \textit{band} dengan panjang yang relatif sama. \textit{Band-band} dari \textit{bitstring} tersebut akan dibandingkan dengan \textit{band-band} dari \textit{bitstring} lain. Pada saat pencarian, \textit{band} yang dibandingkan adalah \textit{band} pada lokasi yang sama saja. 
+
+Dalam pencarian tetangga terdekat LSH akan terlebih dahulu membuat $n$ buah \textit{bucket}, di mana $n$ adalah jumlah \textit{band}. Setiap \textit{bucket} akan berfungsi sebagai indeks untuk \textit{band} tertentu dari vektor-vektor di \textit{dataset}. Sebagai contoh \textit{bucket} pertama akan mencatat vektor mana saja yang \textit{band} pertamanya merupakan sebuah \textit{bitstring} tertentu. Ilustrasi \textit{banding} dan \textit{bucket} dalam LSH dapat dilihat pada Gambar~\ref{fig:lsh_banding_bucket}. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{lsh_banding_bucket.png}
+	\caption{Ilustrasi proses \textit{banding} dan penggunaan \textit{bucket} sebagai indeks dalam LSH.}
+	\label{fig:lsh_banding_bucket}
+\end{figure}
+
+Gambar~\ref{fig:lsh_banding_bucket} menunjukkan 4 buah vektor $A$, $B$, $C$, dan $D$ yang semuanya berada dalam sebuah \textit{dataset}. Keempat vektor tersebut memiliki panjang 12 bit dan dilakukan proses \textit{banding} dengan panjang \textit{band} 3. Proses \textit{banding} menghasilkan 4 \textit{band} berukuran 3 bit untuk tiap vektor. Empat buah \textit{bucket} dibuat sesuai dengan jumlah \textit{band} dalam setiap vektor. Setiap \textit{bucket} menyimpan set untuk setiap kombinasi \textit{bitstring} yang sesuai dengan panjang \textit{band}, pada kasus ini maka diperlukan sebanyak $2^{3}$ buah set. 
+
+Sebuah vektor $q$ yang ingin dicari tetangga terdekatnya akan terlebih dahulu dibagi menjadi \textit{band} dengan panjang yang sama dengan vektor-vektor di \textit{dataset}. Untuk setiap \textit{band} akan dicari dari \textit{bucket} yang bersesuaian vektor mana saja yang memiliki jarak $\leq j$. Vektor-vektor dengan \textit{band} yang sama atau mirip dengan \textit{band} vektor $q$ akan ditandai sebagai kandidat tetangga terdekat. Semakin banyak \textit{band} dari sebuah vektor yang bersesuaian dengan \textit{band} dari vektor $q$ maka semakin besar kemungkinan vektor tersebut untuk menjadi tetangga yang terdekat. Dengan menggunakan cara ini LSH dapat menyaring banyak kandidat yang memiliki kemungkinan kecil untuk menjadi tetangga terdekat, sehingga mempercepat proses pencarian.
+
+%LSH akan membandingkan sebuah vektor \textit{query} dengan vektor-vektor lain di \textit{dataset} dan menghitung jumlah \textit{band} yang sama untuk tiap vektor (\textit{collision}). Vektor-vektor tersebut kemudian akan dimasukkan ke dalam \textit{hash table} sesuai dengan \textit{band} di mana terjadi \textit{collision}. Dengan menggunakan \textit{hash table} tersebut LSH dapat membatasi jumlah vektor yang perlu diperiksa jaraknya dengan mengambil vektor yang muncul dalam beberapa \textit{hash table} saja. Contoh penggunaan teknik \textit{banding} LSH untuk mencari tetangga terdekat dari sebuah vektor dapat dilihat pada Gambar~\ref{fig:lsh_band}.
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=\textwidth]{lsh_band.png}
+%	\caption{Ilustrasi teknik \textit{banding} dalam mencari tetangga terdekat dari suatu vektor.}
+%	\label{fig:lsh_band}
+%\end{figure}
+%
+%Gambar~\ref{fig:lsh_band} menunjukkan sebuah vektor biner $query$ yang ingin dicari tetangga terdekatnya dari 4 vektor $A$, $B$, $C$, dan $D$ yang juga merupakan vektor biner. Vektor-vektor tersebut dibagi menjadi \textit{band} dengan ukuran 4, di mana setiap vektor akan dibagi menjadi vektor-vektor kecil berukuran 4 bit. Empat buah kotak merupakan \textit{hash table} yang masing-masing memiliki fungsi \textit{hash} berbeda. Kotak pertama (kotak paling kiri) membandingkan nilai dari \textit{band} pertama, vektor yang nilai \textit{band} pertamanya sama dengan vektor $query$ akan dimasukkan ke dalam kotak tersebut. Kotak kedua merupakan \textit{hash table} yang membandingkan nilai dari \textit{band} kedua, kotak ketiga membandingkan \textit{band} ketiga dan seterusnya. 
+%
+%Kemunculan sebuah vektor di \textit{hash table} menunjukkan bahwa ada bagian yang mirip antara vektor tersebut dengan vektor $query$. Semakin banyak \textit{hash table} di mana sebuah vektor muncul maka akan semakin tinggi kemungkinan vektor tersebut untuk menjadi pasangan yang paling mirip $query$. Sebaliknya jika ada vektor yang tidak muncul sama sekali dalam \textit{hash table} maka kecil kemungkinan vektor tersebut untuk menjadi pasangan yang mirip. Dengan menggunakan cara ini pencarian tetangga terdekat dapat dipercepat dengan membuang kandidat-kandidat yang memiliki kemungkinan kecil untuk menjadi pasangan mirip.
+
+\section{Agglomerative Clustering}
 \label{sec:clustering}
-\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek-objek pada \textit{dataset}  menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek-objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda.
+\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek-objek pada \textit{dataset}  menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek-objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda. Salah satu contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative Clustering}. 
 
-Beberapa contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative Clustering} dan DBSCAN. Kedua teknik tersebut menggunakan metode dasar yang berbeda dan akan menghasilkan \textit{cluster} dengan ciri yang berbeda juga. Kedua metode tersebut dijelaskan pada dua subbab berikut. Penjelasan berdasarkan pada~\cite{han2011data}
-
-\subsection{Agglomerative Clustering}
-\label{subsec:clustering_agglomerative}
 Teknik \textit{Agglomerative Clustering} adalah salah satu teknik \textit{clustering} yang berbasis hierarki (\textit{hierarchical}). Teknik ini membentuk \textit{cluster} dengan menyusun hierarki atau tingkatan antar objek berdasarkan kemiripannya. Pasangan objek dengan jarak yang paling kecil akan berada di tingkatan terendah, jarak terkecil selanjutnya akan berada di tingkat atasnya, dan seterusnya hingga semua objek telah tercakup. 
 
 \textit{Agglomerative Clustering} adalah teknik \textit{clustering} berbasis hierarki yang menggunakan metode \textit{bottom-up}. Metode \textit{bottom-up} memulai tahapan dengan membentuk \textit{cluster-cluster} kecil dan kemudian menggabungkan \textit{cluster} kecil tersebut menjadi \textit{cluster} yang lebih besar.
@@ -564,59 +599,117 @@ Proses penggabungan objek menjadi \textit{cluster} pada \textit{Agglomerative Cl
 	\end{algorithmic}
 \end{algorithm}
 
-\subsection{DBSCAN}
-\label{subsec:clustering_dbscan}
-DBSCAN atau \textit{Density-Based Spatial Clustering of Applications with Noise} adalah salah satu metode \textit{clustering} yang berbasis kepadatan (\textit{density based}). Pada DBSCAN sebuah \textit{cluster} merupakan sebuah daerah \textit{dense} yang dipisahkan oleh daerah \textit{sparse}. Daerah \textit{dense} adalah sebuah kumpulan yang terdiri dari beberapa objek, di mana objek-objek tersebut memiliki ciri yang mirip. Sedangkan daerah \textit{sparse} adalah daerah di mana hanya terdapat sedikit objek dengan sifat yang saling mirip.
+%\subsection{DBSCAN}
+%\label{subsec:clustering_dbscan}
+%DBSCAN atau \textit{Density-Based Spatial Clustering of Applications with Noise} adalah salah satu metode \textit{clustering} yang berbasis kepadatan (\textit{density based}). Pada DBSCAN sebuah \textit{cluster} merupakan sebuah daerah \textit{dense} yang dipisahkan oleh daerah \textit{sparse}. Daerah \textit{dense} adalah sebuah kumpulan yang terdiri dari beberapa objek, di mana objek-objek tersebut memiliki ciri yang mirip. Sedangkan daerah \textit{sparse} adalah daerah di mana hanya terdapat sedikit objek dengan sifat yang saling mirip.
+%
+%\textit{Cluster} yang dihasilkan oleh DBSCAN tidak selalu berbentuk \textit{circular} (contoh seperti pada Gambar~\ref{fig:dbscan_cluster}) dan objek-objek yang berada dalam satu \textit{cluster} tidak selalu merupakan data yang mirip. Selama sebuah daerah \textit{dense} memiliki daerah \textit{dense} lain di dekatnya, kedua daerah tersebut akan terus bergabung menjadi satu daerah \textit{dense} yang lebih besar. Untuk sebuah daerah \textit{dense} $D$ dapat bergabung ke daerah lain yang terdiri dari lebih dari satu daerah \textit{dense} $C$, daerah \textit{dense} $D$ hanya perlu untuk dekat dengan salah satu daerah \textit{dense} dari $C$. Karena bentuknya yang tidak \textit{circular} dan tidak tentu miripnya objek dalam satu \textit{cluster}, maka \textit{cluster} tidak dapat direpresentasikan dengan sebuah titik tengah atau \textit{centroid}.
+%
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[scale=0.7]{dbscan\_cluster.png}
+%	\caption{Contoh \textit{cluster} dengan bentuk non-\textit{circular}. Objek-objek yang tersebar seperti ini dapat tergabung menjadi \textit{cluster} dengan menggunakan DBSCAN.}
+%	\label{fig:dbscan_cluster}
+%\end{figure}
+%
+%Penyusunan \textit{cluster} pada DBSCAN dimulai dengan mencari objek yang merupakan \textit{core object}. \textit{Core object} merupakan objek yang memiliki setidaknya $MinPts$ objek lain pada radius $\epsilon$ yang berpusat pada objek tersebut. $MinPts$ dan $\epsilon$ adalah parameter yang ditentukan secara manual. Nilai $MinPts$ dan $\epsilon$ akan memengaruhi hasil \textit{cluster} yang dihasilkan.
+%
+%Setiap objek yang merupakan \textit{core object} beserta anggotanya (objek lain pada radius $\epsilon$) akan menjadi satu \textit{cluster}. Jika dalam radius $\epsilon$ objek tersebut terdapat objek lain yang juga merupakan \textit{core object}, maka akan digabungkan menjadi satu \textit{cluster}. \textit{Core object} yang saling berdekatan ini akan terus digabungkan menjadi \textit{cluster} yang besar.
+%
+%Proses pencarian \textit{cluster} pada DBSCAN dimulai dengan pertama menandai semua objek pada \textit{dataset}, $D$ dengan \textit{unvisited}. Dari $D$ diambil sebuah objek, $p$ secara acak dan ditandai sebagai $visited$. Jika $p$ bukan merupakan \textit{core object} maka objek tersebut merupakan \textit{noise}. Sebaliknya jika $p$ adalah \textit{core object} maka $p$ akan dimasukkan ke \textit{cluster} $C$ dan semua objek pada daerah $\epsilon$-nya dimasukkan ke dalam set $N$. Objek-objek pada $N$ akan diiterasi dan dimasukkan ke \textit{cluster} C. Jika ditemukan objek yang merupakan \textit{core object} maka semua objek lain pada daerah $\epsilon$ objek tersebut akan dimasukkan juga ke $N$. Proses berlanjut sampai tidak ada lagi objek di $N$. Objek-objek yang sudah diperiksa tersebut akan ditandai sebagai \textit{visited}. Setelah itu akan diambil lagi sebuah objek secara acak yang masih bertanda \textit{unvisited} dan proses diulang untuk membentuk \textit{cluster} baru.
+%
+%Proses didefinisikan pada \textit{Pseudocode}~\ref{alg:dbscan} berikut: \\
+%\begin{algorithm}[H]
+%	\caption{DBSCAN}
+%	\label{alg:dbscan}
+%	\KwIn{\begin{itemize}[nosep]
+%			\item \textit{D}: \textit{dataset} berisi $n$ buah objek
+%			\item $\epsilon$: parameter radius untuk menghitung daerah
+%			\item \textit{MinPts}: batas kepadatan suatu daerah.
+%	\end{itemize}}
+%	\KwOut{set berisi \textit{cluster-cluster}}
+%	\begin{algorithmic}[1]
+%		\STATE tandai semua objek sebagai \textit{\textbf{unvisited}}
+%		\WHILE{masih terdapat objek yang \textit{\textbf{unvisited}}}
+%		\STATE pilih objek \textit{\textbf{p}} secara acak
+%		\STATE tandai \textit{\textbf{p}} sebagai \textit{\textbf{visited}}
+%		\IF{dalam radius $\epsilon$ dari \textit{\textbf{p}} terdapat setidaknya \textit{MinPts} objek}
+%		\STATE buat \textit{cluster} baru \textit{\textbf{C}}, masukkan \textit{\textbf{p}} ke dalam \textit{\textbf{C}}
+%		\STATE buat variabel \textit{\textbf{N}}, berisi semua objek dalam radius $\epsilon$ dari \textit{\textbf{p}}
+%		\FOR{semua objek \textit{\textbf{p'}} di \textit{\textbf{N}}}
+%		\IF{objek \textit{\textbf{p'}} \textit{\textbf{unvisited}}}
+%		\STATE tandai \textit{\textbf{p'}} sebagai \textit{\textbf{visited}}
+%		\IF{dalam radius $\epsilon$ dari \textit{\textbf{p'}} terdapat setidaknya \textit{MinPts} objek}
+%		\STATE masukkan semua objek tersebut ke dalam \textit{\textbf{N}}
+%		\ENDIF
+%		\IF{\textit{\textbf{p'}} bukan anggota dari \textit{cluster} manapun}
+%		\STATE masukkan \textit{\textbf{p'}} ke dalam \textit{\textbf{C}}
+%		\ENDIF
+%		\ENDIF
+%		\ENDFOR
+%		\STATE \textit{output} \textit{\textbf{C}}
+%		\ELSE
+%		\STATE tandai \textit{\textbf{p}} sebagai \textit{\textbf{noise}}
+%		\ENDIF
+%		\ENDWHILE
+%	\end{algorithmic}
+%\end{algorithm}
 
-\textit{Cluster} yang dihasilkan oleh DBSCAN tidak selalu berbentuk \textit{circular} (contoh seperti pada Gambar~\ref{fig:dbscan_cluster}) dan objek-objek yang berada dalam satu \textit{cluster} tidak selalu merupakan data yang mirip. Selama sebuah daerah \textit{dense} memiliki daerah \textit{dense} lain di dekatnya, kedua daerah tersebut akan terus bergabung menjadi satu daerah \textit{dense} yang lebih besar. Untuk sebuah daerah \textit{dense} $D$ dapat bergabung ke daerah lain yang terdiri dari lebih dari satu daerah \textit{dense} $C$, daerah \textit{dense} $D$ hanya perlu untuk dekat dengan salah satu daerah \textit{dense} dari $C$. Karena bentuknya yang tidak \textit{circular} dan tidak tentu miripnya objek dalam satu \textit{cluster}, maka \textit{cluster} tidak dapat direpresentasikan dengan sebuah titik tengah atau \textit{centroid}.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.7]{dbscan\_cluster.png}
-	\caption{Contoh \textit{cluster} dengan bentuk non-\textit{circular}. Objek-objek yang tersebar seperti ini dapat tergabung menjadi \textit{cluster} dengan menggunakan DBSCAN.}
-	\label{fig:dbscan_cluster}
-\end{figure}
-
-Penyusunan \textit{cluster} pada DBSCAN dimulai dengan mencari objek yang merupakan \textit{core object}. \textit{Core object} merupakan objek yang memiliki setidaknya $MinPts$ objek lain pada radius $\epsilon$ yang berpusat pada objek tersebut. $MinPts$ dan $\epsilon$ adalah parameter yang ditentukan secara manual. Nilai $MinPts$ dan $\epsilon$ akan memengaruhi hasil \textit{cluster} yang dihasilkan.
-
-Setiap objek yang merupakan \textit{core object} beserta anggotanya (objek lain pada radius $\epsilon$) akan menjadi satu \textit{cluster}. Jika dalam radius $\epsilon$ objek tersebut terdapat objek lain yang juga merupakan \textit{core object}, maka akan digabungkan menjadi satu \textit{cluster}. \textit{Core object} yang saling berdekatan ini akan terus digabungkan menjadi \textit{cluster} yang besar.
-
-Proses pencarian \textit{cluster} pada DBSCAN dimulai dengan pertama menandai semua objek pada \textit{dataset}, $D$ dengan \textit{unvisited}. Dari $D$ diambil sebuah objek, $p$ secara acak dan ditandai sebagai $visited$. Jika $p$ bukan merupakan \textit{core object} maka objek tersebut merupakan \textit{noise}. Sebaliknya jika $p$ adalah \textit{core object} maka $p$ akan dimasukkan ke \textit{cluster} $C$ dan semua objek pada daerah $\epsilon$-nya dimasukkan ke dalam set $N$. Objek-objek pada $N$ akan diiterasi dan dimasukkan ke \textit{cluster} C. Jika ditemukan objek yang merupakan \textit{core object} maka semua objek lain pada daerah $\epsilon$ objek tersebut akan dimasukkan juga ke $N$. Proses berlanjut sampai tidak ada lagi objek di $N$. Objek-objek yang sudah diperiksa tersebut akan ditandai sebagai \textit{visited}. Setelah itu akan diambil lagi sebuah objek secara acak yang masih bertanda \textit{unvisited} dan proses diulang untuk membentuk \textit{cluster} baru.
-
-Proses didefinisikan pada \textit{Pseudocode}~\ref{alg:dbscan} berikut: \\
-\begin{algorithm}[H]
-	\caption{DBSCAN}
-	\label{alg:dbscan}
-	\KwIn{\begin{itemize}[nosep]
-			\item \textit{D}: \textit{dataset} berisi $n$ buah objek
-			\item $\epsilon$: parameter radius untuk menghitung daerah
-			\item \textit{MinPts}: batas kepadatan suatu daerah.
-	\end{itemize}}
-	\KwOut{set berisi \textit{cluster-cluster}}
-	\begin{algorithmic}[1]
-		\STATE tandai semua objek sebagai \textit{\textbf{unvisited}}
-		\WHILE{masih terdapat objek yang \textit{\textbf{unvisited}}}
-		\STATE pilih objek \textit{\textbf{p}} secara acak
-		\STATE tandai \textit{\textbf{p}} sebagai \textit{\textbf{visited}}
-		\IF{dalam radius $\epsilon$ dari \textit{\textbf{p}} terdapat setidaknya \textit{MinPts} objek}
-		\STATE buat \textit{cluster} baru \textit{\textbf{C}}, masukkan \textit{\textbf{p}} ke dalam \textit{\textbf{C}}
-		\STATE buat variabel \textit{\textbf{N}}, berisi semua objek dalam radius $\epsilon$ dari \textit{\textbf{p}}
-		\FOR{semua objek \textit{\textbf{p'}} di \textit{\textbf{N}}}
-		\IF{objek \textit{\textbf{p'}} \textit{\textbf{unvisited}}}
-		\STATE tandai \textit{\textbf{p'}} sebagai \textit{\textbf{visited}}
-		\IF{dalam radius $\epsilon$ dari \textit{\textbf{p'}} terdapat setidaknya \textit{MinPts} objek}
-		\STATE masukkan semua objek tersebut ke dalam \textit{\textbf{N}}
-		\ENDIF
-		\IF{\textit{\textbf{p'}} bukan anggota dari \textit{cluster} manapun}
-		\STATE masukkan \textit{\textbf{p'}} ke dalam \textit{\textbf{C}}
-		\ENDIF
-		\ENDIF
-		\ENDFOR
-		\STATE \textit{output} \textit{\textbf{C}}
-		\ELSE
-		\STATE tandai \textit{\textbf{p}} sebagai \textit{\textbf{noise}}
-		\ENDIF
-		\ENDWHILE
-	\end{algorithmic}
-\end{algorithm}
- 
+\section{Dataset Stanford Mobile Visual Search}
+\label{sec:dataset_smvs}
+\textit{Dataset} Stanford Mobile Visual Search (SMVS) merupakan \textit{dataset} yang dapat diakses melalui \textit{website} Stanford Libraries (\url{https://exhibits.stanford.edu/data/catalog/rb470rw0983}). \textit{Dataset} ini terdiri dari beberapa kelompok gambar, setiap kelompok berisi gambar-gambar dari sebuah objek dengan jenis yang sama. Sebuah kelompok gambar dalam \textit{dataset} SMVS memiliki beberapa gambar objek yang berbeda, dan untuk setiap objek terdapat sebuah gambar yang menjadi referensi. Gambar referensi berupa gambar sebuah objek yang diambil dari sudut paling jelas dan tidak ada benda lain di latar belakang. Keterangan untuk tiap kelompok gambar dapat dilihat pada Tabel~\ref{tab:contoh_dataset_smvs}.
+\begin{longtable}{|p{.2\textwidth}|p{.39\textwidth}|p{.39\textwidth}|}
+	\caption{Daftar kelompok gambar dalam \textit{Dataset} SMVS beserta contoh gambar dan contoh referensinya.}
+	\label{tab:contoh_dataset_smvs} \\
+	\hline
+	\textbf{Kelompok Gambar} & \textbf{Contoh Gambar} & \textbf{Contoh Referensi} \\
+	\hline
+	\texttt{book\_covers} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{book_covers_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{book_covers_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{business\_cards} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{business_cards_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{business_cards_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{cd\_covers} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{cd_covers_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{cd_covers_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{dvd\_covers} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{dvd_covers_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{dvd_covers_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{landmarks} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{landmarks_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{landmarks_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{museum\_paintings} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{museum_paintings_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{museum_paintings_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{print} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{print_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{print_ref.jpg}
+	\end{minipage} \\
+	\hline
+	\texttt{video\_frames} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{video_frames_001.jpg} 
+	\end{minipage} & \begin{minipage}{.39\textwidth}
+		\vspace{5pt} \includegraphics[width=\textwidth]{video_frames_ref.jpg}
+	\end{minipage} \\
+	\hline
+\end{longtable}
