@@ -16,11 +16,11 @@ Pada skripsi ini akan dibuat sebuah sistem untuk mengidentifikasi POI dari masuk
 	\label{fig:poi_with_logo}
 \end{figure}
 
-Proses identifikasi POI akan dilakukan menggunakan teknik \textit{Object Instance Recognition} (OIR). Teknik OIR merupakan teknik pengenalan objek spesifik. Sebuah algoritma OIR harus dapat mengatasi masalah seperti pencahayaan, sudut pengambilan, objek \textit{background}. Objek harus tetap dapat diidentifikasi walaupun gambar memiliki gangguan-gangguan tersebut. OIR dapat dilakukan dengan memanfaatkan fitur lokal.
+Proses identifikasi POI akan dilakukan menggunakan teknik \textit{Object Instance Recognition} (OIR). Teknik OIR sendiri merupakan teknik pengenalan objek secara spesifik. Sebuah algoritma OIR harus dapat mengatasi masalah seperti pencahayaan, sudut pengambilan, objek \textit{background}. Objek harus tetap dapat diidentifikasi walaupun gambar memiliki gangguan-gangguan tersebut. OIR dapat dilakukan dengan memanfaatkan fitur lokal dalam gambar.
 
-Fitur lokal merupakan fitur yang mendeskripsikan sebuah daerah penting (\textit{keypoint}) pada gambar. Salah satu cara mendapatkan \textit{Keypoint} adalah dengan mencari sudut-sudut atau perpotongan garis (\textit{corner}) yang terdapat pada gambar. \textit{Keypoint-keypoint} yang terdeteksi pada gambar akan memiliki sebuah vektor untuk mendeskripsikan daerah di sekitar \textit{keypoint} tersebut yang disebut sebagai vektor deskriptor. Proses pencarian fitur lokal pada penelitian ini akan dilakukan dengan menggunakan metode \textit{Scale Invariant Feature Transform} (SIFT) dan \textit{Oriented FAST and Rotated BRIEF} (ORB). Metode SIFT dan ORB akan menghasilkan vektor deskriptor untuk tiap fitur lokal yang terdeteksi, vektor deskriptor ini dapat digunakan untuk mengidentifikasi fitur lokal.
+Fitur lokal merupakan fitur yang mendeskripsikan sebuah daerah penting pada gambar atau yang biasa disebut \textit{keypoint}. Salah satu cara mendapatkan \textit{Keypoint} adalah dengan mencari sudut-sudut atau perpotongan garis (\textit{corner}) yang terdapat pada gambar. \textit{Keypoint-keypoint} yang terdeteksi pada gambar akan memiliki sebuah vektor untuk mendeskripsikan daerah di sekitar \textit{keypoint} tersebut yang disebut sebagai vektor \textit{descriptor}. Proses pencarian fitur lokal pada penelitian ini akan dilakukan dengan menggunakan metode \textit{Scale Invariant Feature Transform} (SIFT) dan \textit{Oriented FAST and Rotated BRIEF} (ORB). Metode SIFT dan ORB akan menghasilkan vektor \textit{descriptor} untuk tiap fitur lokal yang terdeteksi, vektor \textit{descriptor} ini dapat digunakan untuk mengidentifikasi fitur lokal.
 
-Salah satu masalah yang ada pada pengenalan POI adalah pada sebuah gambar POI tidak semua fitur lokal yang dideteksi bersifat unik terhadap POI tersebut. Ada fitur lokal yang juga dimiliki oleh POI lain atau fitur lokal yang berasal dari objek di latar belakang yang sifatnya tidak konsisten. Masalah ini akan mempersulit pada proses OIR untuk mengidentifikasi POI yang tepat. Gambar~\ref{fig:keypoint_non_unique} menunjukkan masalah-masalah ini, gambar \ref{subfig:audi} dan \ref{subfig:chanel} menunjukkan fitur lokal yang mirip dari dua POI yang berbeda, sedangkan gambar \ref{subfig:cgv} dan \ref{subfig:cgv2} menunjukkan objek-objek latar belakang yang tidak konsisten pada POI. Penelitian ini akan melakukan analisis untuk menemukan dan memisahkan fitur-fitur lokal tersebut agar tidak ikut diproses dalam pembuatan model POI.
+Salah satu masalah yang ada pada pengenalan POI adalah pada sebuah gambar POI tidak semua fitur lokal yang terdeteksi bersifat unik terhadap POI tersebut. Ada fitur lokal yang juga dimiliki oleh POI lain atau fitur lokal yang berasal dari objek di latar belakang yang sifatnya tidak konsisten. Masalah ini akan mempersulit pada proses OIR untuk mengidentifikasi POI yang tepat. Gambar~\ref{fig:keypoint_non_unique} menunjukkan masalah-masalah ini, gambar \ref{subfig:audi} dan \ref{subfig:chanel} menunjukkan fitur lokal yang mirip dari dua POI yang berbeda, sedangkan gambar \ref{subfig:cgv} dan \ref{subfig:cgv2} menunjukkan objek-objek latar belakang yang tidak konsisten pada POI. Penelitian ini akan melakukan analisis untuk menemukan dan memisahkan fitur-fitur lokal tersebut agar tidak ikut diproses dalam pembuatan model POI.
 
 \begin{figure}[H]
 	\begin{subfigure}[b]{.5\textwidth}
@@ -50,7 +50,7 @@ Salah satu masalah yang ada pada pengenalan POI adalah pada sebuah gambar POI ti
 	\caption{Empat gambar di atas menunjukkan permasalahan yang dihadapi pada penelitian ini. Gambar (a) dan (b) merupakan gambar dari dua POI yang berbeda tetapi memiliki logo dengan bagian sudut yang mirip, sudut yang mirip tersebut kemungkinan akan menghasilkan fitur lokal yang mirip juga. Sedangkan pada gambar (c) dan (d) merupakan dua gambar dari POI yang sama tetapi banyak objek latar yang berbeda sehingga akan memunculkan fitur lokal yang tidak konsisten.}
 	\label{fig:keypoint_non_unique}
 \end{figure}
-Fitur-fitur lokal yang tidak unik dan tidak konsisten tersebut akan dipisahkan dengan menggunakan metode \textit{clustering}. Metode \textit{clustering} merupakan teknik pemrosesan data yang akan mengelompokkan data-data dengan sifat yang mirip ke dalam satu kelompok. Metode \textit{clustering} pada penelitian ini akan menggunakan metode \textit{Agglomerative}. Penelitian ini mengasumsikan fitur lokal yang merepresentasikan suatu POI adalah fitur lokal yang muncul secara konsisten di gambar POI tersebut dan relatif unik terhadap POI tersebut.
+Fitur-fitur lokal yang tidak unik dan tidak konsisten tersebut akan dipisahkan dengan menggunakan teknik \textit{clustering}. Teknik \textit{clustering} merupakan teknik pemrosesan data yang akan mengelompokkan data-data dengan sifat yang mirip ke dalam satu kelompok. Teknik \textit{clustering} pada penelitian ini akan dilakukan menggunakan metode \textit{Agglomerative}. Penelitian ini mengasumsikan fitur lokal yang merepresentasikan suatu POI adalah fitur lokal yang muncul secara konsisten di gambar POI tersebut dan relatif unik terhadap POI tersebut.
 
 \section{Rumusan Masalah}
 \label{sec:rumusan}
@@ -73,6 +73,8 @@ Skripsi ini memiliki tujuan sebagai berikut:
 Berikut batasan-batasan masalah dari skripsi ini:
 \begin{itemize}
 	\item Pengambilan fitur lokal untuk analisis dilakukan menggunakan metode SIFT dan ORB dengan implementasi OpenCV pada Python.
+	\item Pencarian pasangan fitur lokal dilakukkan dengan menggunakan implementasi FLANN yang tersedia dari \textit{library} OpenCV pada Python.
+	\item Proses pelabelan daerah penting dalam POI dilakukan dengan menggunakan aplikasi Labelimg.
 \end{itemize}
 
 \section{Metodologi}
@@ -87,7 +89,7 @@ Skripsi ini akan memiliki metodologi sebagai berikut:
 	\item Menguji kinerja perangkat lunak.
 	\item Menulis buku skripsi.
 \end{enumerate}
-
+\newpage
 \section{Sistematika Pembahasan}
 \label{sec:sispem}
 Sistematika pembahasan yang digunakan pada penelitian ini adalah sebagai berikut:

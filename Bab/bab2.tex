@@ -6,13 +6,14 @@
 \label{sec:poi}
 
 \textit{Point of Interest} (POI) adalah sebuah lokasi geografis yang memiliki kegunaan tertentu. POI biasanya dikenali oleh banyak orang dan memiliki keunikan tertentu pada tampilannya. Salah satu contoh POI dapat dilihat pada Gambar~\ref{fig:poi}. POI juga dapat dimanfaatkan untuk menjadi penanda lokasi seseorang. Seseorang dapat mengerti lokasinya dengan melihat POI yang ada di sekitarnya.
+\vspace{-9pt}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.6\linewidth]{poi.png}
 	\caption{Salah satu contoh POI.}
 	\label{fig:poi}
 \end{figure}
-
+\vspace{-9pt}
 Beberapa POI tertentu dapat memiliki logo yang sifatnya unik, contohnya seperti pada POI-POI di Gambar~\ref{fig:poi_logo}. POI dengan logo unik tersebut dapat dikenali dengan hanya melihat logonya saja. POI dengan logo unik ini dapat dikenali oleh komputer salah satunya dengan menggunakan teknik \textit{Object Instance Recognition} (OIR). 
 \begin{figure}[H]
 	\centering
@@ -25,7 +26,7 @@ Beberapa POI tertentu dapat memiliki logo yang sifatnya unik, contohnya seperti 
 \section{Object Instance Recognition}
 \label{sec:oir}
 
-\textit{Object Instance Recognition} (OIR) adalah teknik pengenalan objek spesifik. Pada teknik OIR deteksi tidak memberikan kelas dari gambar tetapi label yang khusus, seperti contohnya jika objek merupakan sebuah mobil, OIR tidak hanya akan memberikan keluaran bahwa objek merupakan mobil melainkan hal yang spesifik seperti merk dan jenis mobil tersebut. OIR bekerja dengan menerima gambar masukkan dan mencari gambar pada \textit{dataset} yang memiliki paling banyak kemiripan.
+\textit{Object Instance Recognition} (OIR) adalah teknik pengenalan objek secara spesifik. Pada teknik OIR deteksi tidak memberikan kelas dari gambar tetapi label yang khusus, seperti contohnya jika objek merupakan sebuah mobil, OIR tidak hanya akan memberikan keluaran bahwa objek merupakan mobil melainkan hal yang spesifik seperti merk dan jenis mobil tersebut. OIR bekerja dengan menerima gambar masukkan dan mencari gambar pada \textit{dataset} yang memiliki paling banyak kemiripan.
 
 Penyelesaian OIR akan mudah bila gambar masukkan merupakan gambar yang sudah bersih. Pada praktiknya sebuah algoritma OIR seharusnya tetap dapat mengenali objek walaupun gambar bervariasi. Beberapa perubahan pada gambar berikut merupakan faktor-faktor yang dapat mempersulit proses OIR:
 \begin{itemize}
@@ -82,35 +83,35 @@ Penyelesaian OIR akan mudah bila gambar masukkan merupakan gambar yang sudah ber
 	\label{fig:images}
 \end{figure}
 
-OIR dapat dilakukan dengan menggunakan fitur lokal. Fitur lokal sendiri merupakan fitur dalam gambar yang mendeskripsikan sebuah daerah tertentu pada gambar tersebut. Fitur lokal dapat berupa perpotongan garis atau yang biasa disebut \textit{keypoint}. Sebuah \textit{keypoint} akan dapat diidentifikasi dengan menggunakan daerah di sekitar \textit{keypoint} tersebut. Deskripsi \textit{keypoint} ini dibuat dalam sebuah vektor yang dinamakan vektor deskriptor.
+OIR dapat dilakukan dengan menggunakan fitur lokal dalam gambar. Fitur lokal sendiri merupakan fitur dalam gambar yang mendeskripsikan sebuah daerah tertentu pada gambar tersebut. Fitur lokal dapat diperoleh dari sudut atau perpotongan garis dalam gambar yang biasa disebut \textit{keypoint}. Sebuah \textit{keypoint} akan dapat diidentifikasi dengan menggunakan daerah di sekitar \textit{keypoint} tersebut. Deskripsi \textit{keypoint} ini dibuat dalam sebuah vektor yang dinamakan vektor \textit{descriptor}.
 
-Teknik OIR bekerja dengan melakukan deteksi fitur lokal pada gambar masukkan dan pada gambar-gambar di \textit{dataset}. Fitur-fitur lokal dari gambar masukkan tersebut kemudian dipasangkan dengan fitur lokal dari gambar \textit{dataset}. Gambar yang memiliki pasangan terbanyak akan merupakan hasil deteksi gambar masukkan tersebut. 
+Teknik OIR secara sederhana bekerja dengan melakukan deteksi fitur lokal pada gambar masukkan dan pada gambar-gambar di \textit{dataset}. Masing-masing fitur lokal dari gambar masukkan tersebut kemudian dipasangkan dengan fitur lokal dari gambar \textit{dataset}. Gambar yang memiliki pasangan fitur lokal paling banyak akan menjadi hasil identifikasi gambar masukkan tersebut.
 
 Pengambilan fitur lokal dari gambar dapat dilakukan dengan beberapa metode, seperti SIFT (lihat~\ref{sec:sift}) dan ORB (lihat~\ref{sec:orb}). Kedua metode tersebut---SIFT dan ORB---sudah menangani masalah perubahan translasi, skala dan rotasi karena fitur lokal yang dihasilkan oleh SIFT dan ORB bersifat invarian terhadap translasi, skala dan rotasi.
 
-Proses pencarian pasangan fitur lokal dari gambar masukkan dan \textit{dataset} dilakukan dengan menggunakan vektor deskriptor dari fitur lokal. Perubahan-perubahan pada gambar walaupun sedikit akan menyebabkan perubahan nilai pada vektor deskriptor. Vektor deskriptor dari fitur lokal pada gambar masukkan hampir tidak akan persis sama dengan vektor deskriptor dari gambar yang ada di \textit{dataset}. Oleh karena itu pencarian pasangan fitur lokal dilakukan dengan mencari pasangan fitur lokal yang memiliki nilai kemiripan paling tinggi.
+Proses pencarian pasangan fitur lokal dari gambar masukkan dan \textit{dataset} dilakukan dengan menggunakan vektor \textit{descriptor} dari fitur lokal. Perubahan-perubahan pada gambar walaupun sedikit akan menyebabkan perubahan nilai pada vektor \textit{descriptor}. Vektor \textit{descriptor} dari fitur lokal pada gambar masukkan hampir tidak akan persis sama dengan vektor \textit{descriptor} dari gambar yang ada di \textit{dataset}. Oleh karena itu pencarian pasangan fitur lokal dilakukan dengan mencari pasangan fitur lokal yang memiliki nilai kemiripan paling tinggi.
 
 Secara garis besar tahapan proses OIR pada penelitian ini adalah sebagai berikut:
 \begin{enumerate}
 	\item Ekstraksi Fitur \\
-	Pertama akan dilakukan pengambilan fitur-fitur lokal dari gambar masukkan. Dengan menggunakan metode SIFT atau ORB pengambilan fitur lokal akan menghasilkan \textit{tuple} yang  berisi \textit{keypoint}. Setiap \textit{keypoint} yang dihasilkan akan memiliki sebuah vektor yang akan digunakan untuk mengidentifikasi \textit{keypoint} tersebut. Vektor ini disebut sebagai vektor deskriptor.
-	\item Pairing \\
-	Untuk setiap fitur lokal yang terdeteksi pada gambar masukkan akan dicari beberapa fitur lokal dari gambar pada \textit{dataset} yang paling mirip. Kemiripan fitur lokal ditentukan dengan menghitung jarak (sesuai dengan metrik yang digunakan) antara vektor deskriptor dari kedua fitur lokal tersebut.
-	\item Verification \\
+	Pertama akan dilakukan pengambilan fitur-fitur lokal dari gambar masukkan. Dengan menggunakan metode SIFT atau ORB pengambilan fitur lokal akan menghasilkan \textit{tuple} yang  berisi \textit{keypoint}. Setiap \textit{keypoint} yang dihasilkan akan memiliki sebuah vektor yang akan digunakan untuk mengidentifikasi \textit{keypoint} tersebut. Vektor ini disebut sebagai vektor \textit{descriptor}.
+	\item \textit{Pairing} \\
+	Untuk setiap fitur lokal yang terdeteksi pada gambar masukkan akan dicari beberapa fitur lokal dari gambar pada \textit{dataset} yang paling mirip. Kemiripan fitur lokal ditentukan dengan menghitung jarak (sesuai dengan metrik yang digunakan) antara vektor \textit{descriptor} dari kedua fitur lokal tersebut.
+	\item \textit{Verification} \\
 	Pasangan fitur lokal yang didapat pada tahap sebelumnya merupakan pasangan yang hanya memiliki ciri yang mirip tetapi belum tentu konsisten secara geometris. Pasangan fitur lokal dikatakan konsisten secara geometris jika keduanya memiliki posisi yang sama relatif terhadap pasangan lain di sekitarnya. Penjelasan mengenai pasangan yang konsisten akan dijelaskan pada paragraf di bawah. Hanya pasangan-pasangan fitur lokal yang konsisten secara geometris yang akan diproses lebih lanjut.
-	\item Scoring \\
+	\item \textit{Scoring} \\
 	Setelah didapatkan semua pasangan fitur lokal yang paling mirip dan konsisten secara geometris maka dapat ditentukan pasangan gambar yang menjadi label gambar masukkan. Kemudian perlu dihitung nilai kemiripan dari label yang dihasilkan. Kemiripan dapat dihitung dengan menghitung $\frac{1}{d}$ untuk semua pasangan fitur lokal, di mana $d$ merupakan jarak pasangan tersebut. Nilai-nilai $\frac{1}{d}$ tersebut kemudian dihitung totalnya untuk menjadi nilai kemiripan label hasil.
 \end{enumerate}
 \begin{figure}[H]
 	\begin{subfigure}[b]{.5\textwidth}
 		\centering
-		\includegraphics[width=0.7\linewidth]{geo_ver1.png}
+		\includegraphics[width=0.6\linewidth]{geo_ver1.png}
 		\caption{}
 		\label{subfig:geo_ver1}
 	\end{subfigure}%
 	\begin{subfigure}[b]{.5\textwidth}
 		\centering
-		\includegraphics[width=0.7\linewidth]{geo_ver2.png}
+		\includegraphics[width=0.6\linewidth]{geo_ver2.png}
 		\caption{}
 		\label{subfig:geo_ver2}
 	\end{subfigure}
@@ -135,7 +136,7 @@ Variabel $n$ pada persamaan di atas merupakan sebuah nilai konstan yang nilainya
 
 \section{SIFT (Scale Invariant Feature Transform)}
 \label{sec:sift}
-SIFT adalah salah satu metode pencarian fitur lokal yang dicetuskan pada~\cite{lowe2004sift}. Fitur lokal yang dihasilkan SIFT bersifat invarian terhadap rotasi, perubahan skala, dan translasi pada gambar. Sifat invarian ini berarti fitur lokal yang sama pada gambar yang telah dirotasi, diubah skalanya, atau ditranslasi akan tetap memiliki ciri yang mirip. Setiap fitur lokal akan memiliki sebuah vektor yang mendeskripsikan daerah area fitur lokal tersebut, vektor ini biasa disebut sebagai deskriptor. Vektor deksriptor SIFT berbentuk vektor bilangan bulat yang memiliki 128 elemen. Tahap pencarian fitur lokal pada SIFT dapat dibagi menjadi 4 langkah yang akan dijabarkan pada subbab-subbab berikut.
+SIFT adalah salah satu metode pencarian fitur lokal yang dicetuskan pada~\cite{lowe2004sift}. Fitur lokal yang dihasilkan SIFT bersifat invarian terhadap rotasi, perubahan skala, dan translasi pada gambar. Sifat invarian ini berarti fitur lokal yang sama pada gambar yang telah dirotasi, diubah skalanya, atau ditranslasi akan tetap memiliki ciri yang mirip. Setiap fitur lokal akan memiliki sebuah vektor yang mendeskripsikan daerah area fitur lokal tersebut, vektor ini biasa disebut sebagai \textit{descriptor}. Vektor deksriptor SIFT berbentuk vektor bilangan bulat yang memiliki 128 elemen. Tahap pencarian fitur lokal pada SIFT dapat dibagi menjadi 4 langkah yang akan dijabarkan pada subbab-subbab berikut.
 
 \subsection{Pencarian Extrema}
 Pada tahap ini akan dicari \textit{pixel-pixel} pada gambar yang merupakan \textit{corner} atau biasa disebut \textit{keypoint}. \textit{Keypoint} pada SIFT dicari dengan memeriksa \textit{pixel-pixel} pada gambar hasil turunan kedua Gaussian. Turunan kedua Gaussian akan dihitung dengan menggunakan \textit{Difference of Gaussian} (DoG).
@@ -264,7 +265,9 @@ Setiap \textit{pixel} akan dihitung orientasi dan \textit{magnitude}-nya. \texti
 	\label{fig:gaussian_weighting}
 \end{figure} 
 
+
 Setelah setiap \textit{pixel} sudah dihitung orientasi dan bobotnya menggunakan \textit{magnitude} dan \textit{Gaussian Weighting}, nilai bobot tersebut akan dimasukkan ke dalam histogram berdasarkan orientasinya. Histogram yang digunakan memiliki 36 bin yang masing-masing mewakili 10 derajat orientasi. Ilustrasi dapat dilihat pada Gambar~\ref{fig:hist_orientasi}.
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\linewidth]{hist_orientasi.png}
@@ -272,15 +275,15 @@ Setelah setiap \textit{pixel} sudah dihitung orientasi dan bobotnya menggunakan 
 	\label{fig:hist_orientasi}
 \end{figure}
 
-Dari histogram tersebut puncak nilai bin tertinggi akan digunakan sebagai orientasi dari \textit{keypoint}. Untuk puncak-puncak lain yang berada dalam rentang $80\%$ dari puncak tertinggi akan digunakan untuk membuat \textit{keypoint} baru pada lokasi yang sama dengan orientasi yang berbeda sesuai dengan nilai orientasi pada bin tersebut.
+Dari histogram pada Gambar~\ref{fig:hist_orientasi} terlihat bahwa puncak nilai bin tertinggi akan digunakan sebagai orientasi dari \textit{keypoint}. Untuk puncak-puncak lain yang berada dalam rentang $80\%$ dari puncak tertinggi akan digunakan untuk membuat \textit{keypoint} baru pada lokasi yang sama dengan orientasi yang berbeda sesuai dengan nilai orientasi pada bin tersebut.
 
 \subsection{Pembuatan Deskriptor}
-Setelah didapatkan \textit{keypoint} beserta skala dan orientasinya, perlu untuk diberikan sebuah identitas pada setiap \textit{keypoint}. Pemberian identitas ini berguna untuk mengidentifikasi \textit{keypoint} yang satu dengan yang lainnya, agar dapat ditemukan \textit{keypoint-keypoint} dengan ciri yang mirip. Identifikasi \textit{keypoint} dapat dilakukan dengan membuat sebuah vektor deskriptor. Vektor deskriptor merupakan vektor yang mendeskripsikan daerah di sekitar \textit{keypoint}. Vektor deskriptor pada SIFT berbentuk vektor berjumlah 128 elemen bilangan bulat.
+Setelah didapatkan \textit{keypoint} beserta skala dan orientasinya, perlu untuk diberikan sebuah identitas pada setiap \textit{keypoint}. Pemberian identitas ini berguna untuk mengidentifikasi \textit{keypoint} yang satu dengan yang lainnya, agar dapat ditemukan \textit{keypoint-keypoint} dengan ciri yang mirip. Identifikasi \textit{keypoint} dapat dilakukan dengan membuat sebuah vektor \textit{descriptor}. Vektor \textit{descriptor} merupakan vektor yang mendeskripsikan daerah di sekitar \textit{keypoint}. Vektor \textit{descriptor} pada SIFT berbentuk vektor berjumlah 128 elemen bilangan bulat.
 
-Pembuatan vektor dilakukan dengan mengambil daerah di sekitar \textit{keypoint} dari gambar yang terlebih dahulu dirotasi sesuai dengan orientasi \textit{keypoint}. Ukuran daerah tersebut ditentukan berdasarkan dari skala \textit{keypoint}. Daerah tersebut kemudian dibagi menjadi $4\times4$ subdaerah. Untuk setiap subdaerah dihitung nilai \textit{magnitude} dan orientasi setiap \textit{pixel}-nya dengan diberi bobot menggunakan \textit{Gaussian Weighting} lalu hasilnya dimasukkan ke dalam histogram dengan 8 bin. Setiap bin dalam histogram mewakili 45 derajat orientasi. Nilai dari setiap bin pada histogram akan menjadi satu elemen pada deskriptor. Terdapat total 16 subdaerah dengan setiap daerah menghasilkan 8 elemen, sehingga didapat total sebanyak $16\times8=128$ elemen untuk vektor deskriptor. 
+Pembuatan vektor dilakukan dengan mengambil daerah di sekitar \textit{keypoint} dari gambar yang terlebih dahulu dirotasi sesuai dengan orientasi \textit{keypoint}. Ukuran daerah tersebut ditentukan berdasarkan dari skala \textit{keypoint}. Daerah tersebut kemudian dibagi menjadi $4\times4$ subdaerah. Untuk setiap subdaerah dihitung nilai \textit{magnitude} dan orientasi setiap \textit{pixel}-nya dengan diberi bobot menggunakan \textit{Gaussian Weighting} lalu hasilnya dimasukkan ke dalam histogram dengan 8 bin. Setiap bin dalam histogram mewakili 45 derajat orientasi. Nilai dari setiap bin pada histogram akan menjadi satu elemen pada \textit{descriptor}. Terdapat total 16 subdaerah dengan setiap daerah menghasilkan 8 elemen, sehingga didapat total sebanyak $16\times8=128$ elemen untuk vektor \textit{descriptor}. 
 
 \subsection{SIFT di OpenCV}
-\textit{Library} OpenCV di Python memiliki modul implementasi SIFT. Modul dapat digunakan untuk melakukan ekstraksi fitur lokal dari gambar dan menghasilkan vektor deskriptor untuk tiap fitur lokal. Untuk melakukan deteksi fitur lokal, pertama perlu untuk dibuat objek SIFT dengan menggunakan fungsi \texttt{SIFT\_create}. Beberapa parameter dari fungsi \texttt{SIFT\_create} yang relevan terhadap skripsi ini adalah sebagai berikut:
+\textit{Library} OpenCV di Python memiliki modul implementasi SIFT. Modul dapat digunakan untuk melakukan ekstraksi fitur lokal dari gambar dan menghasilkan vektor \textit{descriptor} untuk tiap fitur lokal. Untuk melakukan deteksi fitur lokal, pertama perlu untuk dibuat objek SIFT dengan menggunakan fungsi \texttt{SIFT\_create}. Beberapa parameter dari fungsi \texttt{SIFT\_create} yang relevan terhadap skripsi ini adalah sebagai berikut:
 \begin{itemize}
 	\item \texttt{nfeatures}: jumlah fitur yang ingin dihasilkan. Dipilih berdasarkan skor yang didapat dari nilai kontras pada daerah sekitar \textit{keypoint}.
 	\item \texttt{nOctaveLayers}: jumlah lapisan untuk tiap oktaf. Ditentukan secara otomatis dari resolusi gambar.
@@ -303,7 +306,7 @@ Fungsi \texttt{detectAndCompute} tersebut akan menghasilkan sebuah \textit{tuple
 
 \section{ORB (Oriented FAST and Rotated BRIEF)}
 \label{sec:orb}
-ORB adalah metode pencarian fitur lokal yang dijelaskan pada~\cite{rublee2011orb}. ORB dapat menemukan fitur lokal dengan lebih cepat jika dibandingkan dengan SIFT, walaupun fitur lokal yang dihasilkan tidak seakurat yang dihasilkan SIFT. ORB mencari fitur lokal dengan mencari \textit{pixel} yang merupakan sudut perpotongan garis (\textit{Keypoint}). \textit{Keypoint} dalam ORB dicari dengan ide bahwa sebuah \textit{pixel} yang merupakan sudut akan memiliki garis kontinu membentuk lingkaran di sekitarnya dengan nilai intensitas yang lebih kecil atau lebih besar dari nilai intensitas \textit{pixel} tersebut. Fitur lokal yang dihasilkan ORB bersifat invarian terhadap rotasi, translasi dan invarian sebagian terhadap skala. Fitur lokal ORB juga memiliki sebuah vektor deskriptor yang berbentuk vektor sebanyak 256 elemen bilangan biner. Tahap pencarian fitur lokal pada ORB dibagi menjadi 4 langkah yang dijelaskan pada subbab-subbab berikut.
+ORB adalah metode pencarian fitur lokal yang dijelaskan pada~\cite{rublee2011orb}. ORB dapat menemukan fitur lokal dengan lebih cepat jika dibandingkan dengan SIFT, walaupun fitur lokal yang dihasilkan tidak seakurat yang dihasilkan SIFT. ORB mencari fitur lokal dengan mencari \textit{pixel} yang merupakan sudut perpotongan garis (\textit{Keypoint}). \textit{Keypoint} dalam ORB dicari dengan ide bahwa sebuah \textit{pixel} yang merupakan sudut akan memiliki garis kontinu membentuk lingkaran di sekitarnya dengan nilai intensitas yang lebih kecil atau lebih besar dari nilai intensitas \textit{pixel} tersebut. Fitur lokal yang dihasilkan ORB bersifat invarian terhadap rotasi, translasi dan invarian sebagian terhadap skala. Fitur lokal ORB juga memiliki sebuah vektor \textit{descriptor} yang berbentuk vektor sebanyak 256 elemen bilangan biner. Tahap pencarian fitur lokal pada ORB dibagi menjadi 4 langkah yang dijelaskan pada subbab-subbab berikut.
 
 \subsection{Pencarian Keypoint}
 \label{subsec:orb_keypoint}
@@ -368,11 +371,10 @@ Proses penentuan orientasi ini diilustrasikan pada Gambar~\ref{fig:orb_orientati
 	\label{fig:orb_orientation}
 \end{figure}
 
-\subsection{Pembuatan Deskriptor}
-\label{subsec:orb_deskriptor}
-Untuk setiap \textit{keypoint} yang dihasilkan perlu untuk dibuat sebuah vektor yang mendeskripsikan daerah di sekitar \textit{keypoint} tersebut. Vektor deskriptor berguna untuk melakukan identifikasi pada \textit{keypoint} tersebut. Pada ORB, vektor deskriptor berbentuk vektor biner berjumlah 256 elemen. Vektor didapat dengan melihat perbandingan nilai intensitas \textit{pixel} pada daerah di sekitar \textit{keypoint}.
+\subsection{Pembuatan Descriptor}
+Untuk setiap \textit{keypoint} yang dihasilkan perlu untuk dibuat sebuah vektor yang mendeskripsikan daerah di sekitar \textit{keypoint} tersebut. Vektor \textit{descriptor} berguna untuk melakukan identifikasi pada \textit{keypoint} tersebut. Pada ORB, vektor \textit{descriptor} berbentuk vektor biner berjumlah 256 elemen. Vektor didapat dengan melihat perbandingan nilai intensitas \textit{pixel} pada daerah di sekitar \textit{keypoint}.
 
-Agar deskriptor bersifat invarian terhadap rotasi gambar terlebih dahulu dirotasi sesuai dengan orientasi yang sudah didapat sebelumnya. Dari gambar yang telah dirotasi diambil daerah berukuran $31\times31$ untuk dilakukan \textit{binary test}. \textit{Binary test} adalah fungsi yang membandingkan nilai intensitas antar dua titik pada gambar. Fungsi \textit{binary test} $\tau$ didefinisikan sebagai berikut:
+Agar \textit{descriptor} bersifat invarian terhadap rotasi gambar terlebih dahulu dirotasi sesuai dengan orientasi yang sudah didapat sebelumnya. Dari gambar yang telah dirotasi diambil daerah berukuran $31\times31$ untuk dilakukan \textit{binary test}. \textit{Binary test} adalah fungsi yang membandingkan nilai intensitas antar dua titik pada gambar. Fungsi \textit{binary test} $\tau$ didefinisikan sebagai berikut:
 \begin{equation}
 	\tau(p;x,y)=\begin{cases}
 		1 :p(x) < p(y), \\
@@ -405,7 +407,7 @@ Proses penghitungan nilai total sebuah daerah menggunakan \textit{Integral Image
 	\label{fig:integral_image2}
 \end{figure}
 
-\textit{Smoothing} pada ORB dilakukan dengan mengubah \textit{binary test} yang dilakukan. \textit{Binary test} pada ORB dilakukan dengan membandingkan nilai total \textit{pixel} dari dua daerah berukuran $5\times5$ dalam daerah $31\times31$ yang digunakan untuk menghitung deskriptor. Penghitungan nilai total pada daerah $5\times5$ dilakukan dengan menggunakan \textit{Integral Image} untuk mempercepat proses. 
+\textit{Smoothing} pada ORB dilakukan dengan mengubah \textit{binary test} yang dilakukan. \textit{Binary test} pada ORB dilakukan dengan membandingkan nilai total \textit{pixel} dari dua daerah berukuran $5\times5$ dalam daerah $31\times31$ yang digunakan untuk menghitung \textit{descriptor}. Penghitungan nilai total pada daerah $5\times5$ dilakukan dengan menggunakan \textit{Integral Image} untuk mempercepat proses. 
 
 \textit{Binary test} pada ORB dilakukan sebanyak 256 kali untuk menghasilkan 256 elemen untuk vektor. ORB menggunakan 256 pasangan \textit{binary test} yang sudah ditentukan sebelumnya. Pasangan-pasangan tersebut didapat dari eksperimen yang dilakukan pada~\cite{rublee2011orb}.
 
@@ -427,7 +429,7 @@ Gambar~\ref{fig:jarak_hamming} menunjukkan ilustrasi penghitungan jarak Hamming 
 	\item \texttt{scaleFactor}: rasio pengurangan resolusi pada setiap level \textit{pyramid}.
 	\item \texttt{nlevels}: jumlah tingkatan (\textit{level}) pada \textit{pyramid}.
 	\item \texttt{firstLevel}: tingkat dalam \textit{pyramid} sebagai tempat gambar asli.
-	\item \texttt{patchSize}: ukuran daerah yang digunakan untuk membuat deskriptor.
+	\item \texttt{patchSize}: ukuran daerah yang digunakan untuk membuat \textit{descriptor}.
 \end{itemize}
 
 Objek ORB tersebut lalu dapat digunakan untuk mendeteksi fitur lokal dalam gambar dengan menggunakan fungsi \texttt{detectAndCompute}.Fungsi \texttt{detectAndCompute} menerima beberapa parameter berikut:
@@ -436,7 +438,7 @@ Objek ORB tersebut lalu dapat digunakan untuk mendeteksi fitur lokal dalam gamba
 	\item \texttt{mask}: \textit{array} 2 dimensi dengan ukuran yang sama dengan gambar, menentukan \textit{pixel} mana yang digunakan dan yang tidak.
 \end{itemize}
 
-Fungsi tersebut menghasilkan \textit{tuple} berisi objek \textit{keypoint} dan array vektor deskriptor untuk tiap objek \textit{keypoint}. Setiap vektor merupakan vektor berisi bilangan biner berjumlah 256 elemen. Objek \textit{keypoint} memiliki atribut sebagai berikut:
+Fungsi tersebut menghasilkan \textit{tuple} berisi objek \textit{keypoint} dan array vektor \textit{descriptor} untuk tiap objek \textit{keypoint}. Setiap vektor merupakan vektor berisi bilangan biner berjumlah 256 elemen. Objek \textit{keypoint} memiliki atribut sebagai berikut:
 \begin{itemize}
 	\item \textbf{pt}: atribut ini memiliki dua buah atribut \textbf{x} dan \textbf{y} yang menunjukkan koordinat dari \textit{keypoint}.
 	\item \textbf{size}: diameter daerah di sekitar \textit{keypoint} yang diperiksa.
@@ -446,7 +448,7 @@ Fungsi tersebut menghasilkan \textit{tuple} berisi objek \textit{keypoint} dan a
 
 \section{BSIS (Best Score Increasing Subsequence)}
 \label{sec:bsis}
-Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor deskriptornya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap pasangan lain di sekitarnya (contoh dapat dilihat pada Gambar~\ref{fig:geo_ver} di \ref{sec:oir}). BSIS~\cite{kusuma2019geometric} adalah salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris. 
+Pada tahapan OIR (lihat~\ref{sec:oir}) sebuah pasangan fitur lokal perlu untuk memiliki sifat yang mirip (dilihat dari vektor \textit{descriptor}nya) dan juga konsisten secara geometris. Pasangan yang konsisten secara geometris adalah pasangan yang memiliki posisi spasial yang konsisten terhadap pasangan lain di sekitarnya (contoh dapat dilihat pada Gambar~\ref{fig:geo_ver} di \ref{sec:oir}). BSIS~\cite{kusuma2019geometric} adalah salah satu metode yang dapat digunakan untuk menentukan apakah pasangan fitur lokal bersifat konsisten secara geometris. 
 
 BSIS merupakan modifikasi metode WLIS~\cite{kusuma2012appearance} yang merupakan implementasi dari OIR. Modifikasi terdapat pada tahap \textit{Pairing}, \textit{Verification}, dan \textit{Scoring}. 
 
@@ -454,7 +456,7 @@ Tahapan dari BSIS dilakukan setelah fitur lokal telah diekstrak dari gambar \tex
 
 \subsection{Pairing}
 \label{subsec:bsis_pairing}
-Pada tahap awal setiap fitur lokal pada gambar \textit{query} akan dicari $N$ fitur lokal dari gambar \textit{training} yang nilai kemiripan vektor deskriptornya paling tinggi. Pencarian $N$ pasangan paling mirip dilakukan dengan menggunakan KD-Tree (lihat~\ref{sec:kdtree}) untuk mempercepat waktu komputasi. Pasangan-pasangan ini akan memiliki sebuah skor kemiripan yang dihitung dari vektor deskriptor kedua fitur lokal. Tidak semua dari $N$ pasangan paling mirip akan digunakan dalam proses BSIS. 
+Pada tahap awal setiap fitur lokal pada gambar \textit{query} akan dicari $N$ fitur lokal dari gambar \textit{training} yang nilai kemiripan vektor \textit{descriptor}nya paling tinggi. Pencarian $N$ pasangan paling mirip dilakukan dengan menggunakan KD-Tree (lihat~\ref{sec:kdtree}) untuk mempercepat waktu komputasi. Pasangan-pasangan ini akan memiliki sebuah skor kemiripan yang dihitung dari vektor \textit{descriptor} kedua fitur lokal. Tidak semua dari $N$ pasangan paling mirip akan digunakan dalam proses BSIS. 
 
 Untuk setiap fitur lokal, BSIS hanya akan mengambil beberapa pasangan yang benar-benar mirip atau paling berpeluang menjadi pasangan yang benar. Pasangan yang benar-benar mirip pada BSIS adalah pasangan yang nilai kemiripannya tinggi dan memiliki perbedaan yang cukup jauh dengan nilai kemiripan pasangan lain. 
 
@@ -533,7 +535,7 @@ Setelah terbentuk pohon dari semua vektor pada \textit{dataset}, pohon tersebut 
 \end{enumerate}
 
 \section{Locality-Sensitive Hashing}
-\textit{Locality Sensitive Hashing} (LSH) adalah sebuah teknik yang dapat digunakan untuk mencari tetangga terdekat dari sebuah vektor biner. LSH dapat mencari tetangga terdekat dengan menggunakan teknik \textit{hashing}. Teknik \textit{Hashing} sendiri merupakan teknik untuk mengubah sebuah nilai awal menjadi sebuah nilai \textit{hash} yang memiliki format tertentu dengan menggunakan sebuah fungsi. Pada teknik \textit{Hashing} nilai awal yang berbeda akan menghasilkan nilai hasil \textit{hash} yang berbeda juga. Teknik \textit{Hashing} ini biasa digunakan untuk memberi indeks dari kumpulan data, sehingga dapat mempermudah pencarian suatu data tertentu.
+Isi subbab ini diambil dari \cite{anand2011mining}. \textit{Locality Sensitive Hashing} (LSH) adalah sebuah teknik yang dapat digunakan untuk mencari tetangga terdekat dari sebuah vektor biner. LSH dapat mencari tetangga terdekat dengan menggunakan teknik \textit{hashing}. Teknik \textit{Hashing} sendiri merupakan teknik untuk mengubah sebuah nilai awal menjadi sebuah nilai \textit{hash} yang memiliki format tertentu dengan menggunakan sebuah fungsi. Pada teknik \textit{Hashing} nilai awal yang berbeda akan menghasilkan nilai hasil \textit{hash} yang berbeda juga. Teknik \textit{Hashing} ini biasa digunakan untuk memberi indeks dari kumpulan data, sehingga dapat mempermudah pencarian suatu data tertentu.
 
 Teknik \textit{Hashing} pada umumnya hanya mementingkan bahwa nilai awal yang berbeda menghasilkan nilai \textit{hash} yang berbeda. Nilai yang awalnya mirip atau berdekatan belum tentu akan menghasilkan nilai \textit{hash} yang mirip juga. Teknik LSH melakukan \textit{hashing} dengan cara yang berbeda dengan teknik \textit{hashing} pada umumnya. Pada LSH nilai awal yang mirip akan menghasilkan nilai hasil \textit{hash} yang mirip juga. Sifat ini membuat nilai hasil \textit{hash} yang memiliki dimensi lebih kecil dapat digunakan untuk mencari pasangan yang mirip dengan lebih efektif.
 
@@ -550,7 +552,7 @@ Dalam pencarian tetangga terdekat LSH akan terlebih dahulu membuat $n$ buah \tex
 
 Gambar~\ref{fig:lsh_banding_bucket} menunjukkan 4 buah vektor $A$, $B$, $C$, dan $D$ yang semuanya berada dalam sebuah \textit{dataset}. Keempat vektor tersebut memiliki panjang 12 bit dan dilakukan proses \textit{banding} dengan panjang \textit{band} 3. Proses \textit{banding} menghasilkan 4 \textit{band} berukuran 3 bit untuk tiap vektor. Empat buah \textit{bucket} dibuat sesuai dengan jumlah \textit{band} dalam setiap vektor. Setiap \textit{bucket} menyimpan set untuk setiap kombinasi \textit{bitstring} yang sesuai dengan panjang \textit{band}, pada kasus ini maka diperlukan sebanyak $2^{3}$ buah set. 
 
-Sebuah vektor $q$ yang ingin dicari tetangga terdekatnya akan terlebih dahulu dibagi menjadi \textit{band} dengan panjang yang sama dengan vektor-vektor di \textit{dataset}. Untuk setiap \textit{band} akan dicari dari \textit{bucket} yang bersesuaian vektor mana saja yang memiliki jarak $\leq j$. Vektor-vektor dengan \textit{band} yang sama atau mirip dengan \textit{band} vektor $q$ akan ditandai sebagai kandidat tetangga terdekat. Semakin banyak \textit{band} dari sebuah vektor yang bersesuaian dengan \textit{band} dari vektor $q$ maka semakin besar kemungkinan vektor tersebut untuk menjadi tetangga yang terdekat. Dengan menggunakan cara ini LSH dapat menyaring banyak kandidat yang memiliki kemungkinan kecil untuk menjadi tetangga terdekat, sehingga mempercepat proses pencarian.
+Sebuah vektor $q$ yang ingin dicari tetangga terdekatnya akan terlebih dahulu dibagi menjadi \textit{band} dengan panjang yang sama dengan vektor-vektor di \textit{dataset}. Untuk setiap \textit{band} akan dicari dari \textit{bucket} yang bersesuaian vektor mana saja yang memiliki jarak $\leq j$. Vektor-vektor dengan \textit{band} yang sama atau mirip dengan \textit{band} vektor $q$ akan ditandai sebagai kandidat tetangga terdekat. Semakin banyak \textit{band} dari sebuah vektor yang bersesuaian dengan \textit{band} dari vektor $q$ maka semakin besar kemungkinan vektor tersebut untuk menjadi tetangga yang terdekat. Dengan menggunakan cara ini LSH dapat menyaring banyak kandidat yang memiliki kemungkinan kecil untuk menjadi tetangga terdekat, sehingga dapat mempercepat proses pencarian.
 
 %LSH akan membandingkan sebuah vektor \textit{query} dengan vektor-vektor lain di \textit{dataset} dan menghitung jumlah \textit{band} yang sama untuk tiap vektor (\textit{collision}). Vektor-vektor tersebut kemudian akan dimasukkan ke dalam \textit{hash table} sesuai dengan \textit{band} di mana terjadi \textit{collision}. Dengan menggunakan \textit{hash table} tersebut LSH dapat membatasi jumlah vektor yang perlu diperiksa jaraknya dengan mengambil vektor yang muncul dalam beberapa \textit{hash table} saja. Contoh penggunaan teknik \textit{banding} LSH untuk mencari tetangga terdekat dari sebuah vektor dapat dilihat pada Gambar~\ref{fig:lsh_band}.
 %
@@ -567,7 +569,7 @@ Sebuah vektor $q$ yang ingin dicari tetangga terdekatnya akan terlebih dahulu di
 
 \section{Agglomerative Clustering}
 \label{sec:clustering}
-\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek-objek pada \textit{dataset}  menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek-objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda. Salah satu contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative Clustering}. 
+\textit{Clustering} adalah salah satu teknik pengolahan data dalam \textit{machine learning}. Pada dasarnya \textit{clustering} akan membagi objek-objek pada \textit{dataset}  menjadi beberapa kelompok (\textit{cluster}) berdasarkan sifatnya. Objek-objek yang memiliki sifat mirip akan masuk kedalam satu kelompok. Sebuah pembagian \textit{cluster} yang baik adalah di mana setiap objek dalam \textit{cluster} memiliki sifat yang mirip dan antar \textit{cluster} memiliki sifat yang sangat berbeda. Salah satu contoh metode \textit{clustering} yang ada adalah \textit{Agglomerative Clustering}~\cite{han2011data}. 
 
 Teknik \textit{Agglomerative Clustering} adalah salah satu teknik \textit{clustering} yang berbasis hierarki (\textit{hierarchical}). Teknik ini membentuk \textit{cluster} dengan menyusun hierarki atau tingkatan antar objek berdasarkan kemiripannya. Pasangan objek dengan jarak yang paling kecil akan berada di tingkatan terendah, jarak terkecil selanjutnya akan berada di tingkat atasnya, dan seterusnya hingga semua objek telah tercakup. 
 

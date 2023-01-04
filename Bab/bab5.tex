@@ -1,30 +1,56 @@
-\chapter{Pengujian}
+\chapter{Implementasi \& Pengujian}
 
-\section{Pengujian Perangkat Lunak BSIS}
+\section{Implementasi Perangkat Lunak BSIS}
 Berdasarkan rancangan pada \ref{sec:rancangan_perangkat_lunak_bsis} telah dibuat sebuah perangkat lunak yang dapat melakukan identifikasi dari suatu gambar masukkan dengan menggunakan teknik BSIS. Perangkat lunak yang dibuat berbentuk aplikasi berbasis \textit{web} yang terbagi ke \textit{server} dan \textit{client}. Bagian \textit{server} dibuat dengan menggunakan \textit{framework} Flask di Python. \textit{Server} akan menerima \textit{request} HTTP dari \textit{client} dan melakukan identifikasi pada gambar masukkan dengan menggunakan parameter-parameter yang diberikan. Bagian \textit{client} dibuat dengan bentuk aplikasi \textit{web} berbasis React. Tampilan halaman \textit{client} saat aplikasi pertama dijalankan dapat dilihat pada Gambar~\ref{fig:client_1}.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{client_1.jpeg}
+	\includegraphics[width=\textwidth]{client_1.png}
 	\caption{Tampilan awal aplikasi perangkat lunak BSIS.}
 	\label{fig:client_1}
 \end{figure}
 
-Pada bagian kiri halaman terdapat panel untuk \textit{input}. Bagian paling atas merupakan tempat untuk memilih gambar \textit{input}, saat tombol ``\textit{Choose file}'' ditekan akan membuka sebuah \textit{window} baru untuk memilih \textit{file} dari \textit{directory} lokal. Setelah dipilih gambar akan ditampilkan pada bagian kotak gambar. Tampilan aplikasi saat telah memilih gambar dapat dilihat pada Gambar~\ref{fig:client_2}. 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{client_2.jpeg}
-	\caption{Tampilan aplikasi perangkat lunak BSIS setelah memilih gambar \textit{input}.}
-	\label{fig:client_2}
-\end{figure}
+Pada Gambar~\ref{fig:client_1} terlihat bahwa pada perangkat lunak terdapat lima bagian seperti yang ditunjukkan dengan kotak hitam. Masing-masing bagian dalam perangkat lunak memiliki fungsi sebagai berikut:
+\begin{enumerate}
+	\item A \\
+	Bagian ini berguna untuk memilih gambar \textit{input} yang ingin diidentifikasi. Bagian terdiri dari kotak gambar dan tombol ``\textit{Choose file}''. Saat tombol ``\textit{Choose file}'' ditekan maka akan membuka \textit{window} untuk memilih gambar dari \textit{directory} lokal, gambar yang dipilih lalu akan ditampilkan di kotak gambar. 
+	\item B \\
+	Bagian ini berguna untuk memilih model yang ingin digunakan untuk melakukan identifikasi gambar. Bagian merupakan \textit{dropdown} yang ketika ditekan akan menampilkan daftar model yang dapat digunakan.
+	\item C \\
+	Bagian ini merupakan \textit{slider} yang berguna untuk mengatur \textit{threshold} untuk nilai keunikan (``\textit{Min. Uniqueness}'') dan nilai konsistensi (``\textit{Min. Consistency}'').
+	\item D \\
+	Tombol yang berguna untuk melakukan identifikasi pada gambar dengan menggunakan parameter (model dan nilai-nilai \textit{threshold}) yang telah ditentukan. Tombol ini hanya dapat digunakan ketika gambar sudah dipilih.
+	\item E \\
+	Bagian ini merupakan bagian di mana akan ditampilkan hasil identifikasi serta gambar pemasangan \textit{keypoint}. Bagian atas menampilkan gambar pemasangan gambar serta di bawahnya ditampilkan daftar 10 pasangan gambar yang memiliki nilai total bobot paling tinggi.
+\end{enumerate}
 
-Bagian di bawah tombol ``Choose file'' merupakan sebuah \textit{dropdown} yang berisi daftar model \texttt{ClusterModel} (lihat \ref{sec:clustermodel_class}) yang dapat digunakan. Di bawah \textit{dropdown} pemilihan model terdapat dua \textit{slider} yang berguna untuk menetukan \textit{threshold} untuk nilai konsistensi dan nilai keunikan. Setelah dipilih gambar \textit{input} dan model yang akan digunakan serta telah ditentukan \textit{threshold} untuk nilai konsistensi dan keunikan maka dapat dilakukan identifikasi dengan menekan tombol ``\textit{Identify}'' di bawah \textit{slider} nilai keunikan. Setelah ditekan tombol ``\textit{Identify}'' maka di bagian kanan akan ditampilkan hasil pemasangan \textit{keypoint} dari gambar \textit{input} dengan gambar di \textit{dataset} yang memiliki nilai total bobot dari BSIS paling tinggi. Tampilan aplikasi setelah dilakukan identifikasi pada gambar \textit{input} dapat dilihat pada Gambar~\ref{fig:client_3}.
+Perangkat lunak dapat digunakan untuk melakukan identifikasi pada sebuah gambar \textit{input} dengan menggunakan metode BSIS. Identifikasi dilakukan dengan menggunakan \textit{file} \texttt{ClusterModel} (lihat  \ref{sec:clustermodel_class}) dan nilai \textit{threshold} untuk konsistensi dan keunikan yang telah ditentukan sebelumnya. Langkah-langkah yang perlu dilakukan untuk melakukan identifikasi pada sebuah gambar adalah sebagai berikut:
+\begin{enumerate}
+	\item Memilih gambar \textit{input} \\
+	Pemilihan gambar \textit{input} dilakukan dengan menekan tombol ``\textit{Choose file}'' (bagian A pada Gambar~\ref{fig:client_1}). Tampilan perangkat lunak setelah memilih gambar \textit{input} dapat dilihat pada Gambar~\ref{fig:client_2}.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{client_2.jpeg}
+		\caption{Tampilan aplikasi perangkat lunak BSIS setelah memilih gambar \textit{input}.}
+		\label{fig:client_2}
+	\end{figure} 
+	\newpage
+	\item Memilih model \\
+	Pemilihan model dilakukan dengan memilih pada \textit{dropdown} di bagian B Gambar~\ref{fig:client_1}. Secara \textit{default} model yang dipilih adalah yang muncul paling pertama pada \textit{dropdown}.
+	\item Menentukan \textit{threshold} \\
+	Pemilihan dilakukan dengan menggeser \textit{slider} di bagian C pada Gambar~\ref{fig:client_1}. Nilai \textit{threshold} untuk konsistensi dan keunikan secara \textit{default} adalah 0.
+	\item Melakukan identifikasi \\
+	Identifikasi dapat dilakukan setelah memilih gambar \textit{input} dengan menekan tombol ``\textit{Identify}'' di bagian D pada Gambar~\ref{fig:client_1}.
+\end{enumerate}
+
+Setelah melakukan langkah-langkah di atas maka perangkat lunak \textit{client} akan mengirim gambar serta parameter (model yang digunakan dan nilai-nilai \textit{threshold}) ke \textit{server} untuk dilakukan identifikasi. Hasil identifikasi dari \textit{server} akan dikirimkan kembali ke \textit{client} dalam bentuk nama gambar, total bobot, serta gambar pemasangan \textit{keypoint}. \textit{Server} akan mengembalikan 10 pasangan gambar dengan nilai total bobot paling tinggi yang dapat ditampilkan di \textit{client}. Tampilan perangkat lunak setelah didapat hasil identifikasi dapat dilihat pada Gambar~\ref{fig:client_3}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{client_3.jpeg}
-	\caption{Tampilan aplikasi perangkat lunak BSIS melakukan identifikasi pada gambar \textit{input}.}
+	\includegraphics[width=\textwidth]{client_3.png}
+	\caption{Tampilan aplikasi perangkat lunak BSIS setelah didapat hasil identifikasi gambar \textit{input}.}
 	\label{fig:client_3}
 \end{figure}
-Pada bagian kanan halaman aplikasi---seperti yang dapat dilihat pada Gambar~\ref{fig:client_3}---terlihat gambar yang menunjukkan pemasangan \textit{keypoint} dari gambar \textit{input} dengan sebuah gambar \textit{dataset}. Pada bagian bawah gambar pemasangan \textit{keypoint} terdapat teks yang menunjukkan nama gambar dan disebelahnya merupakan total bobot pasangan gambar tersebut. Di bawah teks terdapat sebuah \textit{list} yang menunjukkan 10 gambar dari \textit{dataset} yang memiliki nilai total bobot BSIS tertinggi. Setiap \textit{item} dalam \textit{list} dapat ditekan untuk menampilkan pasangan \textit{keypoint} dengan gambar tersebut.
+
+Gambar~\ref{fig:client_3} menunjukkan tampilan perangkat lunak setelah didapat hasil identifikasi gambar dari \textit{server}. Pada bagian A terlihat gambar hasil pemasangan \textit{keypoint} gambar \textit{input} dan gambar \textit{dataset}. Garis-garis yang terlihat pada gambar bagian A merupakan \textit{keypoint-keypoint} yang dipasangkan. Bagian B menunjukkan 10 gambar dengan nilai total bobot paling tinggi, terurut menurun dimulai dari paling kiri atas. Setiap \textit{item} pada bagian B tersebut dapat dipilih untuk ditampilkan gambar pemasangan \textit{keypoint}-nya.
 
 \section{Pengujian Metode Clustering untuk Identifikasi dengan BSIS}
 Pada bab ini akan dilakukan pengujian untuk melihat efek penerapan metode \textit{clustering} untuk menyaring fitur lokal terhadap ketepatan dan waktu proses BSIS. Pengujian yang dilakukan ini akan menggunakan cara yang sama dengan yang ada pada \ref{sec:analisis_bsis} tetapi dengan menggunakan \textit{dataset} dan parameter \textit{threshold} yang berbeda. Pada pengujian ini akan digunakan \textit{dataset} GSV (\ref{subsec:dataset_gsv}).
@@ -36,6 +62,7 @@ Pada pengujian ini penyaringan fitur lokal akan dilakukan menggunakan dua cara. 
 
 Pengujian ini akan dilakukan menggunakan \textit{dataset} GSV dengan dua ukuran gambar yang berbeda sama seperti pada analisis di \ref{sec:analisis_bsis}. Dua ukuran gambar yang digunakan akan dinamakan GSV 400 dan GSV 600, sesuai ukuran sisi terpanjang pada gambar-gambar yang digunakan. Berbeda dengan analisis pada \ref{sec:analisis_bsis}, pada pengujian ini ukuran dari gambar di data \textit{test} akan disesuaikan dengan ukuran gambar yang digunakan pada \textit{dataset}. Pengujian juga akan dilakukan dengan menggunakan dua metode ekstraksi fitur lokal yaitu SIFT dan ORB.
 
+\newpage
 \subsection{Penentuan Threshold dan Hasil Analisis Metode SIFT}
 \subsubsection{GSV 400}
 Sebaran nilai konsistensi dan keunikan untuk \textit{dataset} GSV 400 dapat dilihat pada Gambar~\ref{fig:consistency_gsv400_pengujian_sift} dan Gambar~\ref{fig:uniqueness_gsv400_pengujian_sift}.
@@ -178,14 +205,15 @@ Hasil pada Tabel~\ref{tab:pengujian_sift_gsv400} dan Tabel~\ref{tab:pengujian_si
 Pada pengujian dengan metode ORB ini hanya akan digunakan satu set \textit{threshold}. \textit{Threshold} yang digunakan adalah \textit{threshold} yang didapat dari melihat hasil sebaran nilai konsistensi dan keunikan. Nilai \texttt{threshold} yang didapat dengan melihat hasilnya pada gambar seperti pada \ref{sec:analisis_threshold} tidak digunakan pada pengujian ini, karena pada penelitian ini belum dilakukan analisis \textit{threshold} dengan menggunakan metode ORB. 
 
 \subsubsection{GSV 400}
-Sebaran nilai konsistensi dan keunikan untuk \textit{dataset} GSV 400 dapat dilihat pada Gambar~\ref{fig:consistency_gsv400_pengujian_orb} dan Gambar~\ref{fig:uniqueness_gsv400_pengujian_orb}.
+Sebaran konsistensi dan keunikan \textit{dataset} GSV 400 dapat dilihat pada Gambar~\ref{fig:consistency_gsv400_pengujian_orb} dan Gambar~\ref{fig:uniqueness_gsv400_pengujian_orb}.
+\vspace{-20pt}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{consistency_gsv400_orb.png}
 	\caption{Histogram sebaran nilai keunikan pada \textit{dataset} GSV 400.}
 	\label{fig:consistency_gsv400_pengujian_orb}
 \end{figure}
-
+\vspace{-10pt}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{uniqueness_gsv400_orb.png}

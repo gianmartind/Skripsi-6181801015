@@ -4,7 +4,7 @@
 Secara garis besar program terbagi menjadi dua proses yang saling terhubung. Proses pertama merupakan proses \textit{clustering} untuk membuat model. Proses \textit{clustering} menerima \textit{dataset} dalam bentuk \textit{file} gambar, melakukan ekstraksi fitur lokal dari gambar-gambar tersebut dan membuat model. Proses yang kedua adalah proses OIR yang dilakukan dengan menggunakan metode BSIS. Proses kedua ini menerima \textit{file} model yang dihasilkan oleh proses \textit{clustering} dan menggunakan model tersebut untuk dapat melakukan pengenalan terhadap gambar masukan. Rancangan alur program ini dapat dilihat pada diagram di Gambar~\ref{fig:rancangan_alur_program}.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{rancangan\_alur\_program.png}
+	\includegraphics[width=.8\textwidth]{rancangan\_alur\_program.png}
 	\caption{Rancangan alur program pada penelitian ini.}
 	\label{fig:rancangan_alur_program}
 \end{figure}
@@ -142,7 +142,7 @@ Kelas ini terdiri dari kelas \texttt{ClusterModel} dan tiga \textit{inner-class}
 \begin{itemize}
 	\item \texttt{Meta}: menyimpan informasi dasar tentang model yang dihasilkan. Informasi yang disimpan meliputi jumlah data, ukuran maksimum gambar, tipe deskriptor, nama-nama kelas gambar, dan jumlah gambar tiap kelas. 
 	\item \texttt{Descriptor}: merupakan enumerasi yang menyimpan dua tipe deskriptor yang dapat digunakan. Tipe deskriptor ini akan berpengaruh pada format data masukan saat membuat objek \texttt{ClusterModel}.
-	\item \texttt{LocalFeature}: menyimpan keluaran fungsi \texttt{get\_local\_features} dari  \texttt{ClusterModel} dengan format tertentu. Format ini merupakan format yang digunakan sebagai data masukan pada kelas BSIS.
+	\item \texttt{LocalFeature}: menyimpan keluaran fungsi \texttt{get\_local\_features} dari  \texttt{ClusterModel} dengan format tertentu. Format ini merupakan format data masukan pada kelas BSIS.
 \end{itemize}
 Kelas \texttt{ClusterModel} sendiri memiliki beberapa fungsi penting sebagai berikut:
 \begin{itemize}
@@ -168,16 +168,18 @@ Kelas \texttt{ClusterModel} sendiri memiliki beberapa fungsi penting sebagai ber
 
 \section{Rancangan Kelas Util}
 Kelas \textit{Util} berisi fungsi-fungsi pembantu yang digunakan pada kelas-kelas lainnya. Fungsi-fungsi ini berguna untuk mempermudah proses komputasi saat menggunakan kelas lainnya dan saat melakukan analisis. Fungsi-fungsi dalam kelas \textit{Util} dapat dilihat pada diagram di Gambar~\ref{fig:util_class}.
+\vspace{-5pt}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{util\_class.png}
 	\caption{Diagram kelas \texttt{Util}}
 	\label{fig:util_class}
 \end{figure}
+\vspace{-10pt}
 Beberapa fungsi penting dari kelas \texttt{Util} adalah sebagai berikut:
 \begin{enumerate}
 	\item \texttt{get\_image} \\
-	Fungsi untuk memuat gambar dari \textit{file}. Parameter \texttt{bw} menyatakan apakah gambar yang dimuat akan diubah menjadi format \textit{grayscale}. Sedangkan untuk \texttt{maxwidth} dan \texttt{maxheight} digunakan untuk mengatur ukuran dari gambar.
+	Fungsi untuk memuat gambar dari \textit{file}. Parameter \texttt{bw} menyatakan apakah gambar yang dimuat akan diubah menjadi format \textit{grayscale}. Parameter \texttt{maxwidth} dan \texttt{maxheight} digunakan untuk mengatur ukuran dari gambar.
 	\item \texttt{get\_all\_image} \\
 	Fungsi untuk memuat semua gambar dalam suatu \textit{folder}. Fungsi ini memanggil fungsi \texttt{get\_image} untuk semua \textit{file} gambar dalam \textit{folder} di \texttt{directory}.
 	\item \texttt{get\_dataset} \\
@@ -222,7 +224,7 @@ Langkah-langkah untuk melakukan identifikasi gambar menggunakan BSIS setelah dib
 	\begin{itemize}
 		\item \texttt{num\_rotation}: jumlah rotasi gambar \textit{query}.
 		\item \texttt{algorithm}: algoritma yang digunakan untuk mencari pasangan-pasangan terdekat.
-		\item \texttt{k}: jumlah maksimum pasangan terdekat yang ingin dicari untuk tiap \textit{keypoint} di gambar \textit{query}.
+		\item \texttt{k}: maksimum pasangan terdekat yang ingin dicari untuk tiap \textit{keypoint} di gambar \textit{query}.
 		\item \texttt{t}: menentukan kelipatan standar deviasi yang digunakan untuk menghitung \textit{threshold} dalam tahap \textit{pairing} BSIS.
 	\end{itemize}
 \end{enumerate} 

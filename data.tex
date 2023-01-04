@@ -217,7 +217,7 @@
 % Petunjuk: hilangkan tanda << & >>, dan isi sesuai dengan data anda
 %=============================================================================
 \namanpm{Gian Martin Dwibudi}{6181801015}
-\tanggal{31}{12}{2022}         %isi bulan dengan angka
+\tanggal{3}{1}{2023}         %isi bulan dengan angka
 \pembimbing{\KDH}{<<pembimbing pendamping/2>>}    
 \penguji{<<penguji 1>>}{<<penguji 2>>} 
 %=============================================================================
@@ -251,13 +251,25 @@
 \abstrakINA{
 \textit{Point of Interest} (POI) merupakan sebuah lokasi geografis yang memiliki fungsi tertentu dan dikenali orang. Beberapa POI memiliki bagian penting yang unik terhadap POI tersebut. Bagian penting tersebut biasanya berupa logo atau bagian lainnya yang mudah terlihat dan berbeda dari bagian-bagian dari POI lain. Bagian penting dari POI tersebut dapat digunakan untuk mengenali sebuah POI dengan mudah, seseorang dapat mengenali sebuah POI hanya dengan melihat bagian tersebut saja.
 
-Komputer dapat mengenali POI dari sebuah gambar dengan menggunakan fitur lokal dalam gambar. Salah satu teknik yang dapat digunakan untuk mengenali gambar adalah OIR. Teknik OIR mengenali gambar dengan memasangkan fitur lokal dari gambar masukkan dan gambar-gambar di \textit{dataset}. Sebuah gambar dapat mengandung sangat banyak fitur lokal, sehingga proses pemasangan dapat memakan waktu yang sangat lama. Proses dapat dipercepat dengan menggunakan hanya fitur lokal dari bagian POI yang penting saja.
+Komputer dapat mengenali POI dari sebuah gambar dengan menggunakan fitur lokal dalam gambar. Salah satu teknik yang dapat digunakan untuk mengenali gambar adalah (\textit{Object Instance Recognition}) OIR. Teknik OIR mengenali gambar dengan memasangkan fitur lokal dari gambar tersebut dan gambar-gambar di \textit{dataset}. Sebuah gambar dapat mengandung sangat banyak fitur lokal, sehingga proses pemasangan dapat memakan waktu yang sangat lama. Proses dapat dipercepat dengan menggunakan hanya fitur lokal dari bagian POI yang penting saja.
 
-Penelitian ini bertujuan untuk menyaring fitur lokal dan mengambil yang hanya berasal dari bagian penting POI saja. Penyaringan fitur lokal berdasarkan pada anggapan bahwa bagian penting dari POI adalah bagian yang sifatnya konsisten dan unik terhadap POI tersebut. Bagian penting tersebut bersifat konsisten dan unik maka akan menghasilkan fitur lokal yang sifatnya konsisten dan unik juga. Fitur lokal yang konsisten dan unik dapat ditentukan dengan menggunakan metode \textit{clustering}.
+Penelitian ini bertujuan untuk menyediakan cara menyaring fitur lokal dan mengambil yang hanya berasal dari bagian penting POI saja. Penyaringan fitur lokal berdasarkan pada asumsi bahwa bagian penting dari POI adalah bagian yang sifatnya konsisten dan unik terhadap POI tersebut. Bagian penting tersebut bersifat konsisten dan unik maka akan menghasilkan fitur lokal yang sifatnya konsisten dan unik juga. Fitur lokal yang konsisten dan unik dapat ditentukan dengan menggunakan metode \textit{clustering}.
 
-Metode \textit{clustering} digunakan untuk membagi fitur-fitur lokal menjadi kelompok-kelompok. Kelompok-kelompok tersebut akan digunakan untuk menentukan tingkat kekonsistenan dan keunikan fitur-fitur lokal anggotanya. 
+Metode \textit{clustering} digunakan untuk membagi fitur-fitur lokal menjadi kelompok-kelompok. Kelompok-kelompok tersebut akan digunakan untuk menentukan tingkat kekonsistenan dan keunikan fitur-fitur lokal anggotanya. Tingkat kekonsistenan dan tingkat keunikan tersebut lalu digunakan untuk menyaring fitur lokal yang digunakan dalam OIR. 
+
+Penyaringan fitur lokal berdasarkan nilai konsistensi dan nilai keunikan pada penelitian ini dapat mengurangi waktu yang diperlukan untuk melakukan OIR. Pada \textit{dataset} yang digunakan di penelitian waktu proses OIR dapat berkurang hingga 73.2\% dengan akurasi yang hanya menurun sebesar 10\%.
 }
-\abstrakENG{<<Tuliskan abstrak anda di sini, dalam bahasa Inggris>>} 
+\abstrakENG{
+Point of Interest (POI) is a geographical location with certain usage or function and mostly recognized by people. Some POI have an important part in its shape that is unique to that POI. That important part may be a logo or another part that stands out and can be easily distinguishable from the parts of other POI. The important part of a POI can be used to identify a POI, one can easily identify a POI just by looking at that important part.
+
+Computer can identify a POI from an image with the help of local features in the image. One of the technique to idenfity an image is Object Instance Recognition (OIR). OIR can identify an image by matching local features from that image and local features from images in the dataset. An image can contains tons of local features that may cause feature matching to take a long time. In such cases, the feature matching process can be sped up by filtering the local features and take only the important ones.
+
+This research aims to provide a way to filter local features and take only the important local features from a POI. The filtering is based on the assumption that an important parts of a POI are the parts that are both consistent and unique to that POI. The important parts being consistent and unique, would also produce local features that are consistent and unique. The consistency and uniqueness of a local feature can be determined using clustering.
+
+Clustering method can be used to group local features into several groups. The groups can then be used to determine the consistency value and uniqueness value of its member. The consistency value and the uniqueness value will then be used to filter local features in the OIR dataset.
+
+The filtering of local features by the consistency value and the uniqueness value in this research can reduce OIR processing time. In the dataset used in this research OIR processing time goes down by up to 73.2\% with only 10\% lower accuracy.
+}  
 %=============================================================================
 
 %_____________________________________________________________________________
@@ -270,7 +282,7 @@ Metode \textit{clustering} digunakan untuk membagi fitur-fitur lokal menjadi kel
 % Petunjuk: hilangkan tanda << & >>, dan isi sesuai dengan data anda.
 %=============================================================================
 \kunciINA{\textit{Point of interest}, fitur lokal, OIR, \textit{clustering}, konsistensi, keunikan}
-\kunciENG{<<Tuliskan di sini kata-kata kunci yang anda gunakan, dalam bahasa Inggris>>}
+\kunciENG{Point of interest, local feature, OIR, clustering, consistency, uniqueness}
 %=============================================================================
 
 %_____________________________________________________________________________

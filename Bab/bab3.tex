@@ -8,7 +8,7 @@ Seperti telah dijelaskan sebelumnya terdapat beberapa POI yang memiliki logo dan
 Analisis pada tahap ini merupakan analisis tahap awal yang dilakukan untuk menguji fitur-fitur dari POI. Saat ini belum dilakukan \textit{clustering} untuk memisahkan fitur lokal yang unik dan konsisten dengan yang tidak. Analisis juga tidak menggunakan metode OIR BSIS.
 
 \subsection{Ide Dasar Analisis}
-Analisis ini bertujuan untuk melihat bagian mana dari sebuah POI yang dapat memberikan fitur yang cukup kuat jika digunakan untuk melakukan pengenalan. Untuk menguji hal tersebut akan dilakukan pemasangan fitur lokal dari dua gambar POI. Kedua gambar tersebut merupakan gambar dari POI yang sama diambil dari sudut pengambilan yang berbeda dan pada waktu yang berbeda. 
+Analisis ini bertujuan untuk melihat bagian mana dari sebuah POI yang dapat memberikan fitur yang cukup kuat jika digunakan untuk melakukan pengenalan. Untuk menguji hal tersebut akan dilakukan pemasangan fitur lokal dari dua gambar POI. Kedua gambar POI yang dipasangkan merupakan gambar dari POI sama diambil dari sudut pengambilan berbeda dan pada waktu yang berbeda. 
 
 Hasil pemasangan fitur lokal tersebut lalu disaring berdasarkan tingkat kekuatan pasangannya. Sebuah pasangan fitur lokal $q$ dan $t$, di mana $t$ merupakan fitur lokal paling mirip dengan $q$ dikatakan kuat jika nilai kemiripan $q$ dan $t$ jauh lebih tinggi dibanding dengan nilai kemiripan $q$ dengan fitur lokal $r$, di mana $r$ merupakan fitur lokal kedua termirip dengan $q$. Pencarian pasangan fitur lokal yang kuat tersebut diimplementasikan dengan melakukan \textit{Lowe's Ratio Test}, seperti yang telah dijelaskan pada \ref{sec:oir}. Setelah didapatkan pasangan-pasangan fitur lokal yang kuat, pasangan-pasangan tersebut akan ditampilkan dalam gambar untuk melihat dari objek mana dalam POI pasangan-pasangan tersebut berasal. 
 
@@ -18,7 +18,7 @@ Untuk melakukan implementasi dari ide di atas dilakukan langkah-langkah analisis
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.5]{tahapan\_analisis\_poi.png}
-	\caption{\textit{Flowchart} tahapan analisis pengenalan POI.}
+	\caption{Tahapan analisis pengenalan POI.}
 	\label{fig:tahapan_analisis_poi}
 \end{figure}
 
@@ -26,6 +26,7 @@ Langkah-langkah pada Gambar~\ref{fig:tahapan_analisis_poi} secara rinci adalah s
 \begin{enumerate}
 	\item \textit{Load} Gambar \\
 	Pada langkah ini digunakan dua buah gambar untuk analisis yang masing-masing diberi nama Gambar $Q$ dan Gambar $T$. Gambar $Q$ dan $T$ merupakan gambar dari sebuah POI sama yang diambil dari sudut dan waktu pengambilan berbeda. Waktu dan sudut pengambilan berbeda tersebut menyebabkan ada objek dalam gambar yang terlihat di kedua gambar dan ada yang hanya terlihat di satu gambar saja. Kedua gambar yang digunakan tersebut dapat dilihat pada Gambar~\ref{fig:analisis_asus}.
+	\vspace{-8pt}
 	\begin{figure}[H]
 		\centering
 		\includegraphics[scale=0.55]{asus\_1\_bw.jpg}
@@ -33,6 +34,7 @@ Langkah-langkah pada Gambar~\ref{fig:tahapan_analisis_poi} secara rinci adalah s
 		\caption{Dua gambar yang digunakan untuk melakukan analisis pengenalan POI dengan logo. Gambar yang di sebelah kiri adalah Gambar $Q$ dan yang di sebelah kanan adalah Gambar $T$.}
 		\label{fig:analisis_asus}
 	\end{figure}
+	\vspace{-8pt}
 	\item Ekstraksi Fitur Lokal \\
 	Untuk masing-masing Gambar $Q$ dan $T$ dilakukan ekstraksi fitur lokalnya.
 	\item Pemasangan Fitur Lokal \\
@@ -61,12 +63,12 @@ Langkah-langkah tahapan analisis yang dijelaskan pada subbab sebelumnya dilakuka
 Setelah dilakukan semua tahapan implementasi pada \ref{subsec:tahapan_implementasi_analisis_poi} maka didapatkan hasil sebuah gambar yang menunjukkan pasangan \textit{keypoint} yang kuat. Gambar hasil tersebut dapat dilihat pada Gambar~\ref{fig:keypoint_matches}. Gambar tersebut menunjukkan Gambar $Q$ dengan Gambar $T$ dengan lingkaran-lingkaran kecil serta garis merupakan pasangan \textit{keypoint} dari kedua gambar yang telah tersaring berdasarkan kekuatan pasangannya.
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.5]{img\_matches2.png}
+	\includegraphics[width=\textwidth]{img\_matches2.png}
 	\caption{Pasangan \textit{keypoint} dari Gambar $Q$ dan Gambar $T$ yang kuat.}
 	\label{fig:keypoint_matches}
 \end{figure}
 
-Dapat dilihat dari Gambar~\ref{fig:keypoint_matches} bahwa pasangan-pasangan \textit{keypoint} yang kuat semua berasal dari bagian POI yang merupakan logo dan bagian konsisten. Baik logo yang berada di bagian atas POI (ditunjukkan dengan lingkaran biru) maupun logo yang berada di bagian tembok belakang (lingkaran merah) dan logo yang berada di salah satu meja (lingkaran hijau). Berdasarkan analisis yang telah dilakukan untuk saat ini dapat diambil kesimpulan bahwa bagian logo dari sebuah POI dapat memberikan fitur yang kuat untuk digunakan dalam melakukan pengenalan POI. 
+Dapat dilihat dari Gambar~\ref{fig:keypoint_matches} bahwa pasangan-pasangan \textit{keypoint} yang kuat semua berasal dari bagian POI yang merupakan logo dan bagian konsisten. Pasangan -pasangan \textit{keypoint} tersebut berasal dari logo, baik yang berada di bagian atas POI (ditunjukkan dengan lingkaran biru) maupun logo yang berada di bagian tembok belakang (lingkaran merah) dan logo yang berada di salah satu meja (lingkaran hijau). Berdasarkan analisis yang telah dilakukan untuk saat ini dapat diambil kesimpulan bahwa bagian logo dari sebuah POI dapat memberikan fitur yang kuat untuk digunakan dalam melakukan pengenalan POI. 
 
 Berdasarkan pada ide bahwa logo dan bagian konsisten dari POI memberikan fitur yang kuat, pengenalan POI yang dilakukan dengan algoritma OIR seharusnya dapat ditingkatkan efektifitasnya dengan melakukan OIR hanya menggunakan fitur-fitur yang kuat tersebut. OIR dengan hanya menggunakan fitur-fitur yang kuat tersebut juga dapat diproses dengan waktu yang lebih cepat karena fitur lokal yang diproses lebih sedikit. 
 
@@ -76,7 +78,7 @@ Berdasarkan dari analisis pada \ref{sec:analisis_poi} diperkirakan bahwa pengena
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\textwidth]{objek_konsisten.png}
+	\includegraphics[width=.8\textwidth]{objek_konsisten.png}
 	\caption{Beberapa sudut pengambilan dan waktu pengambilan berbeda dari suatu POI yang sama.}
 	\label{fig:objek_konsisten}
 \end{figure}
@@ -96,10 +98,10 @@ Bagian POI yang merupakan logo dan objek yang konsisten tersebut tidak selalu da
 Fitur lokal yang memiliki sifat konsisten dan unik tersebut dapat dicari dengan menggunakan teknik \textit{clustering}. Fitur lokal yang didapat dari gambar-gambar yang berbeda tersebut dibagi menjadi beberapa kelompok yang disebut \textit{cluster}. Dari \textit{cluster} yang terbentuk tersebut dicari kelompok mana saja yang sifatnya konsisten dan unik terhadap sebuah POI. 
 
 \section{Dataset yang Digunakan}
-Pada analisis ini ada dua \textit{dataset} berbeda yang digunakan, yaitu \textit{dataset} GSV dan \textit{dataset} SMVS. Masing-masing \textit{dataset} tersebut akan dijelaskan pada subbab-subbab di bawah ini.
+Pada analisis ini ada dua \textit{dataset} berbeda yang digunakan, yaitu \textit{dataset} Google Street View (GSV) dan \textit{dataset} Stanford Mobile Visual Search (SMVS). Masing-masing \textit{dataset} tersebut akan dijelaskan pada subbab-subbab di bawah ini.
 \subsection{Dataset SMVS}
 \label{subsec:dataset_smvs}
-\textit{Dataset} SMVS [\ref{sec:dataset_smvs}] memiliki beberapa kumpulan data yang masing-masing merupakan kumpulan gambar dari benda-benda dengan jenis yang sama. Daftar kelompok data yang ada pada SMVS adalah sebagai berikut:
+\textit{Dataset} SMVS (lihat di \ref{sec:dataset_smvs}) memiliki beberapa kumpulan data yang masing-masing merupakan kumpulan gambar dari benda-benda dengan jenis yang sama. Daftar kelompok data yang ada pada SMVS adalah sebagai berikut:
 \begin{itemize}
 	\item \texttt{book\_covers}: berisi gambar-gambar \textit{cover} buku.
 	\item \texttt{bussines\_cards}: berisi gambar-gambar kartu nama.
@@ -120,10 +122,9 @@ Pada \textit{dataset} SMVS ini terdapat kelompok gambar \texttt{landmark} yang b
 
 Dalam \textit{dataset} GSV terdapat beberapa kelas, di mana setiap kelas merupakan sebuah POI tertentu. Setiap kelas terdiri dari gambar-gambar sebuah POI yang diambil dari sudut waktu pengambilan yang berbeda. Pengambilan dari sudut dan waktu yang berbeda ditujukan agar dalam gambar-gambar di sebuah kelas ada bagian dari POI yang selalu muncul dan ada yang hanya muncul di satu atau beberapa gambar saja. 
 
-Data-data gambar dalam \textit{dataset} GSV ini diperoleh dari dua sumber yang berbeda. Sumber yang pertama merupakan Google Street View (\url{https://www.google.com/streetview/}). Google Street View merupakan sebuah \textit{website} yang dapat digunakan untuk melihat tampilan $360\deg$ dari titik-titik di jalan raya. Dengan menggunakan Google Street View diambil gambar-gambar POI yang dapat dilihat dari titik di jalan raya sebagai data. Sumber yang kedua adalah dengan mengambil gambar secara langsung dengan menggunakan kamera. Gambar-gambar yang dihasilkan baik dari Google Street View dan yang diambil menggunakan kamera memiliki ciri yang sama sehingga keduanya dapat digabungkan ke dalam satu \textit{dataset}.
+Data-data gambar dalam \textit{dataset} GSV ini diperoleh dari dua sumber yang berbeda. Sumber yang pertama merupakan Google Street View (\url{https://www.google.com/streetview/}). Google Street View merupakan sebuah \textit{website} yang dapat digunakan untuk melihat tampilan $360^{\circ}$ dari titik-titik di jalan raya. Dengan menggunakan Google Street View diambil gambar-gambar POI yang dapat dilihat dari titik di jalan raya sebagai data. Sumber yang kedua adalah dengan mengambil gambar secara langsung dengan menggunakan kamera. 
 
 Keseluruhan \textit{dataset} GSV terdiri dari sebanyak 150 gambar. Gambar-gambar tersebut terbagi menjadi 10 kelas, di mana setiap kelas memiliki 15 gambar berbeda. Contoh gambar untuk tiap kelas dalam \textit{dataset} ini dapat dilihat pada Tabel~\ref{tab:contoh_dataset_gsv}.
-\newpage
 
 \begin{longtable}{|p{.2\textwidth}|p{.3\textwidth}|p{.4\textwidth}|}
 	\caption{Daftar kelas gambar dalam \textit{dataset} GSV beserta lokasi dan contoh gambarnya.}
@@ -135,7 +136,7 @@ Keseluruhan \textit{dataset} GSV terdiri dari sebanyak 150 gambar. Gambar-gambar
 		\vspace{5pt} \includegraphics[width=\textwidth]{alfamart_1.jpg}
 	\end{minipage} \\
 	\hline
-	binus & Jl. Ciumbuleuit No. 163, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87392, 107.60456) & \begin{minipage}{.4\textwidth}
+	\texttt{binus} & Jl. Ciumbuleuit No. 163, Ciumbuleuit, Cidadap, Kota Bandung, Jawa Barat 40141 (-6.87392, 107.60456) & \begin{minipage}{.4\textwidth}
 		\vspace{5pt} \includegraphics[width=\textwidth, angle=270]{binus_1.jpg}
 	\end{minipage} \\
 	\hline
@@ -184,13 +185,13 @@ Pencarian fitur lokal yang konsisten dapat dilakukan dengan mengelompokkan fitur
 Analisis pada tahap ini dilakukan untuk melihat apakah ada fitur lokal yang sifatnya konsisten pada sekumpulan gambar POI. Analisis dilakukan dengan menggunakan 10 gambar berbeda dari sebuah POI yang sama. Pada analisis ini digunakan kelas \texttt{ping} dari \textit{dataset} GSV. Beberapa contoh gambar kelas \texttt{ping} yang digunakan dapat dilihat pada Gambar~\ref{fig:contoh_ping}.
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=.6\textwidth]{ping_1247.jpg}	
+	\includegraphics[width=.7\textwidth]{ping_1247.jpg}	
 	\caption{Beberapa contoh gambar yang digunakan pada analisis untuk melihat sifat konsisten pada fitur lokal.}
 	\label{fig:contoh_ping}
 \end{figure}
 Dari contoh-contoh gambar pada Gambar~\ref{fig:contoh_ping} terlihat bahwa ada bagian objek dari POI yang selalu muncul dan ada bagian yang hanya muncul di satu gambar saja. Objek-objek yang konsisten muncul tersebut akan menghasilkan fitur lokal dengan sifat yang saling mirip. Jika objek-objek dengan sifat yang mirip tersebut ditemukan dalam mayoritas gambar yang berbeda maka dapat dikatakan bahwa sifat tersebut merupakan sifat yang konsisten.
 
-Pencarian fitur lokal dengan sifat konsisten pada analisis ini dilakukan dengan tahapan sebagai berikut:
+Pencarian fitur lokal dengan sifat konsisten pada analisis ini dilakukan dengan tahapan berikut:
 \begin{enumerate}
 	\item Memuat seluruh \textit{file} gambar yang digunakan.
 	\item Melakukan ekstraksi fitur pada semua gambar.
@@ -226,6 +227,7 @@ Dari implementasi program yang telah dilakukan didapat hasil berupa nomor \texti
 	\caption{Histogram sebaran jumlah gambar unik tiap \textit{cluster}.}
 	\label{fig:unique_image}
 \end{figure}
+\vspace{-10pt}
 Dari histogram pada Gambar~\ref{fig:unique_image} terlihat bahwa ada \textit{cluster} yang berisi fitur-fitur lokal yang sifatnya konsisten ditandai dengan nilai jumlah gambar unik yang tinggi dalam \textit{cluster} tersebut. Sebagai contoh sebuah \textit{cluster} yang memiliki sebanyak 8 gambar unik di dalamnya berarti \textit{cluster} tersebut berisi fitur-fitur lokal dengan sifat yang muncul di 8 gambar berbeda. 
 
 Sebaran pada histogram menunjukkan bahwa mayoritas fitur lokal dari gambar merupakan fitur lokal yang sifatnya tidak konsisten. Terlihat dari sebagian besar data berada pada rentang nilai gambar unik $\leq5$ yang terbilang cukup rendah. Hanya sebagian kecil fitur lokal dari gambar-gambar di kelas \texttt{ping} yang memiliki fitur lokal dengan sifat yang konsisten terhadap POI.
@@ -238,6 +240,8 @@ Beberapa contoh \textit{keypoint} yang fitur lokalnya memiliki sifat konsisten b
 	\caption{Contoh \textit{keypoint} yang konsisten menurut analisis ini.}
 	\label{fig:keypoint_konsisten}
 \end{figure}
+
+Dari Gambar~\ref{fig:keypoint_konsisten} terutama pada gambar sebelah kiri terlihat bahwa sebagian besar \textit{keypoint} berasal dari bagian pagar dari POI tersebut. Bagian pagar merupakan bagian yang konsisten muncul di gambar-gambar POI tersebut. Dari hasil ini didapati bahwa dengan menggunakan \textit{clustering} dapat diperoleh \textit{keypoint} yang sifatnya konsisten, walaupun masih banyak juga \textit{keypoint} yang asalnya dari bagian tidak konsisten yang dari hasil analisis memiliki konsistensi tinggi.
 
 \section{Analisis Sifat Unik pada Fitur Lokal dari Gambar POI}
 \label{sec:analisis_keunikan}
@@ -302,9 +306,11 @@ Beberapa contoh \textit{keypoint} yang fitur lokalnya memiliki sifat unik berdas
 	\label{fig:keypoint_unik}
 \end{figure}
 
+Dapat dilihat di gambar sebelah kanan pada Gambar~\ref{fig:keypoint_unik} bahwa cukup banyak \textit{keypoint} yang didapat berasal dari bagian logo POI, di mana bagian tersebut memiliki sudut-sudut yang unik. Tetapi jika dilihat di gambar sebelah kiri, sebagian besar \textit{keypoint} justru berasal dari bagian yang bukan logo atau bagian unik POI tersebut. 
+
 \section{Analisis Tingkat Keunikan dan Kekonsistenan Fitur Lokal pada Gambar POI}
 \label{sec:analisis_sifat}
-Berdasarkan hasil yang didapat dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan} didapati bahwa ada fitur lokal yang sifatnya konsisten, unik, dan ada yang tidak. Tetapi dari kedua analisis tersebut belum didapat didapat nilai yang dapat digunakan untuk mengukur tingkat kekonsistenan dan nilai yang dapat digunakan untuk mengukur tingkat keunikan fitur lokal. Analisis pada bagian ini bertujuan untuk membuat sebuah metode yang dapat memberikan nilai konsistensi dan nilai keunikan pada suatu fitur lokal. Nilai konsistensi dan nilai keunikan ini nantinya akan berguna untuk menyaring fitur lokal, sehingga dapat dengan mudah diambil fitur lokal yang sifatnya unik dan sifatnya konsisten saja.
+Berdasarkan hasil yang didapat dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan} didapati bahwa ada fitur lokal yang sifatnya konsisten, unik, dan ada yang tidak. Tetapi dari kedua analisis tersebut belum didapat didapat nilai yang dapat digunakan untuk mengukur tingkat kekonsistenan dan nilai yang dapat digunakan untuk mengukur tingkat keunikan fitur lokal. Analisis pada bagian ini bertujuan untuk membuat sebuah metode yang dapat memberikan nilai konsistensi dan nilai keunikan pada suatu fitur lokal. Nilai konsistensi dan nilai keunikan ini nantinya berguna untuk menyaring fitur lokal, sehingga dapat dengan mudah diambil fitur lokal yang sifatnya unik dan sifatnya konsisten saja.
 
 Analisis yang dilakukan merupakan penggabungan dari analisis di \ref{sec:analisis_konsistensi} dan \ref{sec:analisis_keunikan},  dengan beberapa modifikasi untuk mengatasi masalah yang ditemui. Nilai konsistensi dan nilai keunikan akan dihitung dari hasil \textit{clustering} yang sama. Berbeda dengan sebelumnya di mana proses \textit{clustering} untuk melihat konsistensi dan keunikan dilakukan dengan format \textit{dataset} yang berbeda. 
 
@@ -334,7 +340,7 @@ Langkah-langkah pada \textit{flowchart} di Gambar~\ref{fig:tahapan_analisis_clus
 	Pada analisis ini digunakan sebanyak total 100 gambar yang terbagi menjadi 10 kelas POI. Setiap kelas POI memiliki 10 gambar yang merupakan gambar POI tersebut dengan sudut pengambilan dan waktu pengambilan yang berbeda. Beberapa contoh gambar yang digunakan dapat dilihat pada Gambar~\ref{fig:gambar_analisis_clustering}.
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=.8\textwidth]{contoh_gambar_clustering.png}
+		\includegraphics[width=.65\textwidth]{contoh_gambar_clustering.png}
 		\caption{Contoh beberapa gambar yang digunakan pada analisis ini.}
 		\label{fig:gambar_analisis_clustering}
 	\end{figure}
@@ -688,8 +694,8 @@ Data \textit{test} yang digunakan diambil dari gambar referensi \textit{dataset}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\textwidth]{004.jpg}
-	\includegraphics[width=0.3\textwidth]{013.jpg}
+	\includegraphics[width=0.24\textwidth]{004.jpg}
+	\includegraphics[width=0.24\textwidth]{013.jpg}
 	\caption{Contoh gambar referensi dari \textit{dataset} \texttt{book\_covers}.}
 	\label{fig:referensi_book_covers}
 \end{figure}
@@ -700,8 +706,8 @@ Data \textit{test} yang berjumlah 100 tersebut memiliki ukuran lebar yang berkis
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\textwidth]{004-test1.jpg}
-	\includegraphics[width=0.3\textwidth]{013-test1.jpg}
+	\includegraphics[width=0.24\textwidth]{004-test1.jpg}
+	\includegraphics[width=0.24\textwidth]{013-test1.jpg}
 	\caption{Contoh gambar referensi dari \textit{dataset} \texttt{book\_covers} yang telah ditransformasi.}
 	\label{fig:transformasi_book_covers}
 \end{figure}
@@ -758,6 +764,7 @@ Implementasi dilakukan dengan membuat program Python. Digunakan Python versi 3.7
 	\item Menentukan parameter batas nilai \texttt{uniqueness} dan \texttt{consistency} untuk menyaring \textit{dataset}. 
 	\item Membuat objek SIFT dengan fungsi \texttt{cv2.SIFT\_create}.
 	\item Melakukan identifikasi gambar dengan BSIS. Tahap \textit{pairing} dalam BSIS dilakukan dengan menggunakan metode KD-Tree.
+	\newpage
 	\item Menyimpan 10 nilai dari hasil BSIS masing-masing dalam sebuah \textit{list}. Nilai-nilai yang disimpan adalah sebagai berikut:
 	\begin{itemize}
 		\item \texttt{q\_name}: nama dari gambar \textit{test}.
@@ -777,6 +784,7 @@ Implementasi dilakukan dengan membuat program Python. Digunakan Python versi 3.7
 \end{enumerate}
 Langkah-langkah tersebut dilakukan untuk Book Covers 400 dan Book Covers 600. Hasil dari kedua \textit{dataset} tersebut lalu dibandingkan.
 
+\newpage
 \subsection{Hasil Analisis}
 \subsubsection{Book Covers 400}
 Book Covers 400 memiliki total fitur lokal yang dihasilkan dari seluruh gambar sebanyak 121909 fitur lokal. Setelah dilakukan \textit{clustering} menghitung nilai keunikan dan konsistensi didapat hasil sebaran nilai keunikan dan konsistensi seperti pada Gambar~\ref{fig:half_400_consistency} dan Gambar~\ref{fig:half_400_uniqueness}.
@@ -955,6 +963,7 @@ Dari data pada Tabel~\ref{tab:waktu_akurasi_dataset400} didapat beberapa poin be
 \end{itemize}
 Terlihat bahwa pada pengujian dengan \textit{dataset} ini penyaringan fitur lokal dengan menggunakan nilai konsistensi dan keunikan memberikan hasil yang cukup baik. Dengan menggunakan hanya sebagian dari \textit{dataset} dapat meningkatkan waktu proses secara signifikan dengan tetap mendapat hasil akurasi yang tinggi.
 
+\vspace{-10pt}
 \subsubsection{Book Covers 600}
 Book Covers 600 memiliki total fitur lokal yang dihasilkan dari seluruh gambar sebanyak 195558 fitur lokal. Setelah dilakukan \textit{clustering} menghitung nilai konsistensi dan keunikan didapat hasil sebaran nilai konsistensi dan keunikan seperti pada Gambar~\ref{fig:half_600_uniqueness} dan Gambar~\ref{fig:half_600_consistency}.
 \begin{figure}[H]
@@ -1167,7 +1176,7 @@ Setelah dilakukan identifikasi dengan BSIS menggunakan fitur lokal ORB dihitung 
 		ORB  & 94281 & 0.24                             & 135.63                        & 86                    \\ \hline
 		SIFT & 121909 & 1.78                             & 190.85                        & 99                    \\ \hline
 	\end{tabular}
-	\caption{Perbandingan Waktu Proses dengan Akurasi Metode ORB dan SIFT pada Book Covers 400}
+	\caption{Perbandingan Waktu Proses dengan Akurasi ORB dan SIFT pada Book Covers 400}
 	\label{tab:hasil_orb_dataset400}
 \end{table}
 \begin{table}[H]
@@ -1178,7 +1187,7 @@ Setelah dilakukan identifikasi dengan BSIS menggunakan fitur lokal ORB dihitung 
 		ORB  & 99658 & 0.30                             & 144.16                        & 88                    \\ \hline
 		SIFT & 195558 & 2.44                             & 307.43                        & 99                    \\ \hline
 	\end{tabular}
-	\caption{Perbandingan Waktu Proses dengan Akurasi Metode ORB dan SIFT pada Book Covers 600}
+	\caption{Perbandingan Waktu Proses dengan Akurasi ORB dan SIFT pada Book Covers 600}
 	\label{tab:hasil_orb_dataset600}
 \end{table}
 Terlihat dari kedua tabel di atas bahwa metode ORB memiliki total waktu ekstrak dan total waktu BSIS secara keseluruhan yang lebih kecil. Walaupun begitu akurasi hasil identifikasi juga menurun. Dari nilai-nilai pada kedua tabel didapat beberapa poin berikut.
